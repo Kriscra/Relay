@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relay Dokümantasyon & API Referansı | Paper & Folia 1.21+</title>
-    <meta name="description" content="Relay API resmi dokümantasyonu: Reaktif servisler, ekonomi, mikroservis pub/sub, bekleme süreleri, paylaşımlı veri ve sıfır-gecikmeli dost ateşi servislerinin tüm metotları ve kod örnekleri.">
+    <title>Relay Dokümantasyon & API Referansı | Paper, Purpur & Folia 1.21+</title>
+    <meta name="description" content="Relay API kapsamlı geliştirici dokümantasyonu: Reaktif servisler, mikroservis pub/sub, çoklu ekonomi, bekleme süreleri, ortak veri ve sıfır-gecikmeli dost ateşi servislerinin tüm metotları, mimari detayları ve gerçek hayat kod örnekleri.">
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
     
@@ -61,7 +61,7 @@
                 <a href="#home" class="text-slate-400 hover:text-white transition">Genel Bakış</a>
                 <a href="#features" class="text-slate-400 hover:text-white transition">Servisler</a>
                 <a href="#overview" class="text-cyan-400 font-medium hover:text-white transition flex items-center gap-1.5">
-                    <i data-lucide="book-marked" class="w-4 h-4"></i> API Dokümantasyonu
+                    <i data-lucide="book-marked" class="w-4 h-4"></i> API Dokümantasyonu & Örnekler
                 </a>
             </nav>
 
@@ -122,16 +122,16 @@
                         <!-- CTA Row -->
                         <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
                             <a href="#overview" class="px-5 py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold text-sm transition shadow-lg shadow-cyan-500/20 flex items-center gap-2">
-                                <i data-lucide="book-open" class="w-4 h-4"></i> API Dokümantasyonu (Tüm Metotlar)
+                                <i data-lucide="book-open" class="w-4 h-4"></i> API Dokümantasyonu (Tüm Örnekler)
                             </a>
-                            <a href="#installation" class="px-5 py-2.5 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] text-white font-medium text-sm border border-white/[0.1] transition flex items-center gap-2">
-                                <i data-lucide="code-2" class="w-4 h-4 text-cyan-400"></i> Hızlı Başlangıç
+                            <a href="#quick-dep" class="px-5 py-2.5 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] text-white font-medium text-sm border border-white/[0.1] transition flex items-center gap-2">
+                                <i data-lucide="code-2" class="w-4 h-4 text-cyan-400"></i> Bağımlılığı Kopyala
                             </a>
                         </div>
                     </div>
 
                     <!-- Interactive Code IDE Showcase -->
-                    <div class="mt-14 max-w-4xl mx-auto">
+                    <div id="quick-dep" class="mt-14 max-w-4xl mx-auto">
                         <div class="ide-window rounded-xl overflow-hidden">
                             
                             <!-- IDE Header / Tabs -->
@@ -165,7 +165,7 @@
 }
 
 dependencies {
-    // Hafif ve modüler API kütüphanesi:
+    // Sadece 40 KB'lık hafif, sıfır-bağımlılıklı API kütüphanesi:
     compileOnly("com.github.Kriscra.Relay:relay-api:v1.0.0")
 }</code></pre>
                             </div>
@@ -385,7 +385,7 @@ RelayAPI.getMessenger().request("clan:get_level", clanId, Integer.class, Duratio
                                 <div class="space-y-0.5">
                                     <a href="#overview" class="sidebar-link block px-3 py-1.5 rounded text-slate-400 active">Genel Bakış</a>
                                     <a href="#installation" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">Projeye Ekleme</a>
-                                    <a href="#facade" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">RelayAPI Giriş Noktası</a>
+                                    <a href="#facade" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">RelayAPI Statik Cephe</a>
                                 </div>
                             </div>
 
@@ -406,7 +406,7 @@ RelayAPI.getMessenger().request("clan:get_level", clanId, Integer.class, Duratio
                                 <h4 class="font-semibold uppercase tracking-wider text-slate-500 mb-2 px-3">İleri Düzey</h4>
                                 <div class="space-y-0.5">
                                     <a href="#folia" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">Folia & Paralel Çekirdek Güvenliği</a>
-                                    <a href="#commands" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">Yönetici Komutları</a>
+                                    <a href="#commands" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">Yönetim Komutları</a>
                                 </div>
                             </div>
 
@@ -503,7 +503,7 @@ dependencies {
                         <div class="pb-4 border-b border-white/[0.08]">
                             <span class="text-xs font-semibold uppercase text-cyan-400">Giriş Noktası</span>
                             <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">RelayAPI Statik Cephe (Facade)</h1>
-                            <p class="text-xs text-slate-400 mt-1">Tüm Relay servislerine tek bir statik sınıftan erişim sağlayın.</p>
+                            <p class="text-xs text-slate-400 mt-1">Tüm Relay servislerine tek bir statik sınıftan thread-safe erişim.</p>
                         </div>
 
                         <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
@@ -575,8 +575,8 @@ dependencies {
                     <article id="service-registry" class="wiki-article space-y-6 hidden">
                         <div class="pb-4 border-b border-white/[0.08]">
                             <span class="text-xs font-semibold uppercase text-cyan-400">Çekirdek Sistem</span>
-                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">ServiceRegistry API Referansı</h1>
-                            <p class="text-xs text-slate-400 mt-1">Dinamik öncelikli servis kaydı, reaktif dinleyiciler ve yaşam döngüsü.</p>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">ServiceRegistry API & Reaktif Mimari</h1>
+                            <p class="text-xs text-slate-400 mt-1">Öncelik basamakları, yüklenme sırasından bağımsız servis tüketimi ve yaşam döngüsü.</p>
                         </div>
 
                         <div class="space-y-6 text-sm text-slate-300 leading-relaxed">
@@ -584,19 +584,19 @@ dependencies {
                             <!-- Concept -->
                             <div>
                                 <h3 class="text-base font-bold text-white mb-2">1. Öncelik Kademeleri (ServicePriority)</h3>
-                                <p class="text-xs text-slate-400 mb-3">Bir servis için birden fazla eklenti sağlayıcı kaydettiğinde, Relay otomatik olarak en yüksek önceliğe sahip sağlayıcıyı birincil seçer:</p>
+                                <p class="text-xs text-slate-400 mb-3">Bir servis için birden fazla eklenti sağlayıcı kaydettiğinde, Relay otomatik olarak en yüksek önceliğe sahip sağlayıcıyı birincil seçer. Eğer birincil eklenti devre dışı kalırsa (reload veya stop), Relay sıradaki en yüksek öncelikli sağlayıcıya kesintisiz geri döner:</p>
                                 <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs font-mono text-center">
-                                    <div class="p-2 rounded bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 font-bold">HIGHEST (100)</div>
-                                    <div class="p-2 rounded bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 font-bold">HIGH (50)</div>
-                                    <div class="p-2 rounded bg-slate-800 border border-white/10 text-slate-200">NORMAL (0)</div>
-                                    <div class="p-2 rounded bg-slate-800 border border-white/10 text-slate-300">LOW (-50)</div>
-                                    <div class="p-2 rounded bg-slate-800 border border-white/10 text-slate-400">FALLBACK (-100)</div>
+                                    <div class="p-2.5 rounded bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 font-bold">HIGHEST (100)</div>
+                                    <div class="p-2.5 rounded bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 font-bold">HIGH (50)</div>
+                                    <div class="p-2.5 rounded bg-slate-800 border border-white/10 text-slate-200">NORMAL (0)</div>
+                                    <div class="p-2.5 rounded bg-slate-800 border border-white/10 text-slate-300">LOW (-50)</div>
+                                    <div class="p-2.5 rounded bg-slate-800 border border-white/10 text-slate-400">FALLBACK (-100)</div>
                                 </div>
                             </div>
 
                             <!-- Methods Table -->
                             <div>
-                                <h3 class="text-base font-bold text-white mb-2">2. Metot Listesi</h3>
+                                <h3 class="text-base font-bold text-white mb-2">2. Metot Kataloğu</h3>
                                 <div class="bento-card rounded-lg overflow-hidden border border-white/[0.06]">
                                     <table class="w-full text-left text-xs border-collapse">
                                         <thead class="bg-[#0e121a] border-b border-white/[0.08] text-slate-300">
@@ -610,54 +610,106 @@ dependencies {
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">register(Class&lt;T&gt;, T, ServicePriority, Plugin)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">ServiceRegistration&lt;T&gt;</td>
-                                                <td class="py-3 px-4">Yeni bir sağlayıcı kaydeder ve gerekirse birincil servisi günceller.</td>
+                                                <td class="py-3 px-4">Yeni bir servis sağlayıcısı kaydeder. Birincil değişirse <code class="text-cyan-400">PrimaryProviderChangedEvent</code> fırlatır.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">getProvider(Class&lt;T&gt;)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">Optional&lt;T&gt;</td>
-                                                <td class="py-3 px-4">Aktif en yüksek öncelikli birincil sağlayıcıyı döndürür.</td>
+                                                <td class="py-3 px-4">Aktif en yüksek öncelikli birincil sağlayıcıyı anında senkron döndürür.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">awaitService(Class&lt;T&gt;)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">CompletableFuture&lt;T&gt;</td>
-                                                <td class="py-3 px-4">Servis kayıtlıysa hemen, değilse kaydedildiği an tamamlanan Promise.</td>
+                                                <td class="py-3 px-4">Servis zaten kayıtlıysa anında, henüz kayıtlı değilse kaydedildiği an tamamlanan Promise.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">onServiceReady(Class&lt;T&gt;, Consumer&lt;T&gt;)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">void</td>
-                                                <td class="py-3 px-4">Servis hazır olduğunda verilen geri çağırma (callback) fonksiyonunu çalıştırır.</td>
+                                                <td class="py-3 px-4">Servis hazır olduğunda verilen lambda fonksiyonunu tetikler (Yüklenme sırası koruması).</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">getRegistration(Class&lt;T&gt;)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">Optional&lt;ServiceRegistration&lt;T&gt;&gt;</td>
+                                                <td class="py-3 px-4">Aktif sağlayıcının öncelik derecesi ve sağlayan eklenti metaverisini döndürür.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">getRegistrations(Class&lt;T&gt;)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">Collection&lt;ServiceRegistration&lt;T&gt;&gt;</td>
+                                                <td class="py-3 px-4">Bu servis için kayıtlı tüm sağlayıcıların listesini (öncelik sırasına göre) döndürür.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">unregister(Class&lt;T&gt;, T)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">boolean</td>
-                                                <td class="py-3 px-4">Belirli bir sağlayıcıyı kayıttan düşürür.</td>
+                                                <td class="py-3 px-4">Belirli bir sağlayıcı örneğini kayıttan düşürür.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">unregisterAll(Plugin)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">void</td>
-                                                <td class="py-3 px-4">Bir eklenti kapandığında onun tüm kayıtlı servislerini temizler.</td>
+                                                <td class="py-3 px-4">Eklenti devre dışı kaldığında (<code class="text-slate-300">PluginDisableEvent</code>) otomatik çağrılır, bellek sızıntısını önler.</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
 
-                            <!-- Code Example -->
+                            <!-- Example 1 -->
                             <div>
-                                <h3 class="text-base font-bold text-white mb-2">3. Kod Örneği</h3>
+                                <h3 class="text-base font-bold text-white mb-2">Örnek 1: Reaktif Servis Tüketimi (Load-Order Independent)</h3>
+                                <p class="text-xs text-slate-400 mb-2">Diğer eklentinin sizden önce mi yoksa sonra mı başladığını düşünmenize gerek yok:</p>
                                 <div class="ide-window p-4 rounded-lg">
-                                    <pre><code class="language-java">// Örnek: Ekonomi servisine reaktif olarak bağlanma
-RelayAPI.getServiceRegistry().onServiceReady(EconomyService.class, economy -> {
-    getLogger().info("Ekonomi sistemi başarıyla bağlandı!");
-});
+                                    <pre><code class="language-java">public class MyPlugin extends JavaPlugin {
+    @Override
+    public void onEnable() {
+        // Ekonomi servisi sunucuda ne zaman hazır olursa (şimdi veya 5 saniye sonra) tetiklenir:
+        RelayAPI.getServiceRegistry().onServiceReady(EconomyService.class, economy -> {
+            getLogger().info("Ekonomi sistemi başarıyla bağlandı!");
+            getLogger().info("Para Birimi: " + economy.getDefaultCurrency().displayName());
+        });
+    }
+}</code></pre>
+                                </div>
+                            </div>
 
-// Örnek: Kendi servisimizi sisteme öncelikli kaydetme
+                            <!-- Example 2 -->
+                            <div>
+                                <h3 class="text-base font-bold text-white mb-2">Örnek 2: Özel Bir Servis Yazıp Sisteme Öncelikli Kaydetme</h3>
+                                <p class="text-xs text-slate-400 mb-2">Kendi özel arayüzünüzü tanımlayıp diğer eklentilere açabilirsiniz:</p>
+                                <div class="ide-window p-4 rounded-lg">
+                                    <pre><code class="language-java">// 1. Özel Servis Arayüzü:
+public interface DungeonBridge {
+    CompletableFuture&lt;Boolean&gt; isDungeonActive(String dungeonId);
+    CompletableFuture&lt;Integer&gt; getPlayerDungeonLevel(UUID playerId);
+}
+
+// 2. Kendi Eklentinizde Servisi Kaydetme:
 RelayAPI.getServiceRegistry().register(
-    MyCustomService.class,
-    new MyCustomServiceImpl(),
-    ServicePriority.HIGH,
+    DungeonBridge.class,
+    new MyDungeonBridgeImpl(),
+    ServicePriority.HIGH, // Yüksek öncelikle kaydol
     this
-);</code></pre>
+);
+
+// 3. Başka Bir Eklentiden Kullanma:
+RelayAPI.getServiceRegistry().getProvider(DungeonBridge.class).ifPresent(dungeon -> {
+    dungeon.isDungeonActive("ancient_ruins").thenAccept(active -> {
+        if (active) getLogger().info("Antik Harabeler zindanı şu anda açık!");
+    });
+});</code></pre>
+                                </div>
+                            </div>
+
+                            <!-- Example 3 -->
+                            <div>
+                                <h3 class="text-base font-bold text-white mb-2">Örnek 3: Birincil Sağlayıcı Değişimini Dinleme (Dynamic Failover)</h3>
+                                <div class="ide-window p-4 rounded-lg">
+                                    <pre><code class="language-java">@EventHandler
+public void onProviderChange(PrimaryProviderChangedEvent event) {
+    if (event.getServiceClass().equals(EconomyService.class)) {
+        getLogger().warning("Ekonomi sağlayıcısı değişti!");
+        getLogger().info("Eski Sağlayıcı Eklenti: " + (event.getOldProvider() != null ? event.getOldProvider().getPlugin().getName() : "Yok"));
+        getLogger().info("Yeni Sağlayıcı Eklenti: " + (event.getNewProvider() != null ? event.getNewProvider().getPlugin().getName() : "Yok"));
+    }
+}</code></pre>
                                 </div>
                             </div>
 
@@ -671,15 +723,15 @@ RelayAPI.getServiceRegistry().register(
                     <article id="messenger" class="wiki-article space-y-6 hidden">
                         <div class="pb-4 border-b border-white/[0.08]">
                             <span class="text-xs font-semibold uppercase text-cyan-400">İletişim Omurgası</span>
-                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">RelayMessenger API Referansı</h1>
-                            <p class="text-xs text-slate-400 mt-1">Pub/Sub kanal yayıncılığı ve zaman aşımı korumalı asenkron mikroservis RPC.</p>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">RelayMessenger API Referansı (Pub/Sub & RPC)</h1>
+                            <p class="text-xs text-slate-400 mt-1">Tamamen bağımsız mikroservis veri köprüsü, konu tabanlı yayın ve zaman aşımı korumalı RPC.</p>
                         </div>
 
                         <div class="space-y-6 text-sm text-slate-300 leading-relaxed">
                             
                             <!-- Methods Table -->
                             <div>
-                                <h3 class="text-base font-bold text-white mb-2">1. Metot Listesi</h3>
+                                <h3 class="text-base font-bold text-white mb-2">1. Metot Kataloğu</h3>
                                 <div class="bento-card rounded-lg overflow-hidden border border-white/[0.06]">
                                     <table class="w-full text-left text-xs border-collapse">
                                         <thead class="bg-[#0e121a] border-b border-white/[0.08] text-slate-300">
@@ -693,52 +745,95 @@ RelayAPI.getServiceRegistry().register(
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">publish(String, T, Plugin)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">void</td>
-                                                <td class="py-3 px-4">Bir kanala asenkron mesaj fırlatır. Tüm aboneler eşzamanlı haberdar olur.</td>
+                                                <td class="py-3 px-4">Konuya mesaj fırlatır. Arka plan thread havuzunda tüm abonelere non-blocking dağıtılır.</td>
                                             </tr>
                                             <tr>
-                                                <td class="py-3 px-4 font-mono text-cyan-400">subscribe(String, Class&lt;T&gt;, Plugin, MessageListener&lt;T&gt;)</td>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">subscribe(String, Class&lt;T&gt;, Plugin, MessageListener)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">Subscription</td>
-                                                <td class="py-3 px-4">Bir konuyu (topic) dinlemeye başlar. Eklenti kapandığında otomatik iptal edilir.</td>
+                                                <td class="py-3 px-4">Konuyu dinlemeye başlar. Gelen nesne tip güvenli şekilde lambda fonksiyonuna iletilir.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">request(String, REQ, Class&lt;RESP&gt;, Duration)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">CompletableFuture&lt;RESP&gt;</td>
-                                                <td class="py-3 px-4">Karşı eklentiye istek atar. Süre aşılırsa <code class="text-red-400">RequestTimeoutException</code> fırlatır.</td>
+                                                <td class="py-3 px-4">Soru-Cevap (RPC). Karşı taraftan yanıt bekler. Süre dolarsa <code class="text-red-400 font-mono text-xs">RequestTimeoutException</code> atar.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">handleRequest(String, Class&lt;REQ&gt;, Plugin, RequestHandler)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">Subscription</td>
-                                                <td class="py-3 px-4">Gelen RPC isteklerini asenkron yanıtlayan bir handler kaydeder.</td>
+                                                <td class="py-3 px-4">RPC isteklerini asenkron yanıtlayan (CompletableFuture dönen) işleyici kaydeder.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">handleRequestSync(String, Class&lt;REQ&gt;, Plugin, SyncRequestHandler)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">Subscription</td>
-                                                <td class="py-3 px-4">Gelen RPC isteklerini anında değer döndürerek senkron çözen handler kaydeder.</td>
+                                                <td class="py-3 px-4">RPC isteklerini anında değer döndürerek senkron çözen işleyici kaydeder.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">unsubscribeAll(Plugin)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">void</td>
-                                                <td class="py-3 px-4">Eklentiye ait tüm dinleyicileri ve RPC işleyicilerini bellekten siler.</td>
+                                                <td class="py-3 px-4">Eklentiye ait tüm abonelikleri ve RPC işleyicilerini bellekten kaldırır.</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
 
-                            <!-- Code Example -->
+                            <!-- Example 1 -->
                             <div>
-                                <h3 class="text-base font-bold text-white mb-2">2. Kod Örneği (RPC Microservice)</h3>
+                                <h3 class="text-base font-bold text-white mb-2">Örnek 1: Pub/Sub Kanal Yayını (EventBus Modeli)</h3>
+                                <p class="text-xs text-slate-400 mb-2">Bir klan eklentisi seviye atlama duyurusu yapar; görev ve skor tablosu eklentileri bağımsız olarak bu veriyi tüketir:</p>
                                 <div class="ide-window p-4 rounded-lg">
-                                    <pre><code class="language-java">// Provider Eklenti (Yanıt Verici):
-RelayAPI.getMessenger().handleRequestSync("clan:get_name", UUID.class, this, (ctx, clanId) -> {
-    return clanManager.getClan(clanId).getName();
+                                    <pre><code class="language-java">// Paylaşılacak Veri Modeli (Java Record):
+public record ClanLevelUpData(String clanName, UUID leaderId, int newLevel) {}
+
+// Yayınlayan Eklenti (Klan Eklentisi):
+ClanLevelUpData payload = new ClanLevelUpData("Akıncılar", leader.getUniqueId(), 5);
+RelayAPI.getMessenger().publish("clan:levelup", payload, this);
+
+// Dinleyen Eklenti A (Görev Eklentisi):
+RelayAPI.getMessenger().subscribe("clan:levelup", ClanLevelUpData.class, this, context -> {
+    ClanLevelUpData data = context.getPayload();
+    questManager.giveReward(data.leaderId(), 1000);
 });
 
-// Consumer Eklenti (Soru Soran Eklenti):
-RelayAPI.getMessenger().request("clan:get_name", clanId, String.class, Duration.ofSeconds(2))
-    .thenAccept(name -> player.sendMessage("Klanınız: " + name))
+// Dinleyen Eklenti B (Discord / Webhook Eklentisi):
+RelayAPI.getMessenger().subscribe("clan:levelup", ClanLevelUpData.class, this, context -> {
+    ClanLevelUpData data = context.getPayload();
+    discordBot.sendMessage("📢 " + data.clanName() + " klanı " + data.newLevel() + ". seviyeye ulaştı!");
+});</code></pre>
+                                </div>
+                            </div>
+
+                            <!-- Example 2 -->
+                            <div>
+                                <h3 class="text-base font-bold text-white mb-2">Örnek 2: Zaman Aşımı Korumalı Mikroservis RPC (Request-Response)</h3>
+                                <p class="text-xs text-slate-400 mb-2">Açık Artırma eklentisi, Banka eklentisine oyuncunun teklif verecek parası olup olmadığını sorar ve bakiye rezerve eder:</p>
+                                <div class="ide-window p-4 rounded-lg">
+                                    <pre><code class="language-java">// İstek ve Yanıt Modelleri:
+public record BidRequest(UUID playerId, BigDecimal bidAmount) {}
+public record BidResponse(boolean approved, String failureReason) {}
+
+// Banka Eklentisi (İsteği Yanıtlayan):
+RelayAPI.getMessenger().handleRequest("auction:verify_bid", BidRequest.class, this, (ctx, req) -> {
+    return bankService.checkAndLockFunds(req.playerId(), req.bidAmount())
+        .thenApply(success -> success 
+            ? new BidResponse(true, null) 
+            : new BidResponse(false, "Yetersiz bakiye!"));
+});
+
+// Açık Artırma Eklentisi (Soru Soran):
+BidRequest req = new BidRequest(player.getUniqueId(), BigDecimal.valueOf(5000));
+
+// 3 saniye süre tanınır, yanıt gelmezse otomatik iptal edilir:
+RelayAPI.getMessenger().request("auction:verify_bid", req, BidResponse.class, Duration.ofSeconds(3))
+    .thenAccept(response -> {
+        if (response.approved()) {
+            player.sendMessage("§aTeklifiniz kabul edildi!");
+        } else {
+            player.sendMessage("§cTeklif reddedildi: " + response.failureReason());
+        }
+    })
     .exceptionally(err -> {
-        player.sendMessage("Klan yanıt vermedi (Zaman aşımı)");
+        player.sendMessage("§cBanka servisine ulaşılamadı (Zaman aşımı). Teklif iptal edildi.");
         return null;
     });</code></pre>
                                 </div>
@@ -754,15 +849,21 @@ RelayAPI.getMessenger().request("clan:get_name", clanId, String.class, Duration.
                     <article id="economy" class="wiki-article space-y-6 hidden">
                         <div class="pb-4 border-b border-white/[0.08]">
                             <span class="text-xs font-semibold uppercase text-cyan-400">Finans</span>
-                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">EconomyService API Referansı</h1>
-                            <p class="text-xs text-slate-400 mt-1">Kayıpsız BigDecimal aritmetiği ve sınırsız çoklu para birimi mimarisi.</p>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">EconomyService API Referansı (Çoklu Para Birimi)</h1>
+                            <p class="text-xs text-slate-400 mt-1">Kayıpsız BigDecimal aritmetiği, atomik transferler ve bağımsız para birimleri.</p>
                         </div>
 
                         <div class="space-y-6 text-sm text-slate-300 leading-relaxed">
                             
+                            <!-- Concept -->
+                            <div>
+                                <h3 class="text-base font-bold text-white mb-2">1. Neden double Değil de BigDecimal?</h3>
+                                <p class="text-xs text-slate-400 mb-2">Java'da IEEE 754 standardındaki <code>double</code> türü ikili tabanda kayan nokta hesaplar. Örneğin <code>0.1 + 0.2</code> işleminin sonucu <code>0.30000000000000004</code> çıkar. Eski Vault eklentilerinde oyuncuların kuruşlarının kaybolması veya devasa ekonomilerde haksız para türemesinin sebebi budur. Relay, finans sektörünün altın standardı olan <strong>BigDecimal</strong> kullanarak %100 kayıpsız çalışır.</p>
+                            </div>
+
                             <!-- Methods Table -->
                             <div>
-                                <h3 class="text-base font-bold text-white mb-2">1. Metot Listesi</h3>
+                                <h3 class="text-base font-bold text-white mb-2">2. Metot Kataloğu</h3>
                                 <div class="bento-card rounded-lg overflow-hidden border border-white/[0.06]">
                                     <table class="w-full text-left text-xs border-collapse">
                                         <thead class="bg-[#0e121a] border-b border-white/[0.08] text-slate-300">
@@ -776,63 +877,90 @@ RelayAPI.getMessenger().request("clan:get_name", clanId, String.class, Duration.
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">getDefaultCurrency()</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">Currency</td>
-                                                <td class="py-3 px-4">Sunucunun varsayılan para birimini döndürür.</td>
+                                                <td class="py-3 px-4">Sunucunun birincil para birimini döndürür.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">getCurrency(String)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">Optional&lt;Currency&gt;</td>
-                                                <td class="py-3 px-4">Kimliğe göre (örn: "gold", "token") para birimi çeker.</td>
+                                                <td class="py-3 px-4">Özel bir para birimini kimliğine göre arar (Örn: "gold", "token", "crypto").</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">getBalance(UUID, Currency)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">CompletableFuture&lt;BigDecimal&gt;</td>
-                                                <td class="py-3 px-4">Oyuncunun belirtilen para birimindeki anlık bakiyesini asenkron sorgular.</td>
+                                                <td class="py-3 px-4">Oyuncunun belirli bir para birimindeki bakiyesini asenkron çeker.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">has(UUID, BigDecimal, Currency)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">CompletableFuture&lt;Boolean&gt;</td>
-                                                <td class="py-3 px-4">Oyuncunun yeterli bakiyeye sahip olup olmadığını kontrol eder.</td>
+                                                <td class="py-3 px-4">Oyuncunun belirtilen miktarda parası olup olmadığını kontrol eder.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">deposit(UUID, BigDecimal, Currency, String)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">CompletableFuture&lt;EconomyResponse&gt;</td>
-                                                <td class="py-3 px-4">Hesaba para yatırır. Başarı durumunu ve yeni bakiyeyi döner.</td>
+                                                <td class="py-3 px-4">Hesaba para ekler ve log açıklaması (reason) kaydeder.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">withdraw(UUID, BigDecimal, Currency, String)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">CompletableFuture&lt;EconomyResponse&gt;</td>
-                                                <td class="py-3 px-4">Hesaptan para çeker. Yetersiz bakiye durumunda hata döner.</td>
+                                                <td class="py-3 px-4">Hesaptan para çeker. Yetersiz bakiye durumunda işlemi iptal eder.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">transfer(UUID, UUID, BigDecimal, Currency, String)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">CompletableFuture&lt;EconomyResponse&gt;</td>
-                                                <td class="py-3 px-4">İki hesap arasında atomik (güvenli) transfer gerçekleştirir.</td>
+                                                <td class="py-3 px-4">İki hesap arasında atomik (güvenli) transfer yapar. Bir taraf başarısız olursa işlem geri alınır.</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
 
-                            <!-- Code Example -->
+                            <!-- Example 1 -->
                             <div>
-                                <h3 class="text-base font-bold text-white mb-2">2. Para Transferi Kod Örneği</h3>
+                                <h3 class="text-base font-bold text-white mb-2">Örnek 1: İki Farklı Para Birimiyle Alışveriş GUI'si</h3>
                                 <div class="ide-window p-4 rounded-lg">
-                                    <pre><code class="language-java">RelayAPI.getEconomy().ifPresent(econ -> {
-    UUID sender = playerA.getUniqueId();
-    UUID target = playerB.getUniqueId();
-    BigDecimal amount = BigDecimal.valueOf(50);
-    Currency defaultCurrency = econ.getDefaultCurrency();
+                                    <pre><code class="language-java">public void buyPremiumSword(Player player) {
+    RelayAPI.getEconomy().ifPresent(econ -> {
+        UUID uuid = player.getUniqueId();
+        
+        // 1. "token" adlı özel para birimini bul:
+        Currency token = econ.getCurrency("token").orElseThrow();
+        BigDecimal price = BigDecimal.valueOf(150); // 150 Token
 
-    econ.transfer(sender, target, amount, defaultCurrency, "Ticaret Ödemesi")
-        .thenAccept(res -> {
-            if (res.isSuccess()) {
-                playerA.sendMessage("§aTransfer başarılı! Yeni bakiye: " + econ.format(res.balanceAfter()));
-                playerB.sendMessage("§aHesabınıza " + econ.format(amount) + " geldi!");
-            } else {
-                playerA.sendMessage("§cTransfer başarısız: " + res.errorMessage());
-            }
-        });
-});</code></pre>
+        // 2. Asenkron bakiye kontrolü ve para çekme:
+        econ.withdraw(uuid, price, token, "Marketten Kılıç Satın Alındı")
+            .thenAccept(response -> {
+                if (response.isSuccess()) {
+                    giveSword(player);
+                    player.sendMessage("§aKılıç satın alındı! Kalan Token: " + econ.format(response.balanceAfter(), token));
+                } else {
+                    player.sendMessage("§cİşlem başarısız: " + response.errorMessage());
+                }
+            });
+    });
+}</code></pre>
+                                </div>
+                            </div>
+
+                            <!-- Example 2 -->
+                            <div>
+                                <h3 class="text-base font-bold text-white mb-2">Örnek 2: Atomik Para Gönderme Komutu (/pay)</h3>
+                                <div class="ide-window p-4 rounded-lg">
+                                    <pre><code class="language-java">public void handlePayCommand(Player sender, Player target, BigDecimal amount) {
+    RelayAPI.getEconomy().ifPresent(econ -> {
+        Currency gold = econ.getDefaultCurrency();
+
+        econ.transfer(sender.getUniqueId(), target.getUniqueId(), amount, gold, "Oyuncu /pay Transferi")
+            .thenAccept(res -> {
+                if (res.isSuccess()) {
+                    sender.sendMessage("§a" + target.getName() + " oyuncusuna " + econ.format(amount) + " gönderdiniz.");
+                    sender.sendMessage("§7Kalan Bakiyeniz: " + econ.format(res.balanceAfter()));
+                    target.sendMessage("§a" + sender.getName() + " size " + econ.format(amount) + " gönderdi!");
+                } else {
+                    sender.sendMessage("§cTransfer yapılamadı: " + res.errorMessage());
+                }
+            });
+    });
+}</code></pre>
                                 </div>
                             </div>
 
@@ -854,7 +982,7 @@ RelayAPI.getMessenger().request("clan:get_name", clanId, String.class, Duration.
                             
                             <!-- Methods Table -->
                             <div>
-                                <h3 class="text-base font-bold text-white mb-2">1. Metot Listesi</h3>
+                                <h3 class="text-base font-bold text-white mb-2">1. Metot Kataloğu</h3>
                                 <div class="bento-card rounded-lg overflow-hidden border border-white/[0.06]">
                                     <table class="w-full text-left text-xs border-collapse">
                                         <thead class="bg-[#0e121a] border-b border-white/[0.08] text-slate-300">
@@ -868,12 +996,12 @@ RelayAPI.getMessenger().request("clan:get_name", clanId, String.class, Duration.
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">setCooldown(UUID, String, Duration, Plugin, Consumer)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">CooldownEntry</td>
-                                                <td class="py-3 px-4">Oyuncuya bekleme süresi uygular. Süre dolunca lambda fonksiyonu tetiklenir.</td>
+                                                <td class="py-3 px-4">Oyuncuya bekleme süresi atar. Süre bittiğinde geri çağırma (callback) tetiklenir.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">hasCooldown(UUID, String)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">boolean</td>
-                                                <td class="py-3 px-4">Oyuncunun aktif bir cooldown'ı olup olmadığını doğrular.</td>
+                                                <td class="py-3 px-4">Oyuncunun aktif bir bekleme süresi olup olmadığını anında doğrular.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">getRemaining(UUID, String)</td>
@@ -883,47 +1011,74 @@ RelayAPI.getMessenger().request("clan:get_name", clanId, String.class, Duration.
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">formatRemaining(UUID, String)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">String</td>
-                                                <td class="py-3 px-4">Kalan süreyi okunabilir metin formatına çevirir (Örn: "4.2s" veya "2m 15s").</td>
+                                                <td class="py-3 px-4">Kalan süreyi formatlar (Örn: "3.4s", "1m 20s", "2h 10m").</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">getProgress(UUID, String)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">double</td>
-                                                <td class="py-3 px-4">0.0 ile 1.0 arasında doluluk oranı verir (Bossbar / ActionBar için idealdir).</td>
+                                                <td class="py-3 px-4">0.0 (başlangıç) ile 1.0 (tamamlandı) arasında ilerleme yüzdesini döndürür.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">clearCooldown(UUID, String)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">boolean</td>
-                                                <td class="py-3 px-4">Bekleme süresini anında sıfırlar.</td>
+                                                <td class="py-3 px-4">Bekleme süresini erkenden sonlandırır ve zamanlayıcıyı iptal eder.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">setGlobalCooldown(String, Duration, Plugin, Consumer)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">CooldownEntry</td>
-                                                <td class="py-3 px-4">Tüm sunucu geneli ortak bekleme süresi başlatır (Örn: Ejderha Etkinliği).</td>
+                                                <td class="py-3 px-4">Tüm sunucu geneli paylaşılan ortak bekleme süresi başlatır (Örn: Ejderha Etkinliği).</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
 
-                            <!-- Code Example -->
+                            <!-- Example 1 -->
                             <div>
-                                <h3 class="text-base font-bold text-white mb-2">2. Bossbar İlerleme Kod Örneği</h3>
+                                <h3 class="text-base font-bold text-white mb-2">Örnek 1: ActionBar Üzerinde Canlı Yetenek İlerlemesi Gösterme</h3>
                                 <div class="ide-window p-4 rounded-lg">
-                                    <pre><code class="language-java">UUID uuid = player.getUniqueId();
-String key = "spell:meteor";
+                                    <pre><code class="language-java">public void castDashAbility(Player player) {
+    UUID uuid = player.getUniqueId();
+    String key = "ability:dash";
 
-if (RelayAPI.getCooldowns().hasCooldown(uuid, key)) {
-    // 0.0 - 1.0 arası görsel dolum:
-    double progress = RelayAPI.getCooldowns().getProgress(uuid, key);
-    bossBar.setProgress(progress);
-    player.sendMessage("Kalan süre: " + RelayAPI.getCooldowns().formatRemaining(uuid, key));
-    return;
-}
+    // 1. Kontrol:
+    if (RelayAPI.getCooldowns().hasCooldown(uuid, key)) {
+        String remaining = RelayAPI.getCooldowns().formatRemaining(uuid, key);
+        player.sendActionBar(Component.text("§cDash henüz hazır değil! (" + remaining + ")"));
+        return;
+    }
 
-// 12 saniyelik bekleme başlat ve süre bitince oyuncuya haber ver:
-RelayAPI.getCooldowns().setCooldown(uuid, key, Duration.ofSeconds(12), this, entry -> {
-    player.sendMessage("§aMeteor büyüsü tekrar hazır!");
-});</code></pre>
+    // 2. Yeteneği uygula:
+    applyDashEffect(player);
+
+    // 3. 8 saniyelik bekleme başlat ve süre bitince ses efekti çal:
+    RelayAPI.getCooldowns().setCooldown(uuid, key, Duration.ofSeconds(8), this, expiredEntry -> {
+        player.sendActionBar(Component.text("§a✦ Dash Yeteneği Tekrar Hazır! ✦"));
+        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1.5f);
+    });
+}</code></pre>
+                                </div>
+                            </div>
+
+                            <!-- Example 2 -->
+                            <div>
+                                <h3 class="text-base font-bold text-white mb-2">Örnek 2: Sunucu Geneli Ejderha Etkinliği Cooldown'ı (Global Scope)</h3>
+                                <div class="ide-window p-4 rounded-lg">
+                                    <pre><code class="language-java">public void triggerDragonSpawnEvent() {
+    String key = "event:ender_dragon";
+
+    if (RelayAPI.getCooldowns().hasGlobalCooldown(key)) {
+        String remaining = RelayAPI.getCooldowns().formatGlobalRemaining(key);
+        Bukkit.broadcastMessage("§cEjderha etkinliği beklemede! Kalan süre: " + remaining);
+        return;
+    }
+
+    // Ejderhayı doğur ve 2 saatlik global bekleme başlat:
+    spawnEnderDragon();
+    RelayAPI.getCooldowns().setGlobalCooldown(key, Duration.ofHours(2), this, entry -> {
+        Bukkit.broadcastMessage("§e§lDİKKAT! §r§6Antik Ejderha tapınağı tekrar uyanıyor!");
+    });
+}</code></pre>
                                 </div>
                             </div>
 
@@ -937,15 +1092,15 @@ RelayAPI.getCooldowns().setCooldown(uuid, key, Duration.ofSeconds(12), this, ent
                     <article id="shared-data" class="wiki-article space-y-6 hidden">
                         <div class="pb-4 border-b border-white/[0.08]">
                             <span class="text-xs font-semibold uppercase text-cyan-400">Ortak Bellek</span>
-                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">SharedDataService API Referansı</h1>
-                            <p class="text-xs text-slate-400 mt-1">Tip güvenli anahtarlar, geçici TTL verileri ve canlı veri mutasyon gözlemcileri.</p>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">SharedDataService API Referansı (Ortak Veri & TTL)</h1>
+                            <p class="text-xs text-slate-400 mt-1">Tip güvenli anahtarlar, geçici TTL etiketleri ve canlı veri mutasyon gözlemcileri.</p>
                         </div>
 
                         <div class="space-y-6 text-sm text-slate-300 leading-relaxed">
                             
                             <!-- Methods Table -->
                             <div>
-                                <h3 class="text-base font-bold text-white mb-2">1. Metot Listesi</h3>
+                                <h3 class="text-base font-bold text-white mb-2">1. Metot Kataloğu</h3>
                                 <div class="bento-card rounded-lg overflow-hidden border border-white/[0.06]">
                                     <table class="w-full text-left text-xs border-collapse">
                                         <thead class="bg-[#0e121a] border-b border-white/[0.08] text-slate-300">
@@ -959,27 +1114,27 @@ RelayAPI.getCooldowns().setCooldown(uuid, key, Duration.ofSeconds(12), this, ent
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">DataKey.of(namespace, key, type, defaultVal)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">DataKey&lt;T&gt;</td>
-                                                <td class="py-3 px-4">Tip güvenli, namespace korumalı bir veri anahtarı tanımlar.</td>
+                                                <td class="py-3 px-4">Tip güvenli, namespace çakışmasız statik anahtar tanımlar.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">set(UUID, DataKey&lt;T&gt;, T, Plugin)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">void</td>
-                                                <td class="py-3 px-4">Oyuncuya kalıcı (RAM üzerinde) ortak veri bağlar.</td>
+                                                <td class="py-3 px-4">Oyuncuya bellek içi veri kaydeder. Gözlemcileri (observer) uyarır.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">setTemporary(UUID, DataKey&lt;T&gt;, T, Duration, Plugin)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">void</td>
-                                                <td class="py-3 px-4">Otomatik süresi dolan geçici veri bağlar (Örn: 15 sn savaş etiketi).</td>
+                                                <td class="py-3 px-4">Otomatik süresi dolan geçici veri bağlar (Örn: Savaş etiketi). Süre bitince bellekten silinir.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">get(UUID, DataKey&lt;T&gt;)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">Optional&lt;T&gt;</td>
-                                                <td class="py-3 px-4">Veriyi güvenle çeker. Süresi dolmuşsa Optional.empty() döner.</td>
+                                                <td class="py-3 px-4">Veriyi güvenle çeker. Süresi dolmuş veya hiç atanmamışsa Optional.empty() döner.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">getOrKeyDefault(UUID, DataKey&lt;T&gt;)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">T</td>
-                                                <td class="py-3 px-4">Veri yoksa anahtarın varsayılan değerini döndürür.</td>
+                                                <td class="py-3 px-4">Değer bulunamazsa anahtarın varsayılan (default) değerini anında döndürür.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">observe(DataKey&lt;T&gt;, Plugin, DataChangeListener)</td>
@@ -991,25 +1146,49 @@ RelayAPI.getCooldowns().setCooldown(uuid, key, Duration.ofSeconds(12), this, ent
                                 </div>
                             </div>
 
-                            <!-- Code Example -->
+                            <!-- Example 1 -->
                             <div>
-                                <h3 class="text-base font-bold text-white mb-2">2. Savaş Etiketi (Combat Tag) Örneği</h3>
+                                <h3 class="text-base font-bold text-white mb-2">Örnek 1: Savaş Etiketi (Combat Tag) ve Işınlanma Engeli</h3>
+                                <p class="text-xs text-slate-400 mb-2">Savaş eklentisi 15 saniyelik etiket koyar; Işınlanma eklentisi oyuncunun savaşıp savaşmadığını kontrol eder:</p>
                                 <div class="ide-window p-4 rounded-lg">
-                                    <pre><code class="language-java">// Anahtar tanımlama:
-public static final DataKey&lt;Boolean&gt; IN_COMBAT = DataKey.of("combat", "tagged", Boolean.class, false);
+                                    <pre><code class="language-java">// 1. Ortak Anahtar Tanımı:
+public static final DataKey&lt;Boolean&gt; COMBAT_TAG = DataKey.of("combat", "tagged", Boolean.class, false);
 
-// 1. Savaş Eklentisi: Hasar alınca 15 saniyelik geçici etiket koyar:
-RelayAPI.getData().setTemporary(victim.getUniqueId(), IN_COMBAT, true, Duration.ofSeconds(15), this);
-
-// 2. Işınlanma Eklentisi: Oyuncunun savaş durumunu doğrudan okur:
-if (RelayAPI.getData().getOrKeyDefault(player.getUniqueId(), IN_COMBAT)) {
-    player.sendMessage("§cSavaş halindeyken /spawn komutunu kullanamazsınız!");
-    return;
+// 2. Savaş Eklentisi (Combat Plugin):
+@EventHandler
+public void onDamage(EntityDamageByEntityEvent event) {
+    if (event.getEntity() instanceof Player victim) {
+        // 15 saniyelik otomatik silinen savaş etiketi koy:
+        RelayAPI.getData().setTemporary(victim.getUniqueId(), COMBAT_TAG, true, Duration.ofSeconds(15), this);
+    }
 }
 
-// 3. Skor Tablosu Eklentisi: Durum değiştiğinde anında haberdar olur:
-RelayAPI.getData().observe(IN_COMBAT, this, (targetId, key, oldVal, newVal) -> {
-    updateScoreboardTag(targetId, newVal);
+// 3. Işınlanma Eklentisi (Teleport / Spawn Plugin):
+public boolean canTeleport(Player player) {
+    boolean inCombat = RelayAPI.getData().getOrKeyDefault(player.getUniqueId(), COMBAT_TAG);
+    if (inCombat) {
+        player.sendMessage("§cSavaş halindeyken ışınlanamazsınız!");
+        return false;
+    }
+    return true;
+}</code></pre>
+                                </div>
+                            </div>
+
+                            <!-- Example 2 -->
+                            <div>
+                                <h3 class="text-base font-bold text-white mb-2">Örnek 2: Değişiklik Gözlemcisi (Live Data Observer)</h3>
+                                <p class="text-xs text-slate-400 mb-2">Skor tablosu eklentisi, oyuncunun itibar puanı değiştiği mikro-saniyede ekranı günceller:</p>
+                                <div class="ide-window p-4 rounded-lg">
+                                    <pre><code class="language-java">public static final DataKey&lt;Integer&gt; REPUTATION = DataKey.of("rpg", "reputation", Integer.class, 0);
+
+// Değişiklikleri dinle:
+RelayAPI.getData().observe(REPUTATION, this, (targetId, key, oldVal, newVal) -> {
+    Player player = Bukkit.getPlayer(targetId);
+    if (player != null) {
+        updatePlayerScoreboard(player, newVal);
+        player.sendMessage("§eİtibar puanınız güncellendi: §a" + newVal);
+    }
 });</code></pre>
                                 </div>
                             </div>
@@ -1024,15 +1203,15 @@ RelayAPI.getData().observe(IN_COMBAT, this, (targetId, key, oldVal, newVal) -> {
                     <article id="permissions" class="wiki-article space-y-6 hidden">
                         <div class="pb-4 border-b border-white/[0.08]">
                             <span class="text-xs font-semibold uppercase text-cyan-400">Yetkilendirme</span>
-                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">PermissionService API Referansı</h1>
-                            <p class="text-xs text-slate-400 mt-1">TPS düşüşlerine yol açmayan asenkron yetki ve rütbe yönetimi.</p>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">PermissionService API Referansı (Asenkron Yetki)</h1>
+                            <p class="text-xs text-slate-400 mt-1">TPS düşürmeyen LuckPerms uyumlu yetki kontrolleri ve rütbe yönetimi.</p>
                         </div>
 
                         <div class="space-y-6 text-sm text-slate-300 leading-relaxed">
                             
                             <!-- Methods Table -->
                             <div>
-                                <h3 class="text-base font-bold text-white mb-2">1. Metot Listesi</h3>
+                                <h3 class="text-base font-bold text-white mb-2">1. Metot Kataloğu</h3>
                                 <div class="bento-card rounded-lg overflow-hidden border border-white/[0.06]">
                                     <table class="w-full text-left text-xs border-collapse">
                                         <thead class="bg-[#0e121a] border-b border-white/[0.08] text-slate-300">
@@ -1051,47 +1230,75 @@ RelayAPI.getData().observe(IN_COMBAT, this, (targetId, key, oldVal, newVal) -> {
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">getPrimaryGroup(UUID)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">CompletableFuture&lt;String&gt;</td>
-                                                <td class="py-3 px-4">Oyuncunun birincil rütbesini (Örn: "vip", "admin", "default") döndürür.</td>
+                                                <td class="py-3 px-4">Oyuncunun birincil rütbe grubunu (Örn: "admin", "vip", "default") döndürür.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">inGroup(UUID, String)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">CompletableFuture&lt;Boolean&gt;</td>
-                                                <td class="py-3 px-4">Oyuncunun belirli bir rütbe grubunda bulunup bulunmadığını kontrol eder.</td>
+                                                <td class="py-3 px-4">Oyuncunun belirtilen grupta yer alıp almadığını kontrol eder.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">getPrefix(UUID)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">CompletableFuture&lt;String&gt;</td>
-                                                <td class="py-3 px-4">Oyuncunun LuckPerms unvanını / ön ekini (prefix) asenkron çeker.</td>
+                                                <td class="py-3 px-4">Oyuncunun rütbe unvanını / ön ekini (prefix) asenkron çeker.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">getSuffix(UUID)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">CompletableFuture&lt;String&gt;</td>
+                                                <td class="py-3 px-4">Oyuncunun son ekini (suffix) asenkron çeker.</td>
                                             </tr>
                                             <tr>
                                                 <td class="py-3 px-4 font-mono text-cyan-400">setTemporaryPermission(UUID, String, boolean, Duration)</td>
                                                 <td class="py-3 px-4 font-mono text-slate-300">CompletableFuture&lt;PermissionResult&gt;</td>
-                                                <td class="py-3 px-4">Süreli geçici yetki atar (Örn: 1 günlük uçuş yetkisi).</td>
+                                                <td class="py-3 px-4">Belirtilen süre boyunca geçerli geçici yetki atar (Örn: 2 günlük uçuş yetkisi).</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
 
-                            <!-- Code Example -->
+                            <!-- Example 1 -->
                             <div>
-                                <h3 class="text-base font-bold text-white mb-2">2. Kod Örneği</h3>
+                                <h3 class="text-base font-bold text-white mb-2">Örnek 1: Asenkron Rütbe Kontrolü ve VIP Karşılama</h3>
                                 <div class="ide-window p-4 rounded-lg">
-                                    <pre><code class="language-java">RelayAPI.getPermissions().ifPresent(perms -> {
-    UUID uuid = player.getUniqueId();
+                                    <pre><code class="language-java">public void onVipZoneEnter(Player player) {
+    RelayAPI.getPermissions().ifPresent(perms -> {
+        UUID uuid = player.getUniqueId();
 
-    // Asenkron rütbe ve unvan kontrolü:
-    perms.inGroup(uuid, "vip").thenAccept(isVip -> {
-        if (!isVip) {
-            player.sendMessage("§cBu özellik sadece VIP oyunculara özeldir!");
-            return;
-        }
+        // 1. Asenkron rütbe kontrolü (Main thread donmaz):
+        perms.inGroup(uuid, "vip").thenAccept(isVip -> {
+            if (!isVip) {
+                player.sendMessage("§cBu bölgeye sadece VIP üyeler girebilir!");
+                teleportBack(player);
+                return;
+            }
 
-        perms.getPrefix(uuid).thenAccept(prefix -> {
-            player.sendMessage(prefix + player.getName() + " VIP salonuna giriş yaptı!");
+            // 2. Unvanı çekip tebrik et:
+            perms.getPrefix(uuid).thenAccept(prefix -> {
+                player.sendMessage(prefix + "§aHoş geldiniz, özel VIP ayrıcalıklarınız aktif!");
+                player.setAllowFlight(true);
+            });
         });
     });
-});</code></pre>
+}</code></pre>
+                                </div>
+                            </div>
+
+                            <!-- Example 2 -->
+                            <div>
+                                <h3 class="text-base font-bold text-white mb-2">Örnek 2: 1 Günlük Süreli Uçuş Yetkisi Verme</h3>
+                                <div class="ide-window p-4 rounded-lg">
+                                    <pre><code class="language-java">public void grantTempFly(Player player) {
+    RelayAPI.getPermissions().ifPresent(perms -> {
+        // 24 saatlik geçici yetki ver:
+        perms.setTemporaryPermission(player.getUniqueId(), "essentials.fly", true, Duration.ofDays(1))
+            .thenAccept(result -> {
+                if (result.isSuccess()) {
+                    player.sendMessage("§aTebrikler! 24 saatlik uçuş yetkisi hesabınıza tanımlandı.");
+                }
+            });
+    });
+}</code></pre>
                                 </div>
                             </div>
 
@@ -1105,15 +1312,21 @@ RelayAPI.getData().observe(IN_COMBAT, this, (targetId, key, oldVal, newVal) -> {
                     <article id="party" class="wiki-article space-y-6 hidden">
                         <div class="pb-4 border-b border-white/[0.08]">
                             <span class="text-xs font-semibold uppercase text-cyan-400">Savaş & Takım</span>
-                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">PartyService API Referansı</h1>
-                            <p class="text-xs text-slate-400 mt-1">Sıfır-gecikmeli senkron dost ateşi koruması ve tam parti yaşam döngüsü.</p>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">PartyService API Referansı (Dost Ateşi & Parti)</h1>
+                            <p class="text-xs text-slate-400 mt-1">Sıfır-gecikmeli senkron dost ateşi koruması, zindan grupları ve takım yönetimi.</p>
                         </div>
 
                         <div class="space-y-6 text-sm text-slate-300 leading-relaxed">
                             
+                            <!-- Concept -->
+                            <div>
+                                <h3 class="text-base font-bold text-white mb-2">1. Sıfır-Gecikmeli (Lock-Free) Senkron Kontrol</h3>
+                                <p class="text-xs text-slate-400 mb-2">Minecraft sunucularında savaş anında (örneğin kılıç savurma, ok isabeti, büyü fırlatma) saniyede binlerce <code class="text-cyan-400">EntityDamageByEntityEvent</code> tetiklenir. Burada asenkron sorgu yapmak event'i zamanında iptal edemez; senkron veritabanı sorgusu yapmak ise tüm sunucuyu dondurur. Relay, kilitsiz (lock-free) O(1) arama ile bu kontrolü mikrosaniyenin altında yapar.</p>
+                            </div>
+
                             <!-- Methods Table -->
                             <div>
-                                <h3 class="text-base font-bold text-white mb-2">1. Metot Listesi</h3>
+                                <h3 class="text-base font-bold text-white mb-2">2. Metot Kataloğu</h3>
                                 <div class="bento-card rounded-lg overflow-hidden border border-white/[0.06]">
                                     <table class="w-full text-left text-xs border-collapse">
                                         <thead class="bg-[#0e121a] border-b border-white/[0.08] text-slate-300">
@@ -1174,9 +1387,9 @@ RelayAPI.getData().observe(IN_COMBAT, this, (targetId, key, oldVal, newVal) -> {
                                 </div>
                             </div>
 
-                            <!-- Code Example -->
+                            <!-- Example 1 -->
                             <div>
-                                <h3 class="text-base font-bold text-white mb-2">2. Savaş Hasar Koruma Dinleyicisi</h3>
+                                <h3 class="text-base font-bold text-white mb-2">Örnek 1: Sıfır-Gecikmeli Hasar Engelleme (Damage Listener)</h3>
                                 <div class="ide-window p-4 rounded-lg">
                                     <pre><code class="language-java">package com.example.combat;
 
@@ -1187,22 +1400,54 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.vrz.relay.api.RelayAPI;
 
-public class CombatProtectionListener implements Listener {
+public class FriendlyFireListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onAttack(EntityDamageByEntityEvent event) {
+    public void onPlayerDamage(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Player damager) || !(event.getEntity() instanceof Player victim)) {
             return;
         }
 
         RelayAPI.getParties().ifPresent(parties -> {
-            // Saniyede binlerce vuruşta thread dondurmayan O(1) lock-free kontrol:
+            // isFriendlySync: O(1) lock-free kontrol. Saniyede binlerce vuruşta thread dondurmaz:
             if (parties.isFriendlySync(damager.getUniqueId(), victim.getUniqueId())) {
                 event.setCancelled(true);
-                damager.sendMessage("§cTakım arkadaşına saldıramazsın!");
+                damager.sendMessage("§c" + victim.getName() + " takım arkadaşınız! Ona saldıramazsınız.");
             }
         });
     }
+}</code></pre>
+                                </div>
+                            </div>
+
+                            <!-- Example 2 -->
+                            <div>
+                                <h3 class="text-base font-bold text-white mb-2">Örnek 2: Zindan Grubu Oluşturma & Toplu Işınlama</h3>
+                                <div class="ide-window p-4 rounded-lg">
+                                    <pre><code class="language-java">public void startDungeonRaid(Player leader) {
+    RelayAPI.getParties().ifPresent(parties -> {
+        parties.getParty(leader.getUniqueId()).thenAccept(optParty -> {
+            if (optParty.isEmpty()) {
+                leader.sendMessage("§cZindana girmek için bir partiye sahip olmalısınız!");
+                return;
+            }
+
+            Party party = optParty.get();
+            if (!party.isLeader(leader.getUniqueId())) {
+                leader.sendMessage("§cSadece parti lideri zindan akınını başlatabilir!");
+                return;
+            }
+
+            leader.sendMessage("§aZindan kapıları açılıyor! Parti üye sayısı: " + party.getSize());
+            for (UUID memberId : party.getMembers()) {
+                Player member = Bukkit.getPlayer(memberId);
+                if (member != null && member.isOnline()) {
+                    teleportToDungeonArena(member);
+                    member.sendMessage("§eZindana ışınlandınız! Takım arkadaşlarınızı koruyun.");
+                }
+            }
+        });
+    });
 }</code></pre>
                                 </div>
                             </div>
@@ -1218,7 +1463,7 @@ public class CombatProtectionListener implements Listener {
                         <div class="pb-4 border-b border-white/[0.08]">
                             <span class="text-xs font-semibold uppercase text-cyan-400">İleri Düzey</span>
                             <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">Folia Çok Çekirdekli Mimari Güvenliği</h1>
-                            <p class="text-xs text-slate-400 mt-1">Bölgesel iş parçacıkları (Region Threads) ve veri bütünlüğü kuralları.</p>
+                            <p class="text-xs text-slate-400 mt-1">Bölgesel iş parçacıkları (Region Threads) ve paralel veri bütünlüğü kuralları.</p>
                         </div>
 
                         <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
