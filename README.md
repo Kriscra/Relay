@@ -32,19 +32,20 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.vrz:relay-api:1.0.0")
+    compileOnly("com.github.Kriscra.Relay:relay-api:v1.0.0")
 }
 ```
 
 ### Maven (`pom.xml`)
 ```xml
 <dependency>
-    <groupId>org.vrz</groupId>
+    <groupId>com.github.Kriscra.Relay</groupId>
     <artifactId>relay-api</artifactId>
-    <version>1.0.0</version>
+    <version>v1.0.0</version>
     <scope>provided</scope>
 </dependency>
 ```
+
 
 ---
 
