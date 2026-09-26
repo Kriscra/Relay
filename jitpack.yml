@@ -1,0 +1,5 @@
+jdk:
+  - openjdk21
+
+install:
+  - ./gradlew :relay-api:publishToMavenLocal -x test
