@@ -1,0 +1,19 @@
+name: Relay
+version: '${version}'
+main: org.vrz.relay.Relay
+api-version: '1.21'
+load: STARTUP
+description: Industry-grade service bridge, reactive registry, and inter-plugin communication framework.
+author: VRZ
+website: https://github.com/vrz/relay
+
+commands:
+  relay:
+    description: Relay management and diagnostic commands.
+    permission: relay.admin
+    usage: /relay <status|services|topics|reload>
+
+permissions:
+  relay.admin:
+    description: Full administrative access to Relay diagnostics and control.
+    default: op
