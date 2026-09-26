@@ -6,9 +6,16 @@ document.addEventListener('DOMContentLoaded', () => {
     initNavigation();
     initSearch();
     initMobileMenu();
+    refreshIcons();
 });
 
-// Dependency Tab Switcher (Kotlin, Groovy, Maven)
+function refreshIcons() {
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+}
+
+// Tab Switcher (IDE and Dependency tabs)
 function initTabs() {
     const tabButtons = document.querySelectorAll('[data-tab-group]');
     tabButtons.forEach(btn => {
@@ -18,12 +25,12 @@ function initTabs() {
 
             // Deactivate siblings in this group
             document.querySelectorAll(`[data-tab-group="${group}"]`).forEach(b => {
-                b.classList.remove('bg-sky-500/20', 'text-sky-400', 'border-sky-500');
+                b.classList.remove('bg-cyan-500/15', 'text-cyan-400', 'border-cyan-500/30');
                 b.classList.add('text-slate-400', 'border-transparent');
             });
 
             // Activate clicked button
-            btn.classList.add('bg-sky-500/20', 'text-sky-400', 'border-sky-500');
+            btn.classList.add('bg-cyan-500/15', 'text-cyan-400', 'border-cyan-500/30');
             btn.classList.remove('text-slate-400', 'border-transparent');
 
             // Show corresponding panel
@@ -34,6 +41,11 @@ function initTabs() {
                     panel.classList.add('hidden');
                 }
             });
+
+            if (window.Prism) {
+                Prism.highlightAll();
+            }
+            refreshIcons();
         });
     });
 }
@@ -49,7 +61,7 @@ function initCopyButtons() {
                 const targetElement = document.getElementById(targetId);
                 textToCopy = targetElement ? targetElement.innerText : '';
             } else {
-                const pre = button.closest('.code-container')?.querySelector('code');
+                const pre = button.closest('.ide-window')?.querySelector('code');
                 textToCopy = pre ? pre.innerText : '';
             }
 
@@ -57,10 +69,10 @@ function initCopyButtons() {
                 navigator.clipboard.writeText(textToCopy.trim()).then(() => {
                     const originalHtml = button.innerHTML;
                     button.innerHTML = `
-                        <svg class="w-4 h-4 text-emerald-400 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-3.5 h-3.5 text-emerald-400 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
-                        <span class="text-xs text-emerald-400 font-medium ml-1">Kopyalandı!</span>
+                        <span class="text-xs text-emerald-400 font-medium ml-1">Kopyalandı</span>
                     `;
                     setTimeout(() => {
                         button.innerHTML = originalHtml;
@@ -75,12 +87,14 @@ function initCopyButtons() {
 function initNavigation() {
     const sidebarLinks = document.querySelectorAll('.sidebar-link');
     const articles = document.querySelectorAll('.wiki-article');
+    const breadcrumbTitle = document.getElementById('doc-breadcrumb-title');
 
     function setActiveDoc(hash) {
         if (!hash || hash === '#' || hash === '#home') {
             document.getElementById('landing-view').classList.remove('hidden');
             document.getElementById('docs-view').classList.add('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            refreshIcons();
             return;
         }
 
@@ -89,16 +103,21 @@ function initNavigation() {
         document.getElementById('docs-view').classList.remove('hidden');
 
         const targetId = hash.replace('#', '');
-        let found = false;
+        let currentTitle = 'Dokümantasyon';
 
         articles.forEach(article => {
             if (article.id === targetId) {
                 article.classList.remove('hidden');
-                found = true;
+                const h1 = article.querySelector('h1');
+                if (h1) currentTitle = h1.innerText;
             } else {
                 article.classList.add('hidden');
             }
         });
+
+        if (breadcrumbTitle) {
+            breadcrumbTitle.innerText = currentTitle;
+        }
 
         // Update active sidebar link
         sidebarLinks.forEach(link => {
@@ -109,12 +128,15 @@ function initNavigation() {
             }
         });
 
-        if (found) {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (window.Prism) {
+            Prism.highlightAll();
         }
+        refreshIcons();
     }
 
-    sidebarLinks.forEach(link => {
+    // Attach click handlers to all anchor links pointing to hash
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
         link.addEventListener('click', (e) => {
             const hash = link.getAttribute('href');
             if (hash.startsWith('#')) {
@@ -145,8 +167,6 @@ function initSearch() {
 
         sidebarLinks.forEach(link => {
             const title = link.innerText.toLowerCase();
-            const parentSection = link.closest('.sidebar-group');
-
             if (title.includes(query) || query === '') {
                 link.classList.remove('hidden');
             } else {

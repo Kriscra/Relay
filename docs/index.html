@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relay | Modern Minecraft Servis & İletişim Çatısı</title>
-    <meta name="description" content="Paper, Purpur ve Folia için Vault'un yerini alan endüstri standardı asenkron servis köprüsü, çoklu para birimli ekonomi ve mikroservis mesajlaşma çatısı.">
+    <title>Relay &bull; Next-Gen Inter-Plugin Service Bridge for Minecraft</title>
+    <meta name="description" content="Ultra-lightweight, non-blocking inter-plugin service bridge, multi-currency economy standard, and microservice messaging for Paper, Purpur, and Folia 1.21+.">
     
-    <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
     
     <!-- Tailwind CSS -->
@@ -17,14 +16,14 @@
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
+                        slate: {
+                            850: '#111520',
+                            900: '#0d1017',
+                            950: '#08090d',
+                        },
+                        cyan: {
                             400: '#38bdf8',
                             500: '#0ea5e9',
-                            600: '#0284c7',
-                            900: '#07090e',
-                            card: '#0f172a'
                         }
                     }
                 }
@@ -38,328 +37,378 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-[#07090e] text-slate-100 min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white">
+<body class="bg-[#08090d] text-[#e6edf3] min-h-screen flex flex-col selection:bg-cyan-500/30 selection:text-cyan-200">
 
-    <!-- Top Navigation -->
-    <nav class="sticky top-0 z-50 glass-panel border-b border-white/5 bg-[#07090e]/80 backdrop-blur-xl">
+    <!-- Top Navbar -->
+    <header class="sticky top-0 z-50 border-b border-white/[0.06] bg-[#08090d]/90 backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            
             <!-- Brand -->
             <a href="#home" class="flex items-center gap-3 group">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-sky-500/20 group-hover:scale-105 transition duration-200">
-                    <i data-lucide="zap" class="w-6 h-6 text-white fill-white"></i>
+                <div class="w-9 h-9 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 group-hover:border-cyan-500/40 transition">
+                    <i data-lucide="zap" class="w-5 h-5 fill-cyan-400/20"></i>
                 </div>
-                <div>
-                    <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-sky-400 bg-clip-text text-transparent">Relay</span>
-                    <span class="ml-2 px-2 py-0.5 text-xs font-semibold rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20">v1.0.0</span>
+                <div class="flex items-center gap-2">
+                    <span class="text-base font-bold tracking-tight text-white">Relay</span>
+                    <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20">v1.0.0</span>
                 </div>
             </a>
 
-            <!-- Desktop Links -->
-            <div class="hidden md:flex items-center gap-8">
-                <a href="#home" class="text-sm font-medium text-slate-300 hover:text-white transition">Tanıtım</a>
-                <a href="#features" class="text-sm font-medium text-slate-300 hover:text-white transition">Özellikler</a>
-                <a href="#overview" class="text-sm font-medium text-slate-300 hover:text-white transition flex items-center gap-1.5">
-                    <i data-lucide="book-open" class="w-4 h-4 text-sky-400"></i> Wiki & Rehber
+            <!-- Nav Links -->
+            <nav class="hidden md:flex items-center gap-7 text-sm">
+                <a href="#home" class="text-slate-400 hover:text-white transition">Genel Bakış</a>
+                <a href="#features" class="text-slate-400 hover:text-white transition">Servisler</a>
+                <a href="#comparison" class="text-slate-400 hover:text-white transition">Vault vs Relay</a>
+                <a href="#overview" class="text-slate-400 hover:text-white transition flex items-center gap-1.5">
+                    <i data-lucide="book-marked" class="w-4 h-4 text-cyan-400"></i> Wiki & Dokümantasyon
                 </a>
-                <a href="https://jitpack.io/#Kriscra/Relay" target="_blank" class="text-sm font-medium text-slate-300 hover:text-white transition flex items-center gap-1">
-                    JitPack <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-                </a>
-            </div>
+            </nav>
 
-            <!-- GitHub CTA -->
-            <div class="hidden md:flex items-center gap-4">
-                <a href="https://github.com/Kriscra/Relay" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-sm font-medium border border-white/10 transition shadow-sm">
+            <!-- Actions -->
+            <div class="flex items-center gap-3">
+                <a href="https://jitpack.io/#Kriscra/Relay" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] transition">
+                    <i data-lucide="package" class="w-3.5 h-3.5 text-cyan-400"></i>
+                    <span>JitPack</span>
+                </a>
+                <a href="https://github.com/Kriscra/Relay" target="_blank" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium text-white bg-slate-800 hover:bg-slate-700 border border-white/10 transition shadow-sm">
                     <i data-lucide="github" class="w-4 h-4"></i>
                     <span>GitHub</span>
-                    <span class="px-1.5 py-0.2 rounded bg-sky-500/20 text-sky-400 text-xs">★ Star</span>
                 </a>
+                <button id="mobile-menu-btn" class="md:hidden p-1.5 rounded-lg text-slate-400 hover:text-white bg-white/[0.04] border border-white/[0.08]">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
             </div>
-
-            <!-- Mobile Hamburger -->
-            <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white">
-                <i data-lucide="menu" class="w-6 h-6"></i>
-            </button>
         </div>
 
         <!-- Mobile Drawer -->
-        <div id="mobile-menu" class="hidden md:hidden px-4 pt-2 pb-6 space-y-3 bg-[#0b0f19] border-b border-white/5">
-            <a href="#home" class="block py-2 text-sm text-slate-300 hover:text-white">Tanıtım</a>
-            <a href="#overview" class="block py-2 text-sm text-sky-400 font-medium">Wiki & Dökümanlar</a>
-            <a href="https://github.com/Kriscra/Relay" target="_blank" class="block py-2 text-sm text-slate-300">GitHub Deposu</a>
+        <div id="mobile-menu" class="hidden md:hidden px-4 py-4 space-y-2 border-t border-white/[0.06] bg-[#0b0e14]">
+            <a href="#home" class="block px-3 py-2 rounded-md text-sm text-slate-300 hover:bg-white/[0.05]">Genel Bakış</a>
+            <a href="#features" class="block px-3 py-2 rounded-md text-sm text-slate-300 hover:bg-white/[0.05]">Servisler</a>
+            <a href="#overview" class="block px-3 py-2 rounded-md text-sm text-cyan-400 font-medium hover:bg-white/[0.05]">Wiki & Dokümantasyon</a>
+            <a href="https://github.com/Kriscra/Relay" target="_blank" class="block px-3 py-2 rounded-md text-sm text-slate-300 hover:bg-white/[0.05]">GitHub Deposu</a>
         </div>
-    </nav>
+    </header>
 
-    <!-- MAIN CONTAINER -->
+    <!-- CONTENT -->
     <main class="flex-grow">
         
-        <!-- ========================================== -->
-        <!-- VIEW 1: LANDING PAGE SHOWCASE               -->
-        <!-- ========================================== -->
+        <!-- ============================================== -->
+        <!-- VIEW 1: LANDING & ARCHITECTURE SHOWCASE        -->
+        <!-- ============================================== -->
         <div id="landing-view">
             
             <!-- Hero Section -->
-            <section class="relative pt-20 pb-24 overflow-hidden glow-effect">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <section class="relative pt-24 pb-20 overflow-hidden bg-grid-pattern border-b border-white/[0.06]">
+                <div class="hero-spotlight"></div>
+
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     
-                    <!-- Pill Badge -->
-                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-xs font-semibold mb-6 animate-pulse">
-                        <i data-lucide="sparkles" class="w-4 h-4"></i>
-                        <span>Paper, Purpur & Çok Çekirdekli Folia (1.21+) Uyumlu</span>
+                    <!-- Hero Top Header -->
+                    <div class="text-center max-w-3xl mx-auto">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium mb-6">
+                            <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+                            <span>Folia, Paper & Purpur 1.21+ İçin Sıfırdan Tasarlandı</span>
+                        </div>
+
+                        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-[1.15]">
+                            Minecraft Eklentileri İçin <br>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-400">Yeni Nesil Servis & İletişim Köprüsü</span>
+                        </h1>
+
+                        <p class="mt-6 text-base sm:text-lg text-slate-400 leading-relaxed font-normal">
+                            2011'den kalma senkron Vault kütüphanesini geride bırakın. <strong class="text-white font-medium">%100 Asenkron</strong> çoklu ekonomi, mikroservis pub/sub mesajlaşma ve sıfır-gecikmeli dost ateşi kontrolü.
+                        </p>
+
+                        <!-- CTA Row -->
+                        <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+                            <a href="#overview" class="px-5 py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold text-sm transition shadow-lg shadow-cyan-500/20 flex items-center gap-2">
+                                <i data-lucide="book-open" class="w-4 h-4"></i> Dokümantasyonu Oku
+                            </a>
+                            <a href="#quick-dep" class="px-5 py-2.5 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] text-white font-medium text-sm border border-white/[0.1] transition flex items-center gap-2">
+                                <i data-lucide="code-2" class="w-4 h-4 text-cyan-400"></i> Bağımlılığı Kopyala
+                            </a>
+                        </div>
                     </div>
 
-                    <!-- Main Headline -->
-                    <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight max-w-4xl mx-auto leading-tight">
-                        Modern Minecraft İçin <br>
-                        <span class="bg-gradient-to-r from-sky-400 via-teal-300 to-indigo-400 bg-clip-text text-transparent">Yeni Nesil Servis & İletişim Çatısı</span>
-                    </h1>
-
-                    <!-- Subtitle -->
-                    <p class="mt-6 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-                        Vault'un 2011'den kalma senkron hantallığına son. <strong class="text-slate-200">%100 Asenkron</strong>, sınırsız para birimli ekonomi, bağımsız mikroservis Pub/Sub mesajlaşması ve sıfır-gecikmeli dost ateşi kontrolü.
-                    </p>
-
-                    <!-- CTAs -->
-                    <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
-                        <a href="#overview" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-semibold text-sm shadow-lg shadow-sky-500/25 transition transform hover:-translate-y-0.5 flex items-center gap-2">
-                            <i data-lucide="rocket" class="w-4 h-4"></i> Dökümantasyona Başla
-                        </a>
-                        <a href="https://github.com/Kriscra/Relay" target="_blank" class="px-7 py-3.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 font-semibold text-sm border border-white/10 transition flex items-center gap-2">
-                            <i data-lucide="github" class="w-4 h-4"></i> GitHub Projesi
-                        </a>
-                    </div>
-
-                    <!-- Dependency Card (Tabs) -->
-                    <div class="mt-16 max-w-3xl mx-auto text-left">
-                        <div class="glass-panel rounded-2xl p-5 shadow-2xl border border-white/10">
-                            <div class="flex items-center justify-between pb-4 border-b border-white/5">
+                    <!-- Interactive Code IDE Showcase -->
+                    <div id="quick-dep" class="mt-16 max-w-4xl mx-auto">
+                        <div class="ide-window rounded-xl overflow-hidden">
+                            
+                            <!-- IDE Header / Tabs -->
+                            <div class="flex items-center justify-between px-4 py-3 bg-[#0d1017] border-b border-white/[0.06]">
                                 <div class="flex items-center gap-2">
-                                    <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
-                                    <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
-                                    <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
-                                    <span class="ml-2 text-xs font-mono text-slate-400">Projeye Ekle (relay-api)</span>
+                                    <span class="w-3 h-3 rounded-full bg-[#ff5f56]"></span>
+                                    <span class="w-3 h-3 rounded-full bg-[#ffbd2e]"></span>
+                                    <span class="w-3 h-3 rounded-full bg-[#27c93f]"></span>
+                                    <span class="ml-3 text-xs font-mono text-slate-400 flex items-center gap-1.5">
+                                        <i data-lucide="terminal" class="w-3.5 h-3.5 text-slate-400"></i> Relay Live Playground
+                                    </span>
                                 </div>
-                                <!-- Language Tabs -->
-                                <div class="flex bg-slate-900/90 rounded-lg p-1 border border-white/5">
-                                    <button data-tab-group="dep" data-tab-target="kotlin" class="px-3 py-1 rounded text-xs font-medium bg-sky-500/20 text-sky-400 border border-sky-500 transition">Gradle (Kotlin)</button>
-                                    <button data-tab-group="dep" data-tab-target="groovy" class="px-3 py-1 rounded text-xs font-medium text-slate-400 hover:text-white transition">Gradle (Groovy)</button>
-                                    <button data-tab-group="dep" data-tab-target="maven" class="px-3 py-1 rounded text-xs font-medium text-slate-400 hover:text-white transition">Maven</button>
+
+                                <!-- Code Switcher Tabs -->
+                                <div class="flex items-center gap-1 bg-[#161b22] p-1 rounded-lg border border-white/[0.06] text-xs">
+                                    <button data-tab-group="ide" data-tab-target="ide-dep" class="px-2.5 py-1 rounded font-medium bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 transition">build.gradle.kts</button>
+                                    <button data-tab-group="ide" data-tab-target="ide-combat" class="px-2.5 py-1 rounded font-medium text-slate-400 hover:text-white transition">CombatListener.java</button>
+                                    <button data-tab-group="ide" data-tab-target="ide-economy" class="px-2.5 py-1 rounded font-medium text-slate-400 hover:text-white transition">AsyncEconomy.java</button>
+                                    <button data-tab-group="ide" data-tab-target="ide-messenger" class="px-2.5 py-1 rounded font-medium text-slate-400 hover:text-white transition">ClusterRPC.java</button>
                                 </div>
                             </div>
 
-                            <!-- Kotlin Snippet -->
-                            <div data-tab-panel="dep" data-panel-id="kotlin" class="relative group mt-4">
-                                <button class="copy-btn absolute top-3 right-3 px-3 py-1.5 rounded-lg bg-slate-800 text-xs text-slate-300 border border-white/10 hover:text-white flex items-center gap-1 z-10" data-clipboard-target="code-kotlin">
+                            <!-- Tab 1: Dependency -->
+                            <div data-tab-panel="ide" data-panel-id="ide-dep" class="p-5 text-xs sm:text-sm font-mono relative">
+                                <button class="copy-btn absolute top-4 right-4 px-3 py-1.5 rounded bg-white/[0.06] hover:bg-white/[0.1] text-xs text-slate-300 border border-white/10 flex items-center gap-1.5 transition z-10" data-clipboard-target="code-dep-content">
                                     <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span>Kopyala</span>
                                 </button>
-                                <pre class="text-sm overflow-x-auto rounded-xl bg-[#090d16] p-4 text-sky-300 font-mono"><code id="code-kotlin" class="language-kotlin">repositories {
+                                <pre><code id="code-dep-content" class="language-kotlin">repositories {
     mavenCentral()
     maven("https://jitpack.io")
 }
 
 dependencies {
+    // Sadece 40 KB'lık hafif, sıfır-bağımlılıklı API:
     compileOnly("com.github.Kriscra.Relay:relay-api:v1.0.0")
 }</code></pre>
                             </div>
 
-                            <!-- Groovy Snippet -->
-                            <div data-tab-panel="dep" data-panel-id="groovy" class="relative group mt-4 hidden">
-                                <button class="copy-btn absolute top-3 right-3 px-3 py-1.5 rounded-lg bg-slate-800 text-xs text-slate-300 border border-white/10 hover:text-white flex items-center gap-1 z-10" data-clipboard-target="code-groovy">
+                            <!-- Tab 2: Combat & Friendly Fire -->
+                            <div data-tab-panel="ide" data-panel-id="ide-combat" class="p-5 text-xs sm:text-sm font-mono relative hidden">
+                                <button class="copy-btn absolute top-4 right-4 px-3 py-1.5 rounded bg-white/[0.06] hover:bg-white/[0.1] text-xs text-slate-300 border border-white/10 flex items-center gap-1.5 transition z-10" data-clipboard-target="code-combat-content">
                                     <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span>Kopyala</span>
                                 </button>
-                                <pre class="text-sm overflow-x-auto rounded-xl bg-[#090d16] p-4 text-sky-300 font-mono"><code id="code-groovy" class="language-groovy">repositories {
-    mavenCentral()
-    maven { url 'https://jitpack.io' }
-}
-
-dependencies {
-    compileOnly 'com.github.Kriscra.Relay:relay-api:v1.0.0'
+                                <pre><code id="code-combat-content" class="language-java">@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+public void onDamage(EntityDamageByEntityEvent event) {
+    if (event.getDamager() instanceof Player damager && event.getEntity() instanceof Player victim) {
+        RelayAPI.getParties().ifPresent(parties -> {
+            // isFriendlySync: O(1) lock-free kontrol. Saniyede binlerce vuruşta thread dondurmaz:
+            if (parties.isFriendlySync(damager.getUniqueId(), victim.getUniqueId())) {
+                event.setCancelled(true);
+                damager.sendMessage("§cTakım arkadaşına saldıramazsın!");
+            }
+        });
+    }
 }</code></pre>
                             </div>
 
-                            <!-- Maven Snippet -->
-                            <div data-tab-panel="dep" data-panel-id="maven" class="relative group mt-4 hidden">
-                                <button class="copy-btn absolute top-3 right-3 px-3 py-1.5 rounded-lg bg-slate-800 text-xs text-slate-300 border border-white/10 hover:text-white flex items-center gap-1 z-10" data-clipboard-target="code-maven">
+                            <!-- Tab 3: Economy -->
+                            <div data-tab-panel="ide" data-panel-id="ide-economy" class="p-5 text-xs sm:text-sm font-mono relative hidden">
+                                <button class="copy-btn absolute top-4 right-4 px-3 py-1.5 rounded bg-white/[0.06] hover:bg-white/[0.1] text-xs text-slate-300 border border-white/10 flex items-center gap-1.5 transition z-10" data-clipboard-target="code-economy-content">
                                     <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span>Kopyala</span>
                                 </button>
-                                <pre class="text-sm overflow-x-auto rounded-xl bg-[#090d16] p-4 text-sky-300 font-mono"><code id="code-maven" class="language-xml">&lt;repositories&gt;
-    &lt;repository&gt;
-        &lt;id&gt;jitpack.io&lt;/id&gt;
-        &lt;url&gt;https://jitpack.io&lt;/url&gt;
-    &lt;/repository&gt;
-&lt;/repositories&gt;
+                                <pre><code id="code-economy-content" class="language-java">RelayAPI.getEconomy().ifPresent(economy -> {
+    UUID playerId = player.getUniqueId();
+    BigDecimal amount = BigDecimal.valueOf(250.50);
 
-&lt;dependencies&gt;
-    &lt;dependency&gt;
-        &lt;groupId&gt;com.github.Kriscra.Relay&lt;/groupId&gt;
-        &lt;artifactId&gt;relay-api&lt;/artifactId&gt;
-        &lt;version&gt;v1.0.0&lt;/version&gt;
-        &lt;scope&gt;provided&lt;/scope&gt;
-    &lt;/dependency&gt;
-&lt;/dependencies&gt;</code></pre>
+    // %100 Non-blocking asenkron para yatırma (Kayıpsız BigDecimal):
+    economy.deposit(playerId, amount, "Zindan Tamamlama Ödülü").thenAccept(res -> {
+        if (res.isSuccess()) {
+            player.sendMessage("Ödül teslim edildi: " + economy.format(amount));
+        }
+    });
+});</code></pre>
                             </div>
 
+                            <!-- Tab 4: Messenger RPC -->
+                            <div data-tab-panel="ide" data-panel-id="ide-messenger" class="p-5 text-xs sm:text-sm font-mono relative hidden">
+                                <button class="copy-btn absolute top-4 right-4 px-3 py-1.5 rounded bg-white/[0.06] hover:bg-white/[0.1] text-xs text-slate-300 border border-white/10 flex items-center gap-1.5 transition z-10" data-clipboard-target="code-messenger-content">
+                                    <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span>Kopyala</span>
+                                </button>
+                                <pre><code id="code-messenger-content" class="language-java">// Eklentiler birbirinin JAR'ına ihtiyaç duymadan asenkron soru-cevap yapar:
+RelayAPI.getMessenger().request("clan:get_level", clanId, Integer.class, Duration.ofSeconds(2))
+    .thenAccept(level -> player.sendMessage("Klan Seviyeniz: " + level))
+    .exceptionally(err -> {
+        player.sendMessage("Klan verisi alınamadı (Zaman aşımı)");
+        return null;
+    });</code></pre>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Metrics / Value Strip -->
+                    <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto text-center">
+                        <div class="bento-card p-4 rounded-xl">
+                            <span class="text-2xl font-bold text-white tracking-tight">&lt; 0.01ms</span>
+                            <p class="text-xs text-slate-400 mt-1">Dost Ateşi Senkron Kontrolü</p>
+                        </div>
+                        <div class="bento-card p-4 rounded-xl">
+                            <span class="text-2xl font-bold text-cyan-400 tracking-tight">%100</span>
+                            <p class="text-xs text-slate-400 mt-1">Non-Blocking Asenkron Mimari</p>
+                        </div>
+                        <div class="bento-card p-4 rounded-xl">
+                            <span class="text-2xl font-bold text-white tracking-tight">Zero-Leak</span>
+                            <p class="text-xs text-slate-400 mt-1">Otomatik Eklenti Bellek Temizliği</p>
+                        </div>
+                        <div class="bento-card p-4 rounded-xl">
+                            <span class="text-2xl font-bold text-indigo-400 tracking-tight">Folia-Ready</span>
+                            <p class="text-xs text-slate-400 mt-1">Çok Çekirdekli Paralel Güvenlik</p>
                         </div>
                     </div>
 
                 </div>
             </section>
 
-            <!-- Vault vs Relay Matrix Section -->
-            <section class="py-20 border-t border-white/5 bg-slate-900/40">
+
+            <!-- Section 2: Vault vs Relay Comparison -->
+            <section id="comparison" class="py-24 border-b border-white/[0.06] bg-[#0a0d14]">
                 <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="text-center max-w-2xl mx-auto mb-16">
-                        <span class="text-sky-400 font-semibold text-xs tracking-wider uppercase">Mimari Farkı</span>
-                        <h2 class="text-3xl font-bold mt-2">Neden Vault Yerine Relay?</h2>
-                        <p class="text-slate-400 text-sm mt-3">2011 yılında tasarlanan eski Vault mimarisi ile modern Paper/Folia odaklı Relay arasındaki temel farklar.</p>
+                    
+                    <div class="text-center max-w-2xl mx-auto mb-14">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-cyan-400">Teknik Karşılaştırma</span>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Neden Vault Yerine Relay?</h2>
+                        <p class="text-sm text-slate-400 mt-2">13 yıl önceki Spigot kısıtlamaları ile modern Paper/Folia mühendisliği arasındaki farklar.</p>
                     </div>
 
-                    <div class="overflow-x-auto glass-panel rounded-2xl shadow-xl border border-white/10">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="border-b border-white/10 bg-slate-800/50">
-                                    <th class="py-4 px-6 text-sm font-semibold text-slate-300">Özellik</th>
-                                    <th class="py-4 px-6 text-sm font-semibold text-red-400/90">Vault (Eski Standart)</th>
-                                    <th class="py-4 px-6 text-sm font-semibold text-sky-400 bg-sky-500/10">Relay (Modern Standart)</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-white/5 text-sm">
-                                <tr>
-                                    <td class="py-4 px-6 font-medium text-slate-200">İş Parçacığı (Threading)</td>
-                                    <td class="py-4 px-6 text-slate-400"><span class="text-red-400 font-semibold">Senkron</span> (Ana thread'i bekletir)</td>
-                                    <td class="py-4 px-6 font-semibold text-sky-300 bg-sky-500/5">%100 Asenkron & Non-Blocking (<code class="text-xs bg-slate-800 px-1 py-0.5 rounded">CompletableFuture</code>)</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-4 px-6 font-medium text-slate-200">Sunucu Desteği</td>
-                                    <td class="py-4 px-6 text-slate-400">Tek çekirdekli Bukkit / Spigot</td>
-                                    <td class="py-4 px-6 font-semibold text-sky-300 bg-sky-500/5">Paper, Purpur ve Çok Çekirdekli Folia Uyumlu</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-4 px-6 font-medium text-slate-200">Finansal Hassasiyet</td>
-                                    <td class="py-4 px-6 text-slate-400"><code class="text-xs">double</code> (Kuruş yuvarlama/kayıp hataları)</td>
-                                    <td class="py-4 px-6 font-semibold text-sky-300 bg-sky-500/5"><code class="text-xs bg-slate-800 px-1 py-0.5 rounded">BigDecimal</code> ile %100 kayıpsız aritmetik</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-4 px-6 font-medium text-slate-200">Para Birimleri</td>
-                                    <td class="py-4 px-6 text-slate-400">Yalnızca 1 adet para birimi</td>
-                                    <td class="py-4 px-6 font-semibold text-sky-300 bg-sky-500/5">Sınırsız Çoklu Para Birimi (<code class="text-xs bg-slate-800 px-1 py-0.5 rounded">Currency</code>)</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-4 px-6 font-medium text-slate-200">Eklentiler Arası İletişim</td>
-                                    <td class="py-4 px-6 text-slate-400">Yok (Doğrudan .jar bağımlılığı zorunlu)</td>
-                                    <td class="py-4 px-6 font-semibold text-sky-300 bg-sky-500/5">Bağımsız Pub/Sub & Soru-Cevap (RPC) EventBus</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-4 px-6 font-medium text-slate-200">Yüklenme Sırası (Load Order)</td>
-                                    <td class="py-4 px-6 text-slate-400"><span class="text-red-400 font-semibold">NullPointerException</span> riski</td>
-                                    <td class="py-4 px-6 font-semibold text-sky-300 bg-sky-500/5">Reaktif <code class="text-xs bg-slate-800 px-1 py-0.5 rounded">onServiceReady</code> Promise mimarisi</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-4 px-6 font-medium text-slate-200">Öncelik & Fallback Zinciri</td>
-                                    <td class="py-4 px-6 text-slate-400">Sınırlı Bukkit önceliği</td>
-                                    <td class="py-4 px-6 font-semibold text-sky-300 bg-sky-500/5">Dinamik geçiş zinciri (<code class="text-xs bg-slate-800 px-1 py-0.5 rounded">HIGHEST ➔ FALLBACK</code>)</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="bento-card rounded-xl overflow-hidden border border-white/[0.08]">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm border-collapse">
+                                <thead>
+                                    <tr class="border-b border-white/[0.08] bg-[#0e121a]">
+                                        <th class="py-4 px-6 font-semibold text-slate-300">Özellik & Kriter</th>
+                                        <th class="py-4 px-6 font-semibold text-slate-400 w-1/3">Vault (Legacy 2011)</th>
+                                        <th class="py-4 px-6 font-semibold text-cyan-400 bg-cyan-500/[0.06] w-1/3">Relay (Modern Standart)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-white/[0.04]">
+                                    <tr>
+                                        <td class="py-4 px-6 font-medium text-slate-200">İş Parçacığı (Threading)</td>
+                                        <td class="py-4 px-6 text-slate-400">Senkron &mdash; Main Thread'i bekletip lag yaratır</td>
+                                        <td class="py-4 px-6 font-semibold text-cyan-300 bg-cyan-500/[0.03]">%100 Asenkron (<code class="text-xs bg-black/40 px-1 py-0.5 rounded text-cyan-400">CompletableFuture</code>)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-4 px-6 font-medium text-slate-200">Platform Desteği</td>
+                                        <td class="py-4 px-6 text-slate-400">Tek çekirdekli eski Bukkit / Spigot</td>
+                                        <td class="py-4 px-6 font-semibold text-cyan-300 bg-cyan-500/[0.03]">Paper, Purpur ve Çok Çekirdekli Folia Uyumlu</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-4 px-6 font-medium text-slate-200">Finansal Aritmetik</td>
+                                        <td class="py-4 px-6 text-slate-400"><code class="text-xs">double</code> (Kuruş yuvarlama & kaybolma hataları)</td>
+                                        <td class="py-4 px-6 font-semibold text-cyan-300 bg-cyan-500/[0.03]"><code class="text-xs bg-black/40 px-1 py-0.5 rounded text-cyan-400">BigDecimal</code> ile %100 kayıpsız hassasiyet</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-4 px-6 font-medium text-slate-200">Para Birimleri</td>
+                                        <td class="py-4 px-6 text-slate-400">Yalnızca 1 tek para birimi</td>
+                                        <td class="py-4 px-6 font-semibold text-cyan-300 bg-cyan-500/[0.03]">Sınırsız Çoklu Para Birimi (<code class="text-xs bg-black/40 px-1 py-0.5 rounded text-cyan-400">Currency</code> standartı)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-4 px-6 font-medium text-slate-200">Eklentiler Arası İletişim</td>
+                                        <td class="py-4 px-6 text-slate-400">Yok &mdash; Doğrudan .jar bağımlılığı gerektirir</td>
+                                        <td class="py-4 px-6 font-semibold text-cyan-300 bg-cyan-500/[0.03]">Bağımsız Pub/Sub & Mikroservis RPC EventBus</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-4 px-6 font-medium text-slate-200">Yüklenme Sırası (Load Order)</td>
+                                        <td class="py-4 px-6 text-slate-400">NullPointerException (Kritik bağımlılık çöküşü)</td>
+                                        <td class="py-4 px-6 font-semibold text-cyan-300 bg-cyan-500/[0.03]">Reaktif <code class="text-xs bg-black/40 px-1 py-0.5 rounded text-cyan-400">onServiceReady</code> Promise mimarisi</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-4 px-6 font-medium text-slate-200">Dost Ateşi & Parti Yönetimi</td>
+                                        <td class="py-4 px-6 text-slate-400">Yok</td>
+                                        <td class="py-4 px-6 font-semibold text-cyan-300 bg-cyan-500/[0.03]"><code class="text-xs bg-black/40 px-1 py-0.5 rounded text-cyan-400">isFriendlySync</code> ile sıfır gecikmeli PVP koruması</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+
                 </div>
             </section>
 
-            <!-- Features Grid Section -->
+
+            <!-- Section 3: The 6 Core Modules Grid -->
             <section id="features" class="py-24">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    
                     <div class="text-center max-w-2xl mx-auto mb-16">
-                        <span class="text-sky-400 font-semibold text-xs tracking-wider uppercase">Çekirdek Sistemler</span>
-                        <h2 class="text-3xl sm:text-4xl font-bold mt-2">Dahili Servis Modülleri</h2>
-                        <p class="text-slate-400 text-sm mt-3">Her biri bağımsız, yüksek performanslı ve thread-safe olarak tasarlandı.</p>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-cyan-400">Modüler Mimari</span>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Dahili Servis Modülleri</h2>
+                        <p class="text-sm text-slate-400 mt-2">Relay, sunucunuzdaki tüm temel ihtiyaçları bağımsız standartlarla karşılar.</p>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                         
-                        <!-- Card 1: Registry -->
-                        <div class="glass-panel p-6 rounded-2xl hover:border-sky-500/40 transition duration-300 flex flex-col justify-between">
+                        <!-- Module 1: Registry -->
+                        <div class="bento-card p-6 rounded-xl flex flex-col justify-between">
                             <div>
-                                <div class="w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center mb-5">
-                                    <i data-lucide="layers" class="w-6 h-6"></i>
+                                <div class="w-10 h-10 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center mb-4">
+                                    <i data-lucide="layers" class="w-5 h-5"></i>
                                 </div>
-                                <h3 class="text-lg font-bold text-white">Reaktif Servis Kaydı</h3>
-                                <p class="text-slate-400 text-sm mt-2 leading-relaxed">
-                                    Eklentilerin yüklenme sırasını önemsemeden <code class="text-sky-300">onServiceReady</code> ile servis hazır olduğunda anında bağlanın. Öncelik sırasına göre otomatik fallback.
+                                <h3 class="text-base font-semibold text-white">Reaktif Servis Kaydı</h3>
+                                <p class="text-slate-400 text-xs mt-2 leading-relaxed">
+                                    Eklenti yüklenme sırası karmaşasını ortadan kaldırır. <code class="text-cyan-400 font-mono text-xs">onServiceReady</code> ile servis kaydedildiği an geri çağrılır. 5 seviyeli dinamik öncelik fallback zinciri.
                                 </p>
                             </div>
-                            <a href="#service-registry" class="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-sky-400 hover:text-sky-300">Detaylı Rehber <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></a>
+                            <a href="#service-registry" class="mt-4 inline-flex items-center gap-1 text-xs font-medium text-cyan-400 hover:text-cyan-300">İncele &rarr;</a>
                         </div>
 
-                        <!-- Card 2: Messenger -->
-                        <div class="glass-panel p-6 rounded-2xl hover:border-sky-500/40 transition duration-300 flex flex-col justify-between">
+                        <!-- Module 2: Messenger -->
+                        <div class="bento-card p-6 rounded-xl flex flex-col justify-between">
                             <div>
-                                <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mb-5">
-                                    <i data-lucide="radio" class="w-6 h-6"></i>
+                                <div class="w-10 h-10 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mb-4">
+                                    <i data-lucide="radio" class="w-5 h-5"></i>
                                 </div>
-                                <h3 class="text-lg font-bold text-white">Pub/Sub & RPC Mesajlaşma</h3>
-                                <p class="text-slate-400 text-sm mt-2 leading-relaxed">
-                                    Eklentiler birbirinin JAR'ına bağımlı olmadan kanal tabanlı asenkron veri paylaşabilir veya REST mikroservisi gibi soru-cevap (RPC) yapabilir.
+                                <h3 class="text-base font-semibold text-white">Pub/Sub & RPC Mesajlaşma</h3>
+                                <p class="text-slate-400 text-xs mt-2 leading-relaxed">
+                                    Eklentiler arası tam bağımsızlık. İki eklenti birbirinin koduna ihtiyaç duymadan asenkron veri paylaşabilir veya zaman aşımı korumalı soru-cevap (RPC) yürütebilir.
                                 </p>
                             </div>
-                            <a href="#messenger" class="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-400 hover:text-indigo-300">Detaylı Rehber <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></a>
+                            <a href="#messenger" class="mt-4 inline-flex items-center gap-1 text-xs font-medium text-cyan-400 hover:text-cyan-300">İncele &rarr;</a>
                         </div>
 
-                        <!-- Card 3: Economy -->
-                        <div class="glass-panel p-6 rounded-2xl hover:border-sky-500/40 transition duration-300 flex flex-col justify-between">
+                        <!-- Module 3: Economy -->
+                        <div class="bento-card p-6 rounded-xl flex flex-col justify-between">
                             <div>
-                                <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mb-5">
-                                    <i data-lucide="coins" class="w-6 h-6"></i>
+                                <div class="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mb-4">
+                                    <i data-lucide="coins" class="w-5 h-5"></i>
                                 </div>
-                                <h3 class="text-lg font-bold text-white">Çoklu Para Birimli Ekonomi</h3>
-                                <p class="text-slate-400 text-sm mt-2 leading-relaxed">
-                                    Kayıpsız <code class="text-amber-300">BigDecimal</code> aritmetiği. Altın, Token, Bakiye ve Etkinlik puanlarını tek bir asenkron standartta yönetin.
+                                <h3 class="text-base font-semibold text-white">Çoklu Para Birimli Ekonomi</h3>
+                                <p class="text-slate-400 text-xs mt-2 leading-relaxed">
+                                    Altın, Bakiye, Kripto Token ve Etkinlik Puanı aynı anda çalışır. <code class="text-amber-400 font-mono text-xs">BigDecimal</code> ile sıfır kuruş kaybı ve %100 asenkron atomik transferler.
                                 </p>
                             </div>
-                            <a href="#economy" class="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 hover:text-amber-300">Detaylı Rehber <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></a>
+                            <a href="#economy" class="mt-4 inline-flex items-center gap-1 text-xs font-medium text-cyan-400 hover:text-cyan-300">İncele &rarr;</a>
                         </div>
 
-                        <!-- Card 4: Cooldowns -->
-                        <div class="glass-panel p-6 rounded-2xl hover:border-sky-500/40 transition duration-300 flex flex-col justify-between">
+                        <!-- Module 4: Cooldowns -->
+                        <div class="bento-card p-6 rounded-xl flex flex-col justify-between">
                             <div>
-                                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-5">
-                                    <i data-lucide="clock" class="w-6 h-6"></i>
+                                <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-4">
+                                    <i data-lucide="clock" class="w-5 h-5"></i>
                                 </div>
-                                <h3 class="text-lg font-bold text-white">Evrensel Bekleme Süreleri</h3>
-                                <p class="text-slate-400 text-sm mt-2 leading-relaxed">
-                                    Otomatik bellek tahliyesi (TTL), kalan süre biçimlendirme ve ilerleme yüzdesi (<code class="text-emerald-300">getProgress()</code>) ile kusursuz cooldown yönetimi.
+                                <h3 class="text-base font-semibold text-white">Evrensel Bekleme Süresi Motoru</h3>
+                                <p class="text-slate-400 text-xs mt-2 leading-relaxed">
+                                    Büyü ve yetenekler için ortak bekleme havuzu. Süresi biten kayıtlar bellekten otomatik temizlenir. ActionBar dolumları için anlık ilerleme yüzdesi (<code class="text-emerald-400 font-mono text-xs">getProgress()</code>).
                                 </p>
                             </div>
-                            <a href="#cooldowns" class="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 hover:text-emerald-300">Detaylı Rehber <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></a>
+                            <a href="#cooldowns" class="mt-4 inline-flex items-center gap-1 text-xs font-medium text-cyan-400 hover:text-cyan-300">İncele &rarr;</a>
                         </div>
 
-                        <!-- Card 5: Shared Data -->
-                        <div class="glass-panel p-6 rounded-2xl hover:border-sky-500/40 transition duration-300 flex flex-col justify-between">
+                        <!-- Module 5: Shared Data -->
+                        <div class="bento-card p-6 rounded-xl flex flex-col justify-between">
                             <div>
-                                <div class="w-12 h-12 rounded-xl bg-violet-500/10 border border-violet-500/20 text-violet-400 flex items-center justify-center mb-5">
-                                    <i data-lucide="database" class="w-6 h-6"></i>
+                                <div class="w-10 h-10 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center mb-4">
+                                    <i data-lucide="database" class="w-5 h-5"></i>
                                 </div>
-                                <h3 class="text-lg font-bold text-white">Ortak Veri & Savaş Etiketi</h3>
-                                <p class="text-slate-400 text-sm mt-2 leading-relaxed">
-                                    Tip güvenli <code class="text-violet-300">DataKey&lt;T&gt;</code> ile oyunculara geçici TTL savaş etiketleri koyun ve verideki değişimleri anında gözlemleyin.
+                                <h3 class="text-base font-semibold text-white">Ortak Veri & Savaş Etiketi</h3>
+                                <p class="text-slate-400 text-xs mt-2 leading-relaxed">
+                                    Tip güvenli <code class="text-purple-400 font-mono text-xs">DataKey&lt;T&gt;</code> ile oyunculara geçici TTL etiketleri (örn: 15 sn savaş durumu) bağlayın ve verideki değişimleri canlı dinleyin.
                                 </p>
                             </div>
-                            <a href="#shared-data" class="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-violet-400 hover:text-violet-300">Detaylı Rehber <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></a>
+                            <a href="#shared-data" class="mt-4 inline-flex items-center gap-1 text-xs font-medium text-cyan-400 hover:text-cyan-300">İncele &rarr;</a>
                         </div>
 
-                        <!-- Card 6: Party & Friendly Fire -->
-                        <div class="glass-panel p-6 rounded-2xl hover:border-sky-500/40 transition duration-300 flex flex-col justify-between">
+                        <!-- Module 6: Party & Friendly Fire -->
+                        <div class="bento-card p-6 rounded-xl flex flex-col justify-between">
                             <div>
-                                <div class="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center mb-5">
-                                    <i data-lucide="shield-check" class="w-6 h-6"></i>
+                                <div class="w-10 h-10 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center mb-4">
+                                    <i data-lucide="shield-check" class="w-5 h-5"></i>
                                 </div>
-                                <h3 class="text-lg font-bold text-white">Parti & Sıfır-Gecikmeli PVP</h3>
-                                <p class="text-slate-400 text-sm mt-2 leading-relaxed">
-                                    Savaş hasar olaylarında thread dondurmayan sıfır bellek tahsisli <code class="text-rose-300">isFriendlySync</code> dost ateşi koruması ve tam asenkron parti yönetimi.
+                                <h3 class="text-base font-semibold text-white">Parti & Sıfır-Gecikmeli Dost Ateşi</h3>
+                                <p class="text-slate-400 text-xs mt-2 leading-relaxed">
+                                    PVP hasar anlarında ana sunucu döngüsünü bekletmeyen <code class="text-rose-400 font-mono text-xs">isFriendlySync</code> kontrolleri, zindan grupları ve yerleşik thread-safe yöneticisi.
                                 </p>
                             </div>
-                            <a href="#party" class="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-rose-400 hover:text-rose-300">Detaylı Rehber <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></a>
+                            <a href="#party" class="mt-4 inline-flex items-center gap-1 text-xs font-medium text-cyan-400 hover:text-cyan-300">İncele &rarr;</a>
                         </div>
 
                     </div>
@@ -369,99 +418,111 @@ dependencies {
         </div>
 
 
-        <!-- ========================================== -->
-        <!-- VIEW 2: FULL WIKI & DOCUMENTATION           -->
-        <!-- ========================================== -->
-        <div id="docs-view" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <!-- ============================================== -->
+        <!-- VIEW 2: FULL WIKI & DOCUMENTATION              -->
+        <!-- ============================================== -->
+        <div id="docs-view" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            
+            <!-- Breadcrumbs -->
+            <div class="flex items-center gap-2 text-xs text-slate-400 pb-6 border-b border-white/[0.06] mb-8">
+                <a href="#home" class="hover:text-white transition">Relay</a>
+                <span>/</span>
+                <span class="text-slate-200">Dokümantasyon</span>
+                <span>/</span>
+                <span id="doc-breadcrumb-title" class="text-cyan-400 font-medium">Genel Bakış</span>
+            </div>
+
             <div class="flex flex-col lg:flex-row gap-10">
                 
                 <!-- Left Sidebar -->
-                <aside class="w-full lg:w-64 flex-shrink-0">
+                <aside class="w-full lg:w-60 flex-shrink-0">
                     <div class="sticky top-24 space-y-6">
                         
                         <!-- Search Box -->
                         <div class="relative">
-                            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
-                            <input id="docs-search" type="text" placeholder="Wiki'de ara..." class="w-full pl-9 pr-3 py-2 bg-slate-900/90 rounded-xl text-xs text-slate-200 border border-white/10 focus:border-sky-500 focus:outline-none transition">
+                            <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-2.5"></i>
+                            <input id="docs-search" type="text" placeholder="Dokümanda ara..." class="w-full pl-9 pr-3 py-2 bg-black/40 rounded-lg text-xs text-slate-200 border border-white/[0.08] focus:border-cyan-500/50 focus:outline-none transition">
                         </div>
 
-                        <!-- Nav List -->
-                        <div class="space-y-6 text-sm">
+                        <!-- Sidebar Nav Menu -->
+                        <nav class="space-y-5 text-xs">
                             
-                            <!-- Group 1 -->
                             <div class="sidebar-group">
-                                <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2 px-3">Giriş & Kurulum</h4>
-                                <div class="space-y-1">
-                                    <a href="#overview" class="sidebar-link block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800/60 active">Genel Bakış</a>
-                                    <a href="#installation" class="sidebar-link block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800/60">Projeye Ekleme</a>
+                                <h4 class="font-semibold uppercase tracking-wider text-slate-500 mb-2 px-3">Başlangıç</h4>
+                                <div class="space-y-0.5">
+                                    <a href="#overview" class="sidebar-link block px-3 py-1.5 rounded text-slate-400 active">Genel Bakış</a>
+                                    <a href="#installation" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">Projeye Ekleme</a>
                                 </div>
                             </div>
 
-                            <!-- Group 2 -->
                             <div class="sidebar-group">
-                                <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2 px-3">Çekirdek Sistemler</h4>
-                                <div class="space-y-1">
-                                    <a href="#service-registry" class="sidebar-link block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800/60">Reaktif Servis Kaydı</a>
-                                    <a href="#messenger" class="sidebar-link block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800/60">Mesajlaşma (Pub/Sub & RPC)</a>
-                                    <a href="#economy" class="sidebar-link block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800/60">Asenkron Ekonomi</a>
-                                    <a href="#cooldowns" class="sidebar-link block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800/60">Bekleme Süreleri</a>
-                                    <a href="#shared-data" class="sidebar-link block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800/60">Paylaşımlı Veri Havuzu</a>
-                                    <a href="#permissions" class="sidebar-link block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800/60">Yetki & Rütbe Servisi</a>
-                                    <a href="#party" class="sidebar-link block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800/60">Parti & Dost Ateşi</a>
+                                <h4 class="font-semibold uppercase tracking-wider text-slate-500 mb-2 px-3">Servis Sistemleri</h4>
+                                <div class="space-y-0.5">
+                                    <a href="#service-registry" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">Reaktif Servis Kaydı</a>
+                                    <a href="#messenger" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">Mesajlaşma (Pub/Sub & RPC)</a>
+                                    <a href="#economy" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">Asenkron Ekonomi</a>
+                                    <a href="#cooldowns" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">Bekleme Süreleri</a>
+                                    <a href="#shared-data" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">Paylaşımlı Veri Havuzu</a>
+                                    <a href="#permissions" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">Yetki & Rütbe Servisi</a>
+                                    <a href="#party" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">Parti & Dost Ateşi</a>
                                 </div>
                             </div>
 
-                            <!-- Group 3 -->
                             <div class="sidebar-group">
-                                <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2 px-3">Yönetim & Folia</h4>
-                                <div class="space-y-1">
-                                    <a href="#folia" class="sidebar-link block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800/60">Folia & Thread Güvenliği</a>
-                                    <a href="#commands" class="sidebar-link block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800/60">Teşhis Komutları</a>
+                                <h4 class="font-semibold uppercase tracking-wider text-slate-500 mb-2 px-3">İleri Düzey</h4>
+                                <div class="space-y-0.5">
+                                    <a href="#folia" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">Folia & Paralel Çekirdek</a>
+                                    <a href="#commands" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">Yönetim Komutları</a>
                                 </div>
                             </div>
 
-                        </div>
+                        </nav>
+
                     </div>
                 </aside>
 
-                <!-- Right Content Panel -->
+                <!-- Right Doc Body -->
                 <div class="flex-grow min-w-0">
                     
-                    <!-- ARTICLE 1: OVERVIEW -->
-                    <article id="overview" class="wiki-article space-y-6">
-                        <div class="border-b border-white/10 pb-5">
-                            <span class="text-sky-400 text-xs font-semibold uppercase">Rehber</span>
-                            <h1 class="text-3xl font-extrabold mt-1 text-white">Genel Bakış & Mimari</h1>
-                            <p class="text-slate-400 text-sm mt-2">Relay'in kuruluş felsefesi ve teknik tasarım kararları.</p>
+                    <!-- DOC 1: OVERVIEW -->
+                    <article id="overview" class="wiki-article space-y-5">
+                        <div class="pb-4 border-b border-white/[0.08]">
+                            <span class="text-xs font-semibold uppercase text-cyan-400">Giriş</span>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">Genel Bakış & Mimari Tasarım</h1>
+                            <p class="text-xs text-slate-400 mt-1">Relay'in modüler altyapısı ve Paper/Folia odaklı mühendisliği.</p>
                         </div>
 
-                        <div class="prose prose-invert max-w-none text-slate-300 space-y-4 text-sm leading-relaxed">
+                        <div class="text-sm text-slate-300 space-y-4 leading-relaxed">
                             <p>
-                                <strong>Relay</strong>, Paper, Purpur ve çok iş parçacıklı (multi-threaded region) <strong>Folia</strong> sunucuları için sıfırdan geliştirilmiş yeni nesil bir servis köprüsü ve eklentiler arası iletişim omurgasıdır.
+                                <strong>Relay</strong>, modern Minecraft sunucu yazılımlarında (Paper, Purpur ve özellikle çok iş parçacıklı <strong>Folia</strong>) eklentiler arası entegrasyonu modern standartlara taşımak için geliştirilmiş açık kaynaklı bir servis çatısıdır.
                             </p>
                             <p>
-                                Minecraft sunucu ekosisteminde uzun yıllardır kullanılan Vault kütüphanesi, 2011 Spigot çağında tasarlanmıştır ve tüm işlemleri ana sunucu döngüsünde (Server Thread) senkron çalıştırır. Modern sunucularda veritabanı veya karmaşık ekonomi işlemleri yapıldığında sunucu TPS düşüşleri (lag spike) yaşar. Relay, bu sorunu <strong>%100 Non-blocking CompletableFuture</strong> mimarisi ile kökten çözer.
+                                Eski Bukkit mimarisinde geliştirilen çözümler, her eklentinin birbirinin <code>.jar</code> dosyasına doğrudan bağımlı olmasını veya ana sunucu thread'ini donduran senkron metotlar kullanmasını gerektiriyordu. Relay, mikroservis benzeri <strong>Pub/Sub EventBus</strong> ve <strong>Reaktif Promise Servis Kaydı</strong> ile eklentileri tamamen birbirinden bağımsız hale getirir.
                             </p>
 
-                            <div class="p-4 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-200">
-                                <strong>💡 Önemli Tasarım İlkesi:</strong> Relay, iki ayrı modülden oluşur. Eklenti geliştiricileri yalnızca 40 KB'lık bağımsız <code>relay-api</code> kütüphanesini kullanır. Sunucu sahipleri ise <code>relay-core.jar</code> eklentisini sunucularına yükler.
+                            <div class="bento-card p-4 rounded-lg border-l-4 border-cyan-500 text-xs text-slate-300">
+                                <strong class="text-white block mb-1">Mimarinin Temel Taşı: İki Ayrı Modül</strong>
+                                <ul class="list-disc list-inside space-y-1 text-slate-400">
+                                    <li><code class="text-cyan-400">relay-api:</code> Yalnızca arayüzleri ve veri modellerini barındıran, 40 KB'lık hafif SDK kütüphanesi. Eklenti geliştiricileri sadece bunu çeker.</li>
+                                    <li><code class="text-cyan-400">relay-core:</code> Sunucunun <code>plugins/</code> klasörüne atılan, motoru STARTUP aşamasında ayağa kaldıran ana eklenti.</li>
+                                </ul>
                             </div>
                         </div>
                     </article>
 
 
-                    <!-- ARTICLE 2: INSTALLATION -->
-                    <article id="installation" class="wiki-article space-y-6 hidden">
-                        <div class="border-b border-white/10 pb-5">
-                            <span class="text-sky-400 text-xs font-semibold uppercase">Kurulum</span>
-                            <h1 class="text-3xl font-extrabold mt-1 text-white">Projeye Ekleme (Dependency)</h1>
-                            <p class="text-slate-400 text-sm mt-2">JitPack üzerinden Gradle ve Maven yapılandırması.</p>
+                    <!-- DOC 2: INSTALLATION -->
+                    <article id="installation" class="wiki-article space-y-5 hidden">
+                        <div class="pb-4 border-b border-white/[0.08]">
+                            <span class="text-xs font-semibold uppercase text-cyan-400">Kurulum</span>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">Projeye Ekleme (Dependency)</h1>
+                            <p class="text-xs text-slate-400 mt-1">JitPack üzerinden Gradle ve Maven yapılandırması.</p>
                         </div>
 
-                        <div class="space-y-6 text-sm text-slate-300">
+                        <div class="space-y-5 text-sm text-slate-300">
                             <div>
-                                <h3 class="text-base font-semibold text-white mb-2">Gradle (Kotlin DSL) - Önerilen</h3>
-                                <div class="code-container p-4">
+                                <h3 class="text-sm font-semibold text-white mb-2">Gradle (Kotlin DSL)</h3>
+                                <div class="ide-window p-4 rounded-lg">
                                     <pre><code class="language-kotlin">repositories {
     mavenCentral()
     maven("https://jitpack.io")
@@ -474,8 +535,8 @@ dependencies {
                             </div>
 
                             <div>
-                                <h3 class="text-base font-semibold text-white mb-2">Maven (pom.xml)</h3>
-                                <div class="code-container p-4">
+                                <h3 class="text-sm font-semibold text-white mb-2">Maven (pom.xml)</h3>
+                                <div class="ide-window p-4 rounded-lg">
                                     <pre><code class="language-xml">&lt;repositories&gt;
     &lt;repository&gt;
         &lt;id&gt;jitpack.io&lt;/id&gt;
@@ -497,35 +558,27 @@ dependencies {
                     </article>
 
 
-                    <!-- ARTICLE 3: SERVICE REGISTRY -->
-                    <article id="service-registry" class="wiki-article space-y-6 hidden">
-                        <div class="border-b border-white/10 pb-5">
-                            <span class="text-sky-400 text-xs font-semibold uppercase">Çekirdek Sistem</span>
-                            <h1 class="text-3xl font-extrabold mt-1 text-white">Dinamik Reaktif Servis Kaydı</h1>
-                            <p class="text-slate-400 text-sm mt-2">Öncelik zincirleri ve yüklenme sırası bağımsız servis tüketimi.</p>
+                    <!-- DOC 3: SERVICE REGISTRY -->
+                    <article id="service-registry" class="wiki-article space-y-5 hidden">
+                        <div class="pb-4 border-b border-white/[0.08]">
+                            <span class="text-xs font-semibold uppercase text-cyan-400">Çekirdek Sistem</span>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">Dinamik Reaktif Servis Kaydı</h1>
+                            <p class="text-xs text-slate-400 mt-1">Öncelik basamakları ve yüklenme sırası bağımsız servis tüketimi.</p>
                         </div>
 
-                        <div class="space-y-6 text-sm text-slate-300 leading-relaxed">
-                            <h3 class="text-lg font-bold text-white">1. Reaktif Tüketim (onServiceReady)</h3>
-                            <p>Eklentinizin diğer eklentiden önce veya sonra başlaması önemli değildir. Servis kayıt edildiği an dinleyici fonksiyon tetiklenir:</p>
+                        <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                            <h3 class="text-sm font-semibold text-white">Reaktif Servis Tüketimi (onServiceReady)</h3>
+                            <p>Eklentinizin ekonomi veya parti eklentisinden önce mi sonra mı yüklendiğini kontrol etmenize gerek yoktur:</p>
                             
-                            <div class="code-container p-4">
-                                <pre><code class="language-java">import org.vrz.relay.api.RelayAPI;
-import org.vrz.relay.api.economy.EconomyService;
-
-RelayAPI.getServiceRegistry().onServiceReady(EconomyService.class, economy -> {
-    getLogger().info("Ekonomi sistemi hazır! Varsayılan birim: " + economy.getDefaultCurrency().displayName());
+                            <div class="ide-window p-4 rounded-lg">
+                                <pre><code class="language-java">RelayAPI.getServiceRegistry().onServiceReady(EconomyService.class, economy -> {
+    getLogger().info("Ekonomi sistemi bağlandı! Para birimi: " + economy.getDefaultCurrency().displayName());
 });</code></pre>
                             </div>
 
-                            <h3 class="text-lg font-bold text-white mt-6">2. Öncelikli Servis Kaydı</h3>
-                            <p>Kendi servisinizi kaydederken öncelik derecesi (Priority) belirtebilirsiniz:</p>
-
-                            <div class="code-container p-4">
-                                <pre><code class="language-java">import org.vrz.relay.api.RelayAPI;
-import org.vrz.relay.api.service.ServicePriority;
-
-// HIGHEST, HIGH, NORMAL, LOW, FALLBACK
+                            <h3 class="text-sm font-semibold text-white mt-5">Öncelikli Servis Sağlama (Register)</h3>
+                            <div class="ide-window p-4 rounded-lg">
+                                <pre><code class="language-java">// HIGHEST, HIGH, NORMAL, LOW, FALLBACK
 RelayAPI.getServiceRegistry().register(
     EconomyService.class,
     new MyCustomEconomyProvider(),
@@ -537,63 +590,47 @@ RelayAPI.getServiceRegistry().register(
                     </article>
 
 
-                    <!-- ARTICLE 4: MESSENGER -->
-                    <article id="messenger" class="wiki-article space-y-6 hidden">
-                        <div class="border-b border-white/10 pb-5">
-                            <span class="text-sky-400 text-xs font-semibold uppercase">İletişim Omurgası</span>
-                            <h1 class="text-3xl font-extrabold mt-1 text-white">Pub/Sub & Soru-Cevap (RPC)</h1>
-                            <p class="text-slate-400 text-sm mt-2">Eklentiler arası bağımsız mikroservis veri köprüsü.</p>
+                    <!-- DOC 4: MESSENGER -->
+                    <article id="messenger" class="wiki-article space-y-5 hidden">
+                        <div class="pb-4 border-b border-white/[0.08]">
+                            <span class="text-xs font-semibold uppercase text-cyan-400">İletişim Omurgası</span>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">Pub/Sub & Soru-Cevap (RPC)</h1>
+                            <p class="text-xs text-slate-400 mt-1">Bağımsız eklentiler arası mikroservis haberleşmesi.</p>
                         </div>
 
-                        <div class="space-y-6 text-sm text-slate-300 leading-relaxed">
-                            <h3 class="text-lg font-bold text-white">1. Kanal Tabanlı Yayın (Publish / Subscribe)</h3>
-                            <div class="code-container p-4">
-                                <pre><code class="language-java">// Yayınlayan Eklenti (Örn: Klan Eklentisi):
+                        <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                            <h3 class="text-sm font-semibold text-white">Kanal Mesajı Yayınlama ve Abone Olma</h3>
+                            <div class="ide-window p-4 rounded-lg">
+                                <pre><code class="language-java">// 1. Veri yayınlayan eklenti:
 RelayAPI.getMessenger().publish("clan:levelup", new ClanLevelPayload("Akıncılar", 10), this);
 
-// Dinleyen Eklenti (Örn: Skor Tablosu veya Görev Eklentisi):
+// 2. Dinleyen eklenti (JAR bağımlılığı gerekmez):
 RelayAPI.getMessenger().subscribe("clan:levelup", ClanLevelPayload.class, this, ctx -> {
     ClanLevelPayload data = ctx.getPayload();
-    getLogger().info(data.clanName() + " klanı 10. seviyeye ulaştı!");
+    getLogger().info(data.clanName() + " klanı seviye atladı!");
 });</code></pre>
-                            </div>
-
-                            <h3 class="text-lg font-bold text-white mt-6">2. Asenkron Soru-Cevap (RPC)</h3>
-                            <p>Bir eklenti diğerine asenkron soru sorar, karşı taraf yanıt verir (Zaman aşımı korumalı):</p>
-                            <div class="code-container p-4">
-                                <pre><code class="language-java">// Soru soran eklenti (2 saniye zaman aşımı ile):
-RelayAPI.getMessenger().request("player:reputation", playerId, Integer.class, Duration.ofSeconds(2))
-    .thenAccept(rep -> player.sendMessage("İtibar puanınız: " + rep))
-    .exceptionally(err -> {
-        player.sendMessage("İtibar bilgisi alınamadı!");
-        return null;
-    });</code></pre>
                             </div>
                         </div>
                     </article>
 
 
-                    <!-- ARTICLE 5: ECONOMY -->
-                    <article id="economy" class="wiki-article space-y-6 hidden">
-                        <div class="border-b border-white/10 pb-5">
-                            <span class="text-sky-400 text-xs font-semibold uppercase">Finansal Standart</span>
-                            <h1 class="text-3xl font-extrabold mt-1 text-white">Çoklu Para Birimli Asenkron Ekonomi</h1>
-                            <p class="text-slate-400 text-sm mt-2">BigDecimal hassasiyeti ve CompletableFuture işlemleri.</p>
+                    <!-- DOC 5: ECONOMY -->
+                    <article id="economy" class="wiki-article space-y-5 hidden">
+                        <div class="pb-4 border-b border-white/[0.08]">
+                            <span class="text-xs font-semibold uppercase text-cyan-400">Ekonomi</span>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">Çoklu Para Birimli Asenkron Ekonomi</h1>
+                            <p class="text-xs text-slate-400 mt-1">Kayıpsız BigDecimal aritmetiği ve non-blocking bakiye işlemleri.</p>
                         </div>
 
-                        <div class="space-y-6 text-sm text-slate-300 leading-relaxed">
-                            <div class="code-container p-4">
+                        <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                            <div class="ide-window p-4 rounded-lg">
                                 <pre><code class="language-java">RelayAPI.getEconomy().ifPresent(econ -> {
     UUID playerId = player.getUniqueId();
-    BigDecimal amount = BigDecimal.valueOf(500.00);
+    BigDecimal amount = BigDecimal.valueOf(100.50);
 
-    // Asenkron Para Yatırma
-    econ.deposit(playerId, amount, "Görev Tamamlama").thenAccept(res -> {
+    econ.deposit(playerId, amount, "Ödül").thenAccept(res -> {
         if (res.isSuccess()) {
-            player.sendMessage("Hesabınıza " + econ.format(amount) + " yatırıldı!");
             player.sendMessage("Yeni bakiye: " + econ.format(res.balanceAfter()));
-        } else {
-            player.sendMessage("Hata: " + res.errorMessage());
         }
     });
 });</code></pre>
@@ -602,81 +639,69 @@ RelayAPI.getMessenger().request("player:reputation", playerId, Integer.class, Du
                     </article>
 
 
-                    <!-- ARTICLE 6: COOLDOWNS -->
-                    <article id="cooldowns" class="wiki-article space-y-6 hidden">
-                        <div class="border-b border-white/10 pb-5">
-                            <span class="text-sky-400 text-xs font-semibold uppercase">Zaman Yönetimi</span>
-                            <h1 class="text-3xl font-extrabold mt-1 text-white">Evrensel Bekleme Süresi Motoru</h1>
-                            <p class="text-slate-400 text-sm mt-2">Otomatik bellek tahliyesi ve ilerleme takibi.</p>
+                    <!-- DOC 6: COOLDOWNS -->
+                    <article id="cooldowns" class="wiki-article space-y-5 hidden">
+                        <div class="pb-4 border-b border-white/[0.08]">
+                            <span class="text-xs font-semibold uppercase text-cyan-400">Zaman Yönetimi</span>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">Evrensel Bekleme Süresi Motoru</h1>
+                            <p class="text-xs text-slate-400 mt-1">Otomatik TTL tahliyesi ve yüzde ilerleme hesaplaması.</p>
                         </div>
 
-                        <div class="space-y-6 text-sm text-slate-300 leading-relaxed">
-                            <div class="code-container p-4">
-                                <pre><code class="language-java">UUID playerId = player.getUniqueId();
+                        <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                            <div class="ide-window p-4 rounded-lg">
+                                <pre><code class="language-java">UUID uuid = player.getUniqueId();
 String key = "ability:dash";
 
-// 1. Cooldown Kontrolü
-if (RelayAPI.getCooldowns().hasCooldown(playerId, key)) {
-    String remaining = RelayAPI.getCooldowns().formatRemaining(playerId, key);
-    player.sendMessage("§cYetenek hazır değil! Kalan: " + remaining);
+if (RelayAPI.getCooldowns().hasCooldown(uuid, key)) {
+    player.sendMessage("Kalan süre: " + RelayAPI.getCooldowns().formatRemaining(uuid, key));
     return;
 }
 
-// 2. Cooldown Uygulama ve Bitiş Callback'i
-RelayAPI.getCooldowns().setCooldown(playerId, key, Duration.ofSeconds(8), this, entry -> {
-    player.sendMessage("§aDash yeteneğiniz tekrar hazır!");
+RelayAPI.getCooldowns().setCooldown(uuid, key, Duration.ofSeconds(10), this, entry -> {
+    player.sendMessage("Dash tekrar hazır!");
 });</code></pre>
                             </div>
                         </div>
                     </article>
 
 
-                    <!-- ARTICLE 7: SHARED DATA -->
-                    <article id="shared-data" class="wiki-article space-y-6 hidden">
-                        <div class="border-b border-white/10 pb-5">
-                            <span class="text-sky-400 text-xs font-semibold uppercase">Ortak Hafıza</span>
-                            <h1 class="text-3xl font-extrabold mt-1 text-white">Paylaşımlı Veri & TTL Savaş Etiketi</h1>
-                            <p class="text-slate-400 text-sm mt-2">Eklentiler arası tip güvenli veri depolama ve canlı gözlemciler.</p>
+                    <!-- DOC 7: SHARED DATA -->
+                    <article id="shared-data" class="wiki-article space-y-5 hidden">
+                        <div class="pb-4 border-b border-white/[0.08]">
+                            <span class="text-xs font-semibold uppercase text-cyan-400">Veri Havuzu</span>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">Paylaşımlı Veri & TTL Savaş Etiketi</h1>
+                            <p class="text-xs text-slate-400 mt-1">Tip güvenli anahtarlar ve canlı gözlemciler.</p>
                         </div>
 
-                        <div class="space-y-6 text-sm text-slate-300 leading-relaxed">
-                            <div class="code-container p-4">
-                                <pre><code class="language-java">// 1. Tip güvenli anahtar tanımlama
-DataKey&lt;Boolean&gt; COMBAT_TAG = DataKey.of("combat", "tagged", Boolean.class, false);
+                        <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                            <div class="ide-window p-4 rounded-lg">
+                                <pre><code class="language-java">DataKey&lt;Boolean&gt; COMBAT_TAG = DataKey.of("combat", "tagged", Boolean.class, false);
 
-// 2. Savaşa giren oyuncuya 15 saniyelik geçici (TTL) etiket koyma
+// 15 saniyelik geçici etiket koy
 RelayAPI.getData().setTemporary(player.getUniqueId(), COMBAT_TAG, true, Duration.ofSeconds(15), this);
 
-// 3. Işınlanma eklentisinden kontrol etme
+// Başka eklentiden oku
 if (RelayAPI.getData().getOrKeyDefault(player.getUniqueId(), COMBAT_TAG)) {
-    player.sendMessage("§cSavaş halindeyken ışınlanamazsınız!");
+    player.sendMessage("Savaş halindesiniz!");
 }</code></pre>
                             </div>
                         </div>
                     </article>
 
 
-                    <!-- ARTICLE 8: PERMISSIONS -->
-                    <article id="permissions" class="wiki-article space-y-6 hidden">
-                        <div class="border-b border-white/10 pb-5">
-                            <span class="text-sky-400 text-xs font-semibold uppercase">Yetkilendirme</span>
-                            <h1 class="text-3xl font-extrabold mt-1 text-white">Asenkron Yetki ve Grup Servisi</h1>
-                            <p class="text-slate-400 text-sm mt-2">TPS düşürmeyen LuckPerms uyumlu yetki kontrolü.</p>
+                    <!-- DOC 8: PERMISSIONS -->
+                    <article id="permissions" class="wiki-article space-y-5 hidden">
+                        <div class="pb-4 border-b border-white/[0.08]">
+                            <span class="text-xs font-semibold uppercase text-cyan-400">Yetkilendirme</span>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">Asenkron Yetki ve Grup Servisi</h1>
+                            <p class="text-xs text-slate-400 mt-1">TPS düşürmeyen yetki ve unvan kontrolleri.</p>
                         </div>
 
-                        <div class="space-y-6 text-sm text-slate-300 leading-relaxed">
-                            <div class="code-container p-4">
+                        <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                            <div class="ide-window p-4 rounded-lg">
                                 <pre><code class="language-java">RelayAPI.getPermissions().ifPresent(perms -> {
-    UUID playerId = player.getUniqueId();
-
-    perms.hasPermission(playerId, "vip.fly").thenAccept(canFly -> {
-        if (canFly) player.setAllowFlight(true);
-    });
-
-    perms.getPrimaryGroup(playerId).thenAccept(group -> {
-        perms.getPrefix(playerId).thenAccept(prefix -> {
-            player.sendMessage("Rütbeniz: " + prefix + group);
-        });
+    perms.hasPermission(player.getUniqueId(), "vip.fly").thenAccept(has -> {
+        if (has) player.setAllowFlight(true);
     });
 });</code></pre>
                             </div>
@@ -684,22 +709,20 @@ if (RelayAPI.getData().getOrKeyDefault(player.getUniqueId(), COMBAT_TAG)) {
                     </article>
 
 
-                    <!-- ARTICLE 9: PARTY -->
-                    <article id="party" class="wiki-article space-y-6 hidden">
-                        <div class="border-b border-white/10 pb-5">
-                            <span class="text-sky-400 text-xs font-semibold uppercase">Takım & Savaş</span>
-                            <h1 class="text-3xl font-extrabold mt-1 text-white">Parti ve Sıfır-Gecikmeli Dost Ateşi</h1>
-                            <p class="text-slate-400 text-sm mt-2">Yüksek frekanslı combat kontrolleri ve zindan grubu yönetimi.</p>
+                    <!-- DOC 9: PARTY -->
+                    <article id="party" class="wiki-article space-y-5 hidden">
+                        <div class="pb-4 border-b border-white/[0.08]">
+                            <span class="text-xs font-semibold uppercase text-cyan-400">Savaş & Takım</span>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">Parti ve Sıfır-Gecikmeli Dost Ateşi</h1>
+                            <p class="text-xs text-slate-400 mt-1">Combat hasar kontrollerinde O(1) lock-free doğrulama.</p>
                         </div>
 
-                        <div class="space-y-6 text-sm text-slate-300 leading-relaxed">
-                            <h3 class="text-lg font-bold text-white">Savaş Olayında Sıfır-Gecikmeli (Lock-Free) Kontrol</h3>
-                            <div class="code-container p-4">
+                        <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                            <div class="ide-window p-4 rounded-lg">
                                 <pre><code class="language-java">@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 public void onDamage(EntityDamageByEntityEvent event) {
     if (event.getDamager() instanceof Player damager && event.getEntity() instanceof Player victim) {
         RelayAPI.getParties().ifPresent(parties -> {
-            // isFriendlySync: O(1) sabit sürede kontrol eder, asla thread dondurmaz:
             if (parties.isFriendlySync(damager.getUniqueId(), victim.getUniqueId())) {
                 event.setCancelled(true);
                 damager.sendMessage("§cTakım arkadaşına saldıramazsın!");
@@ -712,45 +735,42 @@ public void onDamage(EntityDamageByEntityEvent event) {
                     </article>
 
 
-                    <!-- ARTICLE 10: FOLIA -->
-                    <article id="folia" class="wiki-article space-y-6 hidden">
-                        <div class="border-b border-white/10 pb-5">
-                            <span class="text-sky-400 text-xs font-semibold uppercase">Çok Çekirdekli Mimari</span>
-                            <h1 class="text-3xl font-extrabold mt-1 text-white">Folia & Thread Güvenliği</h1>
-                            <p class="text-slate-400 text-sm mt-2">Çok bölgeli eşzamanlı dünyalarda veri güvenliği.</p>
+                    <!-- DOC 10: FOLIA -->
+                    <article id="folia" class="wiki-article space-y-5 hidden">
+                        <div class="pb-4 border-b border-white/[0.08]">
+                            <span class="text-xs font-semibold uppercase text-cyan-400">Mimari</span>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">Folia & Paralel Çekirdek Güvenliği</h1>
+                            <p class="text-xs text-slate-400 mt-1">Çok çekirdekli dünyalarda veri bütünlüğü.</p>
                         </div>
 
-                        <div class="space-y-6 text-sm text-slate-300 leading-relaxed">
+                        <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
                             <p>
-                                <strong>Folia</strong>, Minecraft sunucularını bölgelere (region) bölerek her bölgeyi bağımsız CPU çekirdeklerinde çalıştırır. Klasik eklentilerin static değişkenleri ve senkron Bukkit eventleri Folia üzerinde veri bozulmasına (Race Condition) yol açar.
-                            </p>
-                            <p>
-                                Relay'in tüm servisleri, ConcurrentHashMap, Atomic referanslar ve non-blocking CompletableFuture yapılarıyla güçlendirilmiştir. Bu sayede Folia'nın paralel çekirdeklerinde %100 güvenli çalışır.
+                                Folia, dünyayı birbirinden bağımsız çalışan bölgelere (region) böler. Relay içerisindeki tüm veri yapıları (ConcurrentHashMap, CopyOnWrite, Atomic referanslar) Folia'nın çok iş parçacıklı doğasına tam uyumlu olacak şekilde geliştirilmiştir.
                             </p>
                         </div>
                     </article>
 
 
-                    <!-- ARTICLE 11: COMMANDS -->
-                    <article id="commands" class="wiki-article space-y-6 hidden">
-                        <div class="border-b border-white/10 pb-5">
-                            <span class="text-sky-400 text-xs font-semibold uppercase">Teşhis & Yönetim</span>
-                            <h1 class="text-3xl font-extrabold mt-1 text-white">Yönetici Komutları</h1>
-                            <p class="text-slate-400 text-sm mt-2">Sunucuda çalışan Relay sistemlerini denetleme.</p>
+                    <!-- DOC 11: COMMANDS -->
+                    <article id="commands" class="wiki-article space-y-5 hidden">
+                        <div class="pb-4 border-b border-white/[0.08]">
+                            <span class="text-xs font-semibold uppercase text-cyan-400">Yönetim</span>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">Yönetici Komutları</h1>
+                            <p class="text-xs text-slate-400 mt-1">Sunucu üzerindeki aktif Relay modüllerini denetleme.</p>
                         </div>
 
-                        <div class="space-y-4 text-sm text-slate-300">
-                            <div class="p-4 rounded-xl bg-slate-900 border border-white/5 space-y-2">
-                                <code class="text-sky-400 font-bold text-sm">/relay status</code>
-                                <p class="text-xs text-slate-400">Aktif servis sayısını, mesajlaşma kanallarını ve sistem sağlığını gösterir.</p>
+                        <div class="space-y-3 text-sm text-slate-300">
+                            <div class="bento-card p-4 rounded-lg">
+                                <code class="text-cyan-400 font-mono font-semibold text-xs">/relay status</code>
+                                <p class="text-xs text-slate-400 mt-1">Aktif servis sayısını, kanalları ve çalışma ortamını gösterir.</p>
                             </div>
-                            <div class="p-4 rounded-xl bg-slate-900 border border-white/5 space-y-2">
-                                <code class="text-sky-400 font-bold text-sm">/relay services</code>
-                                <p class="text-xs text-slate-400">Sunucuda kayıtlı tüm servisleri, hangi eklentinin sağladığını ve öncelik derecelerini listeler.</p>
+                            <div class="bento-card p-4 rounded-lg">
+                                <code class="text-cyan-400 font-mono font-semibold text-xs">/relay services</code>
+                                <p class="text-xs text-slate-400 mt-1">Sunucuda kayıtlı servisleri ve öncelik derecelerini listeler.</p>
                             </div>
-                            <div class="p-4 rounded-xl bg-slate-900 border border-white/5 space-y-2">
-                                <code class="text-sky-400 font-bold text-sm">/relay topics</code>
-                                <p class="text-xs text-slate-400">Aktif mesajlaşma kanallarını ve abone sayılarını listeler.</p>
+                            <div class="bento-card p-4 rounded-lg">
+                                <code class="text-cyan-400 font-mono font-semibold text-xs">/relay topics</code>
+                                <p class="text-xs text-slate-400 mt-1">Aktif iletişim kanallarını ve dinleyici sayılarını raporlar.</p>
                             </div>
                         </div>
                     </article>
@@ -762,22 +782,17 @@ public void onDamage(EntityDamageByEntityEvent event) {
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-white/5 bg-[#07090e] py-12 mt-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center">
-                    <i data-lucide="zap" class="w-4 h-4 text-white fill-white"></i>
-                </div>
-                <span class="text-sm font-semibold text-slate-300">Relay Framework &bull; MIT License</span>
+    <footer class="border-t border-white/[0.06] bg-[#08090d] py-10 mt-20 text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <span class="font-semibold text-slate-300">Relay Framework</span>
+                <span>&bull;</span>
+                <span>Licensed under MIT</span>
             </div>
-            <div class="flex items-center gap-6 text-sm text-slate-400">
-                <a href="https://github.com/Kriscra/Relay" target="_blank" class="hover:text-white transition flex items-center gap-1.5">
-                    <i data-lucide="github" class="w-4 h-4"></i> GitHub
-                </a>
-                <a href="https://jitpack.io/#Kriscra/Relay" target="_blank" class="hover:text-white transition flex items-center gap-1.5">
-                    <i data-lucide="package" class="w-4 h-4"></i> JitPack
-                </a>
-                <a href="#overview" class="hover:text-white transition">Dökümantasyon</a>
+            <div class="flex items-center gap-5">
+                <a href="https://github.com/Kriscra/Relay" target="_blank" class="hover:text-slate-300 transition">GitHub</a>
+                <a href="https://jitpack.io/#Kriscra/Relay" target="_blank" class="hover:text-slate-300 transition">JitPack</a>
+                <a href="#overview" class="hover:text-slate-300 transition">Dokümantasyon</a>
             </div>
         </div>
     </footer>
@@ -786,13 +801,17 @@ public void onDamage(EntityDamageByEntityEvent event) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-kotlin.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-groovy.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-xml-doc.min.js"></script>
 
     <!-- App Logic -->
     <script src="app.js"></script>
     <script>
-        lucide.createIcons();
+        // Initialize Lucide icons on start
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
     </script>
 </body>
 </html>
