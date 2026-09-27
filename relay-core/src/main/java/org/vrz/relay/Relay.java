@@ -28,6 +28,7 @@ public final class Relay extends JavaPlugin implements Listener {
     private RelayCooldownServiceImpl cooldownService;
     private RelaySharedDataServiceImpl dataService;
     private org.vrz.relay.party.DefaultPartyServiceImpl partyService;
+    private org.vrz.relay.metric.RelayMetricsServiceImpl metricsService;
 
     @Override
     public void onLoad() {
@@ -37,14 +38,16 @@ public final class Relay extends JavaPlugin implements Listener {
         this.cooldownService = new RelayCooldownServiceImpl();
         this.dataService = new RelaySharedDataServiceImpl();
         this.partyService = new org.vrz.relay.party.DefaultPartyServiceImpl();
+        this.metricsService = new org.vrz.relay.metric.RelayMetricsServiceImpl();
 
-        // Register CooldownService, SharedDataService, PartyService and fallback PermissionService
+        // Register core framework services
         this.serviceRegistry.register(CooldownService.class, this.cooldownService, ServicePriority.HIGHEST, this);
         this.serviceRegistry.register(SharedDataService.class, this.dataService, ServicePriority.HIGHEST, this);
+        this.serviceRegistry.register(org.vrz.relay.api.metric.MetricsService.class, this.metricsService, ServicePriority.HIGHEST, this);
         this.serviceRegistry.register(org.vrz.relay.api.party.PartyService.class, this.partyService, ServicePriority.FALLBACK, this);
         this.serviceRegistry.register(org.vrz.relay.api.permission.PermissionService.class, new org.vrz.relay.permission.DefaultBukkitPermissionProvider(), ServicePriority.FALLBACK, this);
 
-        RelayAPI.setInstance(new RelayProviderImpl(this.serviceRegistry, this.messenger, this.cooldownService, this.dataService));
+        RelayAPI.setInstance(new RelayProviderImpl(this.serviceRegistry, this.messenger, this.cooldownService, this.dataService, this.metricsService));
         getLogger().info("Relay API runtime bound successfully.");
     }
 
@@ -87,6 +90,10 @@ public final class Relay extends JavaPlugin implements Listener {
 
         if (this.partyService != null) {
             this.partyService.clearAll();
+        }
+
+        if (this.metricsService != null) {
+            this.metricsService.reset();
         }
 
         RelayAPI.clearInstance();
@@ -143,6 +150,11 @@ public final class Relay extends JavaPlugin implements Listener {
     @NotNull
     public org.vrz.relay.party.DefaultPartyServiceImpl getPartyService() {
         return partyService;
+    }
+
+    @NotNull
+    public org.vrz.relay.metric.RelayMetricsServiceImpl getMetricsService() {
+        return metricsService;
     }
 }
 

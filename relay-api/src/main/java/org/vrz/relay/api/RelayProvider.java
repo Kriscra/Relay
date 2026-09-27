@@ -49,6 +49,14 @@ public interface RelayProvider {
     SharedDataService getDataService();
 
     /**
+     * Gets the global metrics and telemetry service.
+     *
+     * @return metrics service instance
+     */
+    @NotNull
+    org.vrz.relay.api.metric.MetricsService getMetricsService();
+
+    /**
      * Gets the primary registered economy service, if one is registered.
      *
      * @return optional containing active EconomyService

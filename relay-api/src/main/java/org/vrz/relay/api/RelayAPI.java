@@ -132,6 +132,17 @@ public final class RelayAPI {
     }
 
     /**
+     * Gets the global {@link org.vrz.relay.api.metric.MetricsService}.
+     *
+     * @return active metrics and telemetry service
+     * @throws IllegalStateException if Relay is not yet initialized
+     */
+    @NotNull
+    public static org.vrz.relay.api.metric.MetricsService getMetrics() {
+        return getInstance().getMetricsService();
+    }
+
+    /**
      * Convenience method to retrieve the active {@link org.vrz.relay.api.permission.PermissionService} provider, if registered.
      *
      * @return optional containing the active PermissionService

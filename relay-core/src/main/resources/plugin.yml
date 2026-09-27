@@ -11,7 +11,7 @@ commands:
   relay:
     description: Relay management and diagnostic commands.
     permission: relay.admin
-    usage: /relay <status|services|topics|reload>
+    usage: /relay <status|services|topics|metrics>
 
 permissions:
   relay.admin:

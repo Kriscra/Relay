@@ -52,7 +52,7 @@
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="text-base font-bold tracking-tight text-white">Relay</span>
-                    <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20">v1.0.0</span>
+                    <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20">v1.1.0</span>
                 </div>
             </a>
 
@@ -65,7 +65,7 @@
                 </a>
                 <a href="#changelog" class="text-slate-400 hover:text-white transition flex items-center gap-1.5">
                     <i data-lucide="history" class="w-4 h-4 text-cyan-400"></i> Güncellemeler
-                    <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[10px]">v1.0.0</span>
+                    <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[10px]">v1.1.0</span>
                 </a>
             </nav>
 
@@ -171,7 +171,7 @@
 
 dependencies {
     // Sadece 40 KB'lık hafif, sıfır-bağımlılıklı API kütüphanesi:
-    compileOnly("com.github.Kriscra.Relay:relay-api:v1.0.0")
+    compileOnly("com.github.Kriscra.Relay:relay-api:v1.1.0")
 }</code></pre>
                             </div>
 
@@ -404,6 +404,7 @@ RelayAPI.getMessenger().request("clan:get_level", clanId, Integer.class, Duratio
                                     <a href="#shared-data" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">SharedDataService (TTL & Veri)</a>
                                     <a href="#permissions" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">PermissionService (Yetki & Rütbe)</a>
                                     <a href="#party" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">PartyService (Dost Ateşi & Parti)</a>
+                                    <a href="#metrics" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">MetricsService (Telemetri & Performans)</a>
                                 </div>
                             </div>
 
@@ -420,7 +421,7 @@ RelayAPI.getMessenger().request("clan:get_level", clanId, Integer.class, Duratio
                                 <div class="space-y-0.5">
                                     <a href="#changelog" class="sidebar-link block px-3 py-1.5 rounded text-slate-400 flex items-center justify-between">
                                         <span>Güncellemeler (Changelog)</span>
-                                        <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[10px]">v1.0.0</span>
+                                        <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[10px]">v1.1.0</span>
                                     </a>
                                 </div>
                             </div>
@@ -483,7 +484,7 @@ RelayAPI.getMessenger().request("clan:get_level", clanId, Integer.class, Duratio
 }
 
 dependencies {
-    compileOnly("com.github.Kriscra.Relay:relay-api:v1.0.0")
+    compileOnly("com.github.Kriscra.Relay:relay-api:v1.1.0")
 }</code></pre>
                                 </div>
                             </div>
@@ -502,7 +503,7 @@ dependencies {
     &lt;dependency&gt;
         &lt;groupId&gt;com.github.Kriscra.Relay&lt;/groupId&gt;
         &lt;artifactId&gt;relay-api&lt;/artifactId&gt;
-        &lt;version&gt;v1.0.0&lt;/version&gt;
+        &lt;version&gt;v1.1.0&lt;/version&gt;
         &lt;scope&gt;provided&lt;/scope&gt;
     &lt;/dependency&gt;
 &lt;/dependencies&gt;</code></pre>
@@ -572,6 +573,11 @@ dependencies {
                                             <td class="py-3 px-4 font-mono text-cyan-400">RelayAPI.getParties()</td>
                                             <td class="py-3 px-4 font-mono text-slate-300">Optional&lt;PartyService&gt;</td>
                                             <td class="py-3 px-4">Parti ve dost ateşi yöneticisini döndürür.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-3 px-4 font-mono text-cyan-400">RelayAPI.getMetrics()</td>
+                                            <td class="py-3 px-4 font-mono text-slate-300">MetricsService</td>
+                                            <td class="py-3 px-4">Performans telemetrisi, sayaç ve süre ölçüm servisini döndürür.</td>
                                         </tr>
                                         <tr>
                                             <td class="py-3 px-4 font-mono text-cyan-400">RelayAPI.isInitialized()</td>
@@ -1473,7 +1479,188 @@ public class FriendlyFireListener implements Listener {
 
 
                     <!-- ============================================== -->
-                    <!-- DOC 10: FOLIA                                  -->
+                    <!-- DOC 10: METRICS & TELEMETRY SERVICE            -->
+                    <!-- ============================================== -->
+                    <article id="metrics" class="wiki-article space-y-8 hidden">
+                        <div class="pb-4 border-b border-white/[0.08]">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="badge-tag bg-amber-500/10 text-amber-400 border-amber-500/20 text-xs">v1.1.0 Yeni</span>
+                                <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-xs">Lock-Free Kilit-Siz</span>
+                                <span class="badge-tag bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-xs">Lag Dedektifi</span>
+                            </div>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white">Metrics & Telemetry Service (Performans & Telemetri)</h1>
+                            <p class="text-xs text-slate-400 mt-1">Sunucu işlem sürelerini, sayaçları, bellek sayaçlarını nanosaniye hassasiyetinde ölçen ve TPS düşüşlerini yakalayan dahili telemetri motoru.</p>
+                        </div>
+
+                        <!-- Highlights Bento -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bento-card p-4 rounded-xl border border-white/[0.06]">
+                                <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center mb-3">
+                                    <i data-lucide="gauge" class="w-4 h-4"></i>
+                                </div>
+                                <h3 class="text-xs font-semibold text-white">Try-with-resources Süre Ölçümü</h3>
+                                <p class="text-slate-400 text-[11px] mt-1 leading-relaxed">
+                                    <code class="text-amber-400 font-mono text-[10px]">MetricScope</code> ile ek kod yükü olmadan fonksiyonların ne kadar sürdüğünü anında kayıt altına alın.
+                                </p>
+                            </div>
+                            <div class="bento-card p-4 rounded-xl border border-white/[0.06]">
+                                <div class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-3">
+                                    <i data-lucide="activity" class="w-4 h-4"></i>
+                                </div>
+                                <h3 class="text-xs font-semibold text-white">Yüzdelik Dilimler (p95 / p99)</h3>
+                                <p class="text-slate-400 text-[11px] mt-1 leading-relaxed">
+                                    Sadece ortalamayı değil; en yavaş %5 ve %1'lik uç gecikmeleri dairesel tampon bellek ile RAM şişirmeden hesaplar.
+                                </p>
+                            </div>
+                            <div class="bento-card p-4 rounded-xl border border-white/[0.06]">
+                                <div class="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-400 flex items-center justify-center mb-3">
+                                    <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                                </div>
+                                <h3 class="text-xs font-semibold text-white">Otomatik Lag Uyarısı</h3>
+                                <p class="text-slate-400 text-[11px] mt-1 leading-relaxed">
+                                    Ana döngüde belirlenen eşiği (örn: 50ms) aşan ağır işlemler için anında konsola uyarı yazar ve <code class="text-rose-400 font-mono text-[10px]">PerformanceAlertEvent</code> fırlatır.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- API Metot Tablosu -->
+                        <div class="space-y-3">
+                            <h2 class="text-lg font-bold text-white">Metot Referansı (API Reference)</h2>
+                            <div class="overflow-x-auto border border-white/[0.08] rounded-xl">
+                                <table class="w-full text-left text-xs">
+                                    <thead class="bg-white/[0.03] text-slate-300 border-b border-white/[0.08]">
+                                        <tr>
+                                            <th class="p-3">Metot İmzası</th>
+                                            <th class="p-3">Dönüş Tipi</th>
+                                            <th class="p-3">Açıklama</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-white/[0.05] text-slate-300 font-mono">
+                                        <tr>
+                                            <td class="p-3 text-amber-400">startTimer(String name)</td>
+                                            <td class="p-3 text-cyan-400">MetricScope</td>
+                                            <td class="p-3 font-sans text-slate-400">Ölçüm başlatır; try-with-resources ile kapanınca süreyi kaydeder.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-3 text-amber-400">profile(String name, Runnable task)</td>
+                                            <td class="p-3 text-cyan-400">void</td>
+                                            <td class="p-3 font-sans text-slate-400">Verilen görevi çalıştırır ve süresini kaydeder.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-3 text-amber-400">profileSupplier(String name, Supplier&lt;T&gt;)</td>
+                                            <td class="p-3 text-cyan-400">&lt;T&gt; T</td>
+                                            <td class="p-3 font-sans text-slate-400">Görevi çalıştırır, sonucunu döndürür ve süresini kaydeder.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-3 text-amber-400">increment(String name, [long delta])</td>
+                                            <td class="p-3 text-cyan-400">void</td>
+                                            <td class="p-3 font-sans text-slate-400">Atomik sayacı 1 veya delta kadar artırır (LongAdder).</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-3 text-amber-400">getCount(String name)</td>
+                                            <td class="p-3 text-cyan-400">long</td>
+                                            <td class="p-3 font-sans text-slate-400">Sayacın anlık toplam değerini döndürür.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-3 text-amber-400">registerGauge(String name, DoubleSupplier)</td>
+                                            <td class="p-3 text-cyan-400">void</td>
+                                            <td class="p-3 font-sans text-slate-400">Dinamik anlık değer üreten fonksiyon bağlar (örn: online oyuncu sayısı).</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-3 text-amber-400">setGauge(String name, double val)</td>
+                                            <td class="p-3 text-cyan-400">void</td>
+                                            <td class="p-3 font-sans text-slate-400">Statik bir ölçüm değeri tanımlar.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-3 text-amber-400">getSnapshot(String name)</td>
+                                            <td class="p-3 text-cyan-400">Optional&lt;MetricSnapshot&gt;</td>
+                                            <td class="p-3 font-sans text-slate-400">Min, max, ortalama, p95, p99 ve son çalışma süresini içeren anlık veri.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-3 text-amber-400">setLatencyAlertThreshold(long ms)</td>
+                                            <td class="p-3 text-cyan-400">void</td>
+                                            <td class="p-3 font-sans text-slate-400">Ana iş parçacığında uyarı fırlatılacak azami eşik süresini belirler (Varsayılan: 50ms).</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-3 text-amber-400">reset([String name])</td>
+                                            <td class="p-3 text-cyan-400">void</td>
+                                            <td class="p-3 font-sans text-slate-400">Tüm veya belirli bir ölçüm kaydını sıfırlar.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Production Code Examples -->
+                        <div class="space-y-6">
+                            <h2 class="text-lg font-bold text-white">Canlı Kod Örnekleri (Production Examples)</h2>
+
+                            <!-- Example 1: Timing Scope -->
+                            <div>
+                                <h3 class="text-base font-bold text-white mb-2">Örnek 1: Try-with-resources ile Ağır Fonksiyon Profilleme</h3>
+                                <div class="ide-window p-4 rounded-lg">
+                                    <pre><code class="language-java">import org.vrz.relay.api.RelayAPI;
+import org.vrz.relay.api.metric.MetricScope;
+
+public void processWorldRaid() {
+    // try-with-resources bloğu bittiği anda süre nanosaniye cinsinden otomatik kaydedilir:
+    try (MetricScope scope = RelayAPI.getMetrics().startTimer("dungeon:boss_ai_tick")) {
+        // Ağır yapay zeka ve hedef arama hesaplamaları...
+        calculateBossTarget();
+    }
+}</code></pre>
+                                </div>
+                            </div>
+
+                            <!-- Example 2: Counters & Gauges -->
+                            <div>
+                                <h3 class="text-base font-bold text-white mb-2">Örnek 2: Sayaçlar & Dinamik Bellek Göstergeleri</h3>
+                                <div class="ide-window p-4 rounded-lg">
+                                    <pre><code class="language-java">// İşlenen ekonomi transferlerini veya paketleri sayma:
+RelayAPI.getMetrics().increment("economy:transactions_processed");
+
+// Dinamik sunucu verilerini tek satırda telemetriye bağlama:
+RelayAPI.getMetrics().registerGauge("server:free_memory_mb", () -> {
+    return Runtime.getRuntime().freeMemory() / (1024.0 * 1024.0);
+});
+
+RelayAPI.getMetrics().registerGauge("server:active_parties", () -> {
+    return RelayAPI.getParties().map(p -> (double) p.getActivePartiesCount()).orElse(0.0);
+});</code></pre>
+                                </div>
+                            </div>
+
+                            <!-- Example 3: Lag Event Listener -->
+                            <div>
+                                <h3 class="text-base font-bold text-white mb-2">Örnek 3: Lag Sıçraması Dedektifi (PerformanceAlertEvent)</h3>
+                                <div class="ide-window p-4 rounded-lg">
+                                    <pre><code class="language-java">import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.vrz.relay.api.event.PerformanceAlertEvent;
+
+public class LagMonitorListener implements Listener {
+
+    @EventHandler
+    public void onLagSpike(PerformanceAlertEvent event) {
+        if (event.isPrimaryThread()) {
+            Bukkit.broadcast(
+                Component.text("⚠ Dikkat: " + event.getMetricName() + " işlemi " + 
+                               String.format("%.2fms", event.getDurationMillis()) + " sürdü!", 
+                               NamedTextColor.RED),
+                "server.admin"
+            );
+        }
+    }
+}</code></pre>
+                                </div>
+                            </div>
+
+                        </div>
+                    </article>
+
+
+                    <!-- ============================================== -->
+                    <!-- DOC 11: FOLIA                                  -->
                     <!-- ============================================== -->
                     <article id="folia" class="wiki-article space-y-6 hidden">
                         <div class="pb-4 border-b border-white/[0.08]">
@@ -1524,6 +1711,14 @@ public class FriendlyFireListener implements Listener {
                                 <code class="text-cyan-400 font-mono font-semibold text-xs">/relay topics</code>
                                 <p class="text-xs text-slate-400 mt-1">Aktif iletişim kanallarını ve dinleyici sayılarını raporlar.</p>
                             </div>
+                            <div class="bento-card p-4 rounded-lg">
+                                <code class="text-amber-400 font-mono font-semibold text-xs">/relay metrics</code>
+                                <p class="text-xs text-slate-400 mt-1">Tüm ölçülen fonksiyonların ortalama sürelerini, p95 gecikmelerini, sayaçları ve anlık göstergeleri konsola veya sohbete döker.</p>
+                            </div>
+                            <div class="bento-card p-4 rounded-lg">
+                                <code class="text-amber-400 font-mono font-semibold text-xs">/relay metrics reset</code>
+                                <p class="text-xs text-slate-400 mt-1">Tüm telemetri ve performans sayaçlarını temizleyip sıfırdan başlatır.</p>
+                            </div>
                         </div>
                     </article>
 
@@ -1537,6 +1732,73 @@ public class FriendlyFireListener implements Listener {
                             <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">Güncelleme Günlüğü (Changelog)</h1>
                             <p class="text-xs text-slate-400 mt-1">Relay'in gelişim serüveni, yeni özellikler, iyileştirmeler ve sürüm detayları.</p>
                         </div>
+
+                        <!-- Version 1.1.0 Block -->
+                        <div class="space-y-6">
+                            
+                            <!-- Version Header Card -->
+                            <div class="bento-card p-5 rounded-xl border border-amber-500/30 bg-gradient-to-r from-amber-950/20 via-slate-900/40 to-transparent">
+                                <div class="flex flex-wrap items-center justify-between gap-3">
+                                    <div class="flex items-center gap-3">
+                                        <span class="px-3 py-1 rounded-full bg-amber-400 text-slate-950 font-bold text-xs">v1.1.0</span>
+                                        <h2 class="text-base font-bold text-white">Performans Telemetrisi, Lag Dedektifi & Metrik Motoru</h2>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-xs text-slate-400 font-mono">
+                                        <span>📅 27 Eylül 2026</span>
+                                        <span>&bull;</span>
+                                        <span class="text-amber-400">Tag: v1.1.0</span>
+                                        <span>&bull;</span>
+                                        <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-sans font-semibold">26/26 Tests Passed</span>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-slate-300 mt-3 leading-relaxed">
+                                    Relay 1.1.0 sürümü ile birlikte sunucuların TPS düşüşlerini ve eklentilerin işlem sürelerini nanosaniye hassasiyetinde ölçen, kilit-siz (lock-free) <strong>MetricsService</strong> telemetri altyapısı sisteme eklendi.
+                                </p>
+                            </div>
+
+                            <!-- Highlights Grid -->
+                            <div class="space-y-4">
+                                
+                                <div class="bento-card p-4 rounded-lg space-y-2 border border-white/[0.06]">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                                        <h3 class="text-sm font-semibold text-white">Kilit-Siz Telemetri Motoru (MetricsService)</h3>
+                                    </div>
+                                    <ul class="list-disc list-inside text-xs text-slate-400 space-y-1 pl-2">
+                                        <li><strong>MetricScope & Try-with-resources:</strong> Fonksiyonların yürütülme sürelerini sıfır karmaşıklıkla <code class="text-amber-300 font-mono text-[11px]">try (MetricScope s = RelayAPI.getMetrics().startTimer("anahtar"))</code> ile blok bitiminde otomatik kaydetme.</li>
+                                        <li><strong>Yüzdelik Dilimler (P95 & P99):</strong> 1024 boyutlu dairesel tampon bellek (reservoir sampling) ile sunucu RAM'ini şişirmeden en yavaş %5 ve %1 uç gecikmeleri anlık hesaplama.</li>
+                                        <li><strong>Atomik Sayaçlar & Göstergeler (Counters & Gauges):</strong> İşlenen transferleri, paketleri ve olayları sayan <code class="text-amber-300 font-mono text-[11px]">increment()</code> ve dinamik <code class="text-amber-300 font-mono text-[11px]">registerGauge(DoubleSupplier)</code> desteği.</li>
+                                    </ul>
+                                </div>
+
+                                <div class="bento-card p-4 rounded-lg space-y-2 border border-white/[0.06]">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-rose-400"></span>
+                                        <h3 class="text-sm font-semibold text-white">Ana Thread Lag Dedektifi (PerformanceAlertEvent)</h3>
+                                    </div>
+                                    <ul class="list-disc list-inside text-xs text-slate-400 space-y-1 pl-2">
+                                        <li><strong>Otomatik Eşik Alarmı:</strong> Ana iş parçacığında belirlenen eşiği (varsayılan 50ms = 1 tam sunucu tick'i) aşan operasyonlar anında tespit edilir.</li>
+                                        <li><strong>Asenkron Uyarı Olayı:</strong> Sunucu akışını kilitlemeden arka planda <code class="text-rose-300 font-mono text-[11px]">PerformanceAlertEvent</code> fırlatılır; Discord webhook veya yönetici bilgilendirmeleri bağlanabilir.</li>
+                                    </ul>
+                                </div>
+
+                                <div class="bento-card p-4 rounded-lg space-y-2 border border-white/[0.06]">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+                                        <h3 class="text-sm font-semibold text-white">Tanı Komutları & Tam Test Kapsamı</h3>
+                                    </div>
+                                    <ul class="list-disc list-inside text-xs text-slate-400 space-y-1 pl-2">
+                                        <li><strong>/relay metrics Komutu:</strong> Tüm aktif ölçümleri ortalama süre, p95 gecikmesi, tavan (max) süre ve çağrı adediyle canlı listeleme.</li>
+                                        <li><strong>/relay metrics reset:</strong> Telemetri havuzunu tek komutla temizleyip sıfırlama.</li>
+                                        <li><strong>26/26 Birim Test:</strong> JUnit 5 ve Mockito ile yazılmış tüm testler (7 yeni telemetri testi dahil) %100 başarıyla tamamlandı.</li>
+                                    </ul>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <hr class="border-white/[0.08] my-8">
 
                         <!-- Version 1.0.0 Block -->
                         <div class="space-y-6">

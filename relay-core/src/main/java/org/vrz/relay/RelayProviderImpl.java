@@ -18,15 +18,18 @@ public final class RelayProviderImpl implements RelayProvider {
     private final RelayMessenger messenger;
     private final CooldownService cooldownService;
     private final SharedDataService dataService;
+    private final org.vrz.relay.api.metric.MetricsService metricsService;
 
     public RelayProviderImpl(@NotNull ServiceRegistry serviceRegistry,
                              @NotNull RelayMessenger messenger,
                              @NotNull CooldownService cooldownService,
-                             @NotNull SharedDataService dataService) {
+                             @NotNull SharedDataService dataService,
+                             @NotNull org.vrz.relay.api.metric.MetricsService metricsService) {
         this.serviceRegistry = Objects.requireNonNull(serviceRegistry, "serviceRegistry cannot be null");
         this.messenger = Objects.requireNonNull(messenger, "messenger cannot be null");
         this.cooldownService = Objects.requireNonNull(cooldownService, "cooldownService cannot be null");
         this.dataService = Objects.requireNonNull(dataService, "dataService cannot be null");
+        this.metricsService = Objects.requireNonNull(metricsService, "metricsService cannot be null");
     }
 
     @Override
@@ -51,5 +54,11 @@ public final class RelayProviderImpl implements RelayProvider {
     @NotNull
     public SharedDataService getDataService() {
         return dataService;
+    }
+
+    @Override
+    @NotNull
+    public org.vrz.relay.api.metric.MetricsService getMetricsService() {
+        return metricsService;
     }
 }

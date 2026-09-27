@@ -90,7 +90,54 @@ public class RelayCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        sender.sendMessage(Component.text("Unknown subcommand. Usage: /relay <status|services|topics>", NamedTextColor.RED));
+        if (args[0].equalsIgnoreCase("metrics")) {
+            if (args.length > 1 && args[1].equalsIgnoreCase("reset")) {
+                plugin.getMetricsService().reset();
+                sender.sendMessage(Component.text("✔ All Relay metrics and performance counters have been reset.", NamedTextColor.GREEN));
+                return true;
+            }
+
+            sendHeader(sender, "Performance Metrics & Telemetry");
+            Map<String, org.vrz.relay.api.metric.MetricSnapshot> snapshots = plugin.getMetricsService().getAllSnapshots();
+            Map<String, Long> counters = plugin.getMetricsService().getAllCounters();
+            Map<String, Double> gauges = plugin.getMetricsService().getAllGauges();
+
+            if (snapshots.isEmpty() && counters.isEmpty() && gauges.isEmpty()) {
+                sender.sendMessage(Component.text("No metrics recorded yet.", NamedTextColor.DARK_GRAY));
+                return true;
+            }
+
+            if (!snapshots.isEmpty()) {
+                sender.sendMessage(Component.text("» Execution Timers:", NamedTextColor.GOLD));
+                for (org.vrz.relay.api.metric.MetricSnapshot snap : snapshots.values()) {
+                    sender.sendMessage(Component.text("  • " + snap.name() + ": ", NamedTextColor.AQUA)
+                            .append(Component.text(String.format("avg: %.2fms", snap.averageMillis()), NamedTextColor.GREEN))
+                            .append(Component.text(String.format(" | p95: %.2fms", snap.p95Millis()), NamedTextColor.YELLOW))
+                            .append(Component.text(String.format(" | max: %.2fms", snap.maxMillis()), NamedTextColor.RED))
+                            .append(Component.text(" (" + snap.count() + " calls)", NamedTextColor.DARK_GRAY)));
+                }
+            }
+
+            if (!counters.isEmpty()) {
+                sender.sendMessage(Component.text("» Counters:", NamedTextColor.LIGHT_PURPLE));
+                for (Map.Entry<String, Long> entry : counters.entrySet()) {
+                    sender.sendMessage(Component.text("  • " + entry.getKey() + ": ", NamedTextColor.WHITE)
+                            .append(Component.text(entry.getValue(), NamedTextColor.GREEN)));
+                }
+            }
+
+            if (!gauges.isEmpty()) {
+                sender.sendMessage(Component.text("» Gauges:", NamedTextColor.BLUE));
+                for (Map.Entry<String, Double> entry : gauges.entrySet()) {
+                    sender.sendMessage(Component.text("  • " + entry.getKey() + ": ", NamedTextColor.WHITE)
+                            .append(Component.text(String.format("%.2f", entry.getValue()), NamedTextColor.AQUA)));
+                }
+            }
+
+            return true;
+        }
+
+        sender.sendMessage(Component.text("Unknown subcommand. Usage: /relay <status|services|topics|metrics>", NamedTextColor.RED));
         return true;
     }
 
@@ -110,9 +157,12 @@ public class RelayCommand implements CommandExecutor, TabCompleter {
             return Collections.emptyList();
         }
         if (args.length == 1) {
-            return Arrays.asList("status", "services", "topics").stream()
+            return Arrays.asList("status", "services", "topics", "metrics").stream()
                     .filter(s -> s.startsWith(args[0].toLowerCase(Locale.ROOT)))
                     .collect(Collectors.toList());
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("metrics")) {
+            return Collections.singletonList("reset");
         }
         return Collections.emptyList();
     }
