@@ -65,6 +65,14 @@ public interface RelayProvider {
     org.vrz.relay.api.hologram.HologramService getHologramService();
 
     /**
+     * Gets the global menu and virtual GUI service.
+     *
+     * @return menu service instance
+     */
+    @NotNull
+    org.vrz.relay.api.menu.MenuService getMenuService();
+
+    /**
      * Gets the primary registered economy service, if one is registered.
      *
      * @return optional containing active EconomyService

@@ -20,19 +20,22 @@ public final class RelayProviderImpl implements RelayProvider {
     private final SharedDataService dataService;
     private final org.vrz.relay.api.metric.MetricsService metricsService;
     private final org.vrz.relay.api.hologram.HologramService hologramService;
+    private final org.vrz.relay.api.menu.MenuService menuService;
 
     public RelayProviderImpl(@NotNull ServiceRegistry serviceRegistry,
                              @NotNull RelayMessenger messenger,
                              @NotNull CooldownService cooldownService,
                              @NotNull SharedDataService dataService,
                              @NotNull org.vrz.relay.api.metric.MetricsService metricsService,
-                             @NotNull org.vrz.relay.api.hologram.HologramService hologramService) {
+                             @NotNull org.vrz.relay.api.hologram.HologramService hologramService,
+                             @NotNull org.vrz.relay.api.menu.MenuService menuService) {
         this.serviceRegistry = Objects.requireNonNull(serviceRegistry, "serviceRegistry cannot be null");
         this.messenger = Objects.requireNonNull(messenger, "messenger cannot be null");
         this.cooldownService = Objects.requireNonNull(cooldownService, "cooldownService cannot be null");
         this.dataService = Objects.requireNonNull(dataService, "dataService cannot be null");
         this.metricsService = Objects.requireNonNull(metricsService, "metricsService cannot be null");
         this.hologramService = Objects.requireNonNull(hologramService, "hologramService cannot be null");
+        this.menuService = Objects.requireNonNull(menuService, "menuService cannot be null");
     }
 
     @Override
@@ -69,5 +72,11 @@ public final class RelayProviderImpl implements RelayProvider {
     @NotNull
     public org.vrz.relay.api.hologram.HologramService getHologramService() {
         return hologramService;
+    }
+
+    @Override
+    @NotNull
+    public org.vrz.relay.api.menu.MenuService getMenuService() {
+        return menuService;
     }
 }

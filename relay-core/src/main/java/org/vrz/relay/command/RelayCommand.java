@@ -46,6 +46,8 @@ public class RelayCommand implements CommandExecutor, TabCompleter {
                     .append(Component.text(plugin.getMessenger().getActiveTopics().size(), NamedTextColor.GREEN)));
             sender.sendMessage(Component.text("» Active Holograms: ", NamedTextColor.GRAY)
                     .append(Component.text(plugin.getHologramService().getActiveHologramCount(), NamedTextColor.GREEN)));
+            sender.sendMessage(Component.text("» Active Menus: ", NamedTextColor.GRAY)
+                    .append(Component.text(plugin.getMenuService().getActiveMenus().size(), NamedTextColor.GREEN)));
             sender.sendMessage(Component.text("» Runtime: ", NamedTextColor.GRAY)
                     .append(Component.text(Runtime.version().toString(), NamedTextColor.WHITE)));
             return true;
@@ -158,7 +160,23 @@ public class RelayCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        sender.sendMessage(Component.text("Unknown subcommand. Usage: /relay <status|services|topics|metrics|holograms>", NamedTextColor.RED));
+        if (args[0].equalsIgnoreCase("menus")) {
+            sendHeader(sender, "Active Virtual Menus");
+            Set<org.vrz.relay.api.menu.Menu> menus = plugin.getMenuService().getActiveMenus();
+            if (menus.isEmpty()) {
+                sender.sendMessage(Component.text("No active virtual menus registered.", NamedTextColor.DARK_GRAY));
+                return true;
+            }
+
+            for (org.vrz.relay.api.menu.Menu menu : menus) {
+                sender.sendMessage(Component.text("• " + menu.getId(), NamedTextColor.LIGHT_PURPLE)
+                        .append(Component.text(" [" + menu.getPlugin().getName() + "]", NamedTextColor.YELLOW))
+                        .append(Component.text(" (" + menu.getRows() + " rows, " + menu.getViewers().size() + " viewers)", NamedTextColor.GRAY)));
+            }
+            return true;
+        }
+
+        sender.sendMessage(Component.text("Unknown subcommand. Usage: /relay <status|services|topics|metrics|holograms|menus>", NamedTextColor.RED));
         return true;
     }
 
@@ -178,7 +196,7 @@ public class RelayCommand implements CommandExecutor, TabCompleter {
             return Collections.emptyList();
         }
         if (args.length == 1) {
-            return Arrays.asList("status", "services", "topics", "metrics", "holograms").stream()
+            return Arrays.asList("status", "services", "topics", "metrics", "holograms", "menus").stream()
                     .filter(s -> s.startsWith(args[0].toLowerCase(Locale.ROOT)))
                     .collect(Collectors.toList());
         }

@@ -174,5 +174,16 @@ public final class RelayAPI {
     public static org.vrz.relay.api.hologram.HologramService getHolograms() {
         return getInstance().getHologramService();
     }
+
+    /**
+     * Gets the global {@link org.vrz.relay.api.menu.MenuService}.
+     *
+     * @return active menu service
+     * @throws IllegalStateException if Relay is not yet initialized
+     */
+    @NotNull
+    public static org.vrz.relay.api.menu.MenuService getMenus() {
+        return getInstance().getMenuService();
+    }
 }
 

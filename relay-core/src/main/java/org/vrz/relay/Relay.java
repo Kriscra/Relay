@@ -30,6 +30,7 @@ public final class Relay extends JavaPlugin implements Listener {
     private org.vrz.relay.party.DefaultPartyServiceImpl partyService;
     private org.vrz.relay.metric.RelayMetricsServiceImpl metricsService;
     private org.vrz.relay.hologram.RelayHologramServiceImpl hologramService;
+    private org.vrz.relay.menu.RelayMenuServiceImpl menuService;
 
     @Override
     public void onLoad() {
@@ -41,16 +42,18 @@ public final class Relay extends JavaPlugin implements Listener {
         this.partyService = new org.vrz.relay.party.DefaultPartyServiceImpl();
         this.metricsService = new org.vrz.relay.metric.RelayMetricsServiceImpl();
         this.hologramService = new org.vrz.relay.hologram.RelayHologramServiceImpl();
+        this.menuService = new org.vrz.relay.menu.RelayMenuServiceImpl();
 
         // Register core framework services
         this.serviceRegistry.register(CooldownService.class, this.cooldownService, ServicePriority.HIGHEST, this);
         this.serviceRegistry.register(SharedDataService.class, this.dataService, ServicePriority.HIGHEST, this);
         this.serviceRegistry.register(org.vrz.relay.api.metric.MetricsService.class, this.metricsService, ServicePriority.HIGHEST, this);
         this.serviceRegistry.register(org.vrz.relay.api.hologram.HologramService.class, this.hologramService, ServicePriority.HIGHEST, this);
+        this.serviceRegistry.register(org.vrz.relay.api.menu.MenuService.class, this.menuService, ServicePriority.HIGHEST, this);
         this.serviceRegistry.register(org.vrz.relay.api.party.PartyService.class, this.partyService, ServicePriority.FALLBACK, this);
         this.serviceRegistry.register(org.vrz.relay.api.permission.PermissionService.class, new org.vrz.relay.permission.DefaultBukkitPermissionProvider(), ServicePriority.FALLBACK, this);
 
-        RelayAPI.setInstance(new RelayProviderImpl(this.serviceRegistry, this.messenger, this.cooldownService, this.dataService, this.metricsService, this.hologramService));
+        RelayAPI.setInstance(new RelayProviderImpl(this.serviceRegistry, this.messenger, this.cooldownService, this.dataService, this.metricsService, this.hologramService, this.menuService));
         getLogger().info("Relay API runtime bound successfully.");
     }
 
@@ -59,6 +62,9 @@ public final class Relay extends JavaPlugin implements Listener {
     public void onEnable() {
         // Register listeners
         getServer().getPluginManager().registerEvents(this, this);
+        if (this.menuService != null) {
+            getServer().getPluginManager().registerEvents(new org.vrz.relay.menu.RelayMenuListener(this.menuService), this);
+        }
 
         // Register diagnostic commands
         RelayCommand commandHandler = new RelayCommand(this);
@@ -103,13 +109,17 @@ public final class Relay extends JavaPlugin implements Listener {
             this.hologramService.deleteAll();
         }
 
+        if (this.menuService != null) {
+            this.menuService.closeAll();
+        }
+
         RelayAPI.clearInstance();
         getLogger().info("Relay successfully unhooked and terminated.");
     }
 
     /**
      * Automatic lifecycle cleanup: When any plugin disables, remove its registered services,
-     * messenger subscriptions, active cooldowns, shared data and holograms to prevent memory leaks.
+     * messenger subscriptions, active cooldowns, shared data, holograms and menus to prevent memory leaks.
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPluginDisable(PluginDisableEvent event) {
@@ -135,6 +145,10 @@ public final class Relay extends JavaPlugin implements Listener {
 
         if (this.hologramService != null) {
             this.hologramService.deleteAll(event.getPlugin());
+        }
+
+        if (this.menuService != null) {
+            this.menuService.closeAll(event.getPlugin());
         }
     }
 
@@ -171,6 +185,11 @@ public final class Relay extends JavaPlugin implements Listener {
     @NotNull
     public org.vrz.relay.hologram.RelayHologramServiceImpl getHologramService() {
         return hologramService;
+    }
+
+    @NotNull
+    public org.vrz.relay.menu.RelayMenuServiceImpl getMenuService() {
+        return menuService;
     }
 }
 

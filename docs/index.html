@@ -52,7 +52,7 @@
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="text-base font-bold tracking-tight text-white">Relay</span>
-                    <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20">v1.2.0</span>
+                    <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20">v1.3.0</span>
                 </div>
             </a>
 
@@ -65,7 +65,7 @@
                 </a>
                 <a href="#changelog" class="text-slate-400 hover:text-white transition flex items-center gap-1.5">
                     <i data-lucide="history" class="w-4 h-4 text-cyan-400"></i> Güncellemeler
-                    <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[10px]">v1.2.0</span>
+                    <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[10px]">v1.3.0</span>
                 </a>
             </nav>
 
@@ -173,7 +173,7 @@
 
 dependencies {
     // Sadece 40 KB'lık hafif, sıfır-bağımlılıklı API kütüphanesi:
-    compileOnly("com.github.Kriscra.Relay:relay-api:v1.2.0")
+    compileOnly("com.github.Kriscra.Relay:relay-api:v1.3.0")
 }</code></pre>
                             </div>
 
@@ -408,6 +408,7 @@ RelayAPI.getMessenger().request("clan:get_level", clanId, Integer.class, Duratio
                                     <a href="#party" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">PartyService (Dost Ateşi & Parti)</a>
                                     <a href="#metrics" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">MetricsService (Telemetri & Performans)</a>
                                     <a href="#holograms" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">HologramService (TextDisplay)</a>
+                                    <a href="#menus" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">MenuService (Sanal GUI)</a>
                                 </div>
                             </div>
 
@@ -424,7 +425,7 @@ RelayAPI.getMessenger().request("clan:get_level", clanId, Integer.class, Duratio
                                 <div class="space-y-0.5">
                                     <a href="#changelog" class="sidebar-link block px-3 py-1.5 rounded text-slate-400 flex items-center justify-between">
                                         <span>Güncellemeler (Changelog)</span>
-                                        <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[10px]">v1.2.0</span>
+                                        <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[10px]">v1.3.0</span>
                                     </a>
                                 </div>
                             </div>
@@ -487,7 +488,7 @@ RelayAPI.getMessenger().request("clan:get_level", clanId, Integer.class, Duratio
 }
 
 dependencies {
-    compileOnly("com.github.Kriscra.Relay:relay-api:v1.2.0")
+    compileOnly("com.github.Kriscra.Relay:relay-api:v1.3.0")
 }</code></pre>
                                 </div>
                             </div>
@@ -506,7 +507,7 @@ dependencies {
     &lt;dependency&gt;
         &lt;groupId&gt;com.github.Kriscra.Relay&lt;/groupId&gt;
         &lt;artifactId&gt;relay-api&lt;/artifactId&gt;
-        &lt;version&gt;v1.2.0&lt;/version&gt;
+        &lt;version&gt;v1.3.0&lt;/version&gt;
         &lt;scope&gt;provided&lt;/scope&gt;
     &lt;/dependency&gt;
 &lt;/dependencies&gt;</code></pre>
@@ -586,6 +587,11 @@ dependencies {
                                             <td class="py-3 px-4 font-mono text-cyan-400">RelayAPI.getHolograms()</td>
                                             <td class="py-3 px-4 font-mono text-slate-300">HologramService</td>
                                             <td class="py-3 px-4">Modern TextDisplay tabanlı, Folia uyumlu yüksek performanslı hologram servisini döndürür.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-3 px-4 font-mono text-cyan-400">RelayAPI.getMenus()</td>
+                                            <td class="py-3 px-4 font-mono text-slate-300">MenuService</td>
+                                            <td class="py-3 px-4">Folia güvenli, reaktif sanal sandık GUI ve sayfalama (pagination) menü motorunu döndürür.</td>
                                         </tr>
                                         <tr>
                                             <td class="py-3 px-4 font-mono text-cyan-400">RelayAPI.isInitialized()</td>
@@ -1923,7 +1929,245 @@ public class HologramEventListener implements Listener {
 
 
                     <!-- ============================================== -->
-                    <!-- DOC 11: FOLIA                                  -->
+                    <!-- DOC 11: MENUS                                  -->
+                    <!-- ============================================== -->
+                    <article id="menus" class="wiki-article space-y-8 hidden">
+                        <div class="pb-4 border-b border-white/[0.08]">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-xs">v1.3.0 Yeni</span>
+                                <span class="badge-tag bg-indigo-500/10 text-indigo-400 border-indigo-500/20 text-xs">Folia Safe GUI</span>
+                                <span class="badge-tag bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-xs">Sıfır Eşya Kopyalama (Anti-Dupe)</span>
+                            </div>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white">MenuService & Reaktif Sanal GUI Motoru</h1>
+                            <p class="text-xs text-slate-400 mt-1">Folia çok çekirdekli mimarisinde kilitlenme ve eşya kopyalama açıklarını sıfırlayan, deklaratif şablon (mask) ve dinamik sayfalama (pagination) destekli sanal menü motoru.</p>
+                        </div>
+
+                        <!-- Feature Badges -->
+                        <div class="flex flex-wrap gap-2 text-xs">
+                            <span class="px-2.5 py-1 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-medium">Folia Region-Safe</span>
+                            <span class="px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">Sıfır Duplication Garantisi</span>
+                            <span class="px-2.5 py-1 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-medium">Debounce & Anti-Macro</span>
+                            <span class="px-2.5 py-1 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20 font-medium">Şablon Kalıp (Pattern Mask)</span>
+                            <span class="px-2.5 py-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-medium">Dinamik Sayfalama (Pagination)</span>
+                            <span class="px-2.5 py-1 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 font-medium">Zero-Leak Temizleme</span>
+                        </div>
+
+                        <!-- Content Sections -->
+                        <div class="space-y-6 text-sm text-slate-300 leading-relaxed">
+                            <div class="space-y-3">
+                                <h3 class="text-base font-semibold text-white">Neden Klasik Envanter Sistemleri Folia'da Tehlikelidir?</h3>
+                                <p>
+                                    Folia'da her oyuncu kendi bölgesel iş parçacığında (region thread) yürütülür. Klasik Bukkit GUI eklentilerinde shift-tıklama, sayı tuşları (hotbar 1-9 swap), sol el takası (F tuşu) veya sürükleme (drag) olayları thread çakışmalarına ve oyuncuların eşya kopyalamasına (dupe) yol açar.
+                                </p>
+                                <p>
+                                    Relay <strong>MenuService</strong>, tüm üst envanter tıklamalarını varsayılan olarak iptal eder (<code class="text-cyan-300">setCancelled(true)</code>) ve alt çanta sürüklemelerini kilitler. Dahili <strong>150ms debounce</strong> koruması sayesinde makro veya otomatik tıklayıcı yazılımların aynı butona saniyede 50 kez basarak sunucuyu kandırması imkansız hale gelir.
+                                </p>
+                            </div>
+
+                            <!-- Bento Grid Architecture -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <div class="bento-card p-4 rounded-xl border border-white/[0.06] space-y-1.5">
+                                    <div class="flex items-center gap-2 text-indigo-400 font-semibold text-xs">
+                                        <i data-lucide="shield-check" class="w-4 h-4"></i> Anti-Macro Debounce
+                                    </div>
+                                    <p class="text-xs text-slate-400">
+                                        Hızlı tıklama ve makro botlarını buton bazlı milisaniye gecikmesiyle engeller. İki kez para çekme gibi açıkları önler.
+                                    </p>
+                                </div>
+                                <div class="bento-card p-4 rounded-xl border border-white/[0.06] space-y-1.5">
+                                    <div class="flex items-center gap-2 text-cyan-400 font-semibold text-xs">
+                                        <i data-lucide="layout-grid" class="w-4 h-4"></i> Şablon Maskeleme (Pattern)
+                                    </div>
+                                    <p class="text-xs text-slate-400">
+                                        <code>"#########", "#  B W  #", "#########"</code> gibi görsel metin kalıpları ile slot numaraları hesaplamadan tek satırda mizanpaj tasarımı.
+                                    </p>
+                                </div>
+                                <div class="bento-card p-4 rounded-xl border border-white/[0.06] space-y-1.5">
+                                    <div class="flex items-center gap-2 text-emerald-400 font-semibold text-xs">
+                                        <i data-lucide="refresh-cw" class="w-4 h-4"></i> Canlı Yenilenme (Auto-Refresh)
+                                    </div>
+                                    <p class="text-xs text-slate-400">
+                                        Geri sayımlar veya canlı bakiye için periyodik yenileme. Oyuncu menüyü kapattığında zamanlayıcı anında durur, sıfır CPU kaybı.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Code Example 1 -->
+                            <div class="space-y-3">
+                                <h3 class="text-base font-semibold text-white">1. Şablon (Pattern) ile Menü Oluşturma</h3>
+                                <p class="text-xs text-slate-400">
+                                    Tek tek slot numaralarıyla uğraşmadan, karakter eşlemeleri ile akıcı bir şekilde menü oluşturun:
+                                </p>
+                                <div class="rounded-xl overflow-hidden border border-white/[0.08] bg-[#0c0d12]">
+                                    <div class="px-4 py-2 bg-white/[0.02] border-b border-white/[0.06] flex items-center justify-between text-xs text-slate-400">
+                                        <span>ServerHubMenu.java</span>
+                                        <span class="font-mono text-[11px] text-indigo-400">Pattern Mask &amp; Sound</span>
+                                    </div>
+                                    <pre class="m-0 p-4 text-xs"><code class="language-java">import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
+import org.vrz.relay.api.RelayAPI;
+import org.vrz.relay.api.menu.Menu;
+import org.vrz.relay.api.menu.MenuButton;
+
+public class ServerHubMenu {
+
+    public static void open(Plugin plugin, Player player) {
+        ItemStack borderGlass = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
+        ItemStack warpDungeon = new ItemStack(Material.NETHERITE_SWORD);
+        ItemStack closeBarrier = new ItemStack(Material.BARRIER);
+
+        Menu menu = RelayAPI.getMenus().createBuilder(plugin)
+                .titleMiniMessage("&lt;gradient:#4facfe:#00f2fe&gt;&lt;bold&gt;✦ SUNUCU IŞINLANMA MERKEZİ ✦&lt;/bold&gt;&lt;/gradient&gt;")
+                .pattern(
+                    "#########",
+                    "#   W   #",
+                    "#   X   #"
+                )
+                .bindKey('#', MenuButton.of(borderGlass))
+                .bindKey('W', MenuButton.builder()
+                        .item(warpDungeon)
+                        .sound(Sound.ENTITY_ENDERMAN_TELEPORT)
+                        .debounce(300L) // 300ms makro koruması
+                        .onClick(ctx -> {
+                            ctx.getPlayer().teleport(ctx.getPlayer().getWorld().getSpawnLocation());
+                            ctx.close();
+                        })
+                        .build())
+                .bindKey('X', MenuButton.of(closeBarrier, ctx -> ctx.close()))
+                .build();
+
+        menu.open(player);
+    }
+}</code></pre>
+                                </div>
+                            </div>
+
+                            <!-- Code Example 2 -->
+                            <div class="space-y-3">
+                                <h3 class="text-base font-semibold text-white">2. Dinamik Sayfalama (PaginatedMenu)</h3>
+                                <p class="text-xs text-slate-400">
+                                    Sıralamalar, warp listeleri veya pazar eşyaları gibi yüzlerce öğeyi otomatik sayfalara bölün:
+                                </p>
+                                <div class="rounded-xl overflow-hidden border border-white/[0.08] bg-[#0c0d12]">
+                                    <div class="px-4 py-2 bg-white/[0.02] border-b border-white/[0.06] flex items-center justify-between text-xs text-slate-400">
+                                        <span>PlayerListMenu.java</span>
+                                        <span class="font-mono text-[11px] text-cyan-400">Otomatik Sayfalama Motoru</span>
+                                    </div>
+                                    <pre class="m-0 p-4 text-xs"><code class="language-java">import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
+import org.vrz.relay.api.RelayAPI;
+import org.vrz.relay.api.menu.MenuButton;
+
+import java.util.List;
+
+public class PlayerListMenu {
+
+    public static void open(Plugin plugin, Player player, List&lt;String&gt; warps) {
+        RelayAPI.getMenus().&lt;String&gt;createPaginatedBuilder(plugin)
+                .titleMiniMessage("&lt;yellow&gt;Warp Listesi &lt;gray&gt;(Sayfalı)&lt;/gray&gt;&lt;/yellow&gt;")
+                .rows(6)
+                .items(warps)
+                .contentSlotRange(10, 16) // Sayfa başına 7 slot
+                .itemRenderer((warpName, index) -> {
+                    ItemStack icon = new ItemStack(Material.COMPASS);
+                    return MenuButton.of(icon, ctx -> {
+                        ctx.getPlayer().sendMessage("Warp seçildi: " + warpName);
+                    });
+                })
+                .previousPageButton(48, pMenu -> MenuButton.of(new ItemStack(Material.ARROW), () -> pMenu.previousPage(player)))
+                .nextPageButton(50, pMenu -> MenuButton.of(new ItemStack(Material.ARROW), () -> pMenu.nextPage(player)))
+                .pageInfoButton(49, (current, max) -> MenuButton.of(new ItemStack(Material.BOOK)))
+                .fillBorder(MenuButton.of(new ItemStack(Material.GRAY_STAINED_GLASS_PANE)))
+                .open(player);
+    }
+}</code></pre>
+                                </div>
+                            </div>
+
+                            <!-- API Reference Table -->
+                            <div class="space-y-3">
+                                <h3 class="text-base font-semibold text-white">MenuService &amp; Menu API Referansı</h3>
+                                <div class="overflow-x-auto rounded-xl border border-white/[0.08]">
+                                    <table class="w-full text-left text-xs border-collapse">
+                                        <thead>
+                                            <tr class="border-b border-white/[0.08] bg-white/[0.02] text-slate-400">
+                                                <th class="py-3 px-4">Metot</th>
+                                                <th class="py-3 px-4">Dönüş Türü</th>
+                                                <th class="py-3 px-4">Açıklama</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-white/[0.05] text-slate-300">
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">createBuilder(Plugin)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">MenuBuilder</td>
+                                                <td class="py-3 px-4">Sandık menüsü inşa edicisini başlatır.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">createPaginatedBuilder(Plugin)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">PaginatedMenuBuilder&lt;T&gt;</td>
+                                                <td class="py-3 px-4">Koleksiyonlar için çok sayfalı dinamik menü inşa edicisini başlatır.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">createButtonBuilder()</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">MenuButtonBuilder</td>
+                                                <td class="py-3 px-4">Yetki, debounce ve ses efektli interaktif buton yapılandırıcısı.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">builder.pattern(String...)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">MenuBuilder</td>
+                                                <td class="py-3 px-4">Metin kalıpları (mask) ile envanter düzeni belirler.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">builder.fillBorder(MenuButton)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">MenuBuilder</td>
+                                                <td class="py-3 px-4">Dış çerçeve slotlarını otomatik olarak belirtilen butonla kaplar.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">builder.fillBackground(MenuButton)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">MenuBuilder</td>
+                                                <td class="py-3 px-4">Boş kalan tüm iç slotları arkaplan butonuyla doldurur.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">builder.refreshInterval(long)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">MenuBuilder</td>
+                                                <td class="py-3 px-4">Açık olan menüyü N tick'te bir otomatik yenileyen zamanlayıcı kurar.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">menu.open(Player)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">void</td>
+                                                <td class="py-3 px-4">Menüyü Folia oyuncu iş parçacığında güvenle açar.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">menu.updateSlot(Player, slot)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">void</td>
+                                                <td class="py-3 px-4">Menüyü kapatıp açmadan tek bir slotu canlı günceller.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">service.getOpenMenu(Player)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">Optional&lt;Menu&gt;</td>
+                                                <td class="py-3 px-4">Oyuncunun şu anda açık olan sanal menüsünü döndürür.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">service.closeAll(Plugin)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">void</td>
+                                                <td class="py-3 px-4">Eklenti devre dışı kaldığında tüm menü oturumlarını kapatıp temizler (Zero-Leak).</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </article>
+
+
+                    <!-- ============================================== -->
+                    <!-- DOC 12: FOLIA                                  -->
                     <!-- ============================================== -->
                     <article id="folia" class="wiki-article space-y-6 hidden">
                         <div class="pb-4 border-b border-white/[0.08]">
@@ -1986,6 +2230,10 @@ public class HologramEventListener implements Listener {
                                 <code class="text-indigo-400 font-mono font-semibold text-xs">/relay holograms</code>
                                 <p class="text-xs text-slate-400 mt-1">Sunucu üzerindeki tüm aktif TextDisplay hologramlarını ve her birinin ait olduğu eklentiyi listeler.</p>
                             </div>
+                            <div class="bento-card p-4 rounded-lg">
+                                <code class="text-purple-400 font-mono font-semibold text-xs">/relay menus</code>
+                                <p class="text-xs text-slate-400 mt-1">Sunucuda aktif sanal sandık menülerini, satır sayılarını ve görüntüleyen oyuncu sayılarını listeler.</p>
+                            </div>
                         </div>
                     </article>
 
@@ -2004,21 +2252,117 @@ public class HologramEventListener implements Listener {
                         <div class="relative pl-6 sm:pl-8 border-l border-white/[0.08] space-y-16 my-8 ml-2">
 
                             <!-- ============================================== -->
-                            <!-- RELEASE 1: v1.2.0                              -->
+                            <!-- RELEASE 1: v1.3.0                              -->
                             <!-- ============================================== -->
                             <div class="relative space-y-5">
                                 <!-- Timeline Node -->
-                                <div class="absolute -left-[31px] sm:-left-[39px] top-1 w-4 h-4 rounded-full bg-[#08090d] border-2 border-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.6)] flex items-center justify-center">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                                <div class="absolute -left-[31px] sm:-left-[39px] top-1 w-4 h-4 rounded-full bg-[#08090d] border-2 border-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.6)] flex items-center justify-center">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                                 </div>
 
                                 <!-- Header Metadata -->
                                 <div class="space-y-2">
                                     <div class="flex flex-wrap items-center gap-2">
-                                        <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-cyan-400 text-slate-950 font-mono tracking-tight">v1.2.0</span>
+                                        <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-emerald-400 text-slate-950 font-mono tracking-tight">v1.3.0</span>
                                         <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> En Güncel Sürüm
                                         </span>
+                                        <span class="text-xs text-slate-500 font-mono flex items-center gap-1 ml-auto">
+                                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i> 27 Eylül 2026
+                                        </span>
+                                    </div>
+                                    <h2 class="text-xl font-bold text-white">MenuService & Reaktif Sanal GUI Motoru (Folia Safe & Zero-Dupe)</h2>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        Folia çok çekirdekli mimarisinde kilitlenme ve eşya kopyalama açıklarını sıfırlayan, deklaratif şablon (mask) ve dinamik sayfalama (pagination) destekli sanal sandık menü motoru eklendi.
+                                    </p>
+                                </div>
+
+                                <!-- Badges row -->
+                                <div class="flex flex-wrap items-center gap-2 text-xs">
+                                    <a href="https://github.com/Kriscra/Relay/releases/tag/v1.3.0" target="_blank" class="px-2 py-0.5 rounded bg-white/[0.04] text-slate-300 hover:text-white border border-white/[0.08] font-mono text-[11px] transition">
+                                        Tag: v1.3.0
+                                    </a>
+                                    <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] font-medium">
+                                        ✔ 35 / 35 Birim Test Geçti
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[11px] font-medium">
+                                        Folia Safe GUI
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-[11px] font-medium">
+                                        Zero-Dupe Güvenliği
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20 text-[11px] font-medium">
+                                        Pagination Engine
+                                    </span>
+                                </div>
+
+                                <!-- Feature List Grid -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                                    
+                                    <div class="bento-card p-4 rounded-xl space-y-2 border border-white/[0.06] hover:border-emerald-500/30 transition">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                                                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i> Folia Safe Envanter Mimarisi
+                                            </span>
+                                            <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Güvenlik</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">
+                                            Folia'da bölgesel thread çakışmalarını önlemek için tüm üst envanter tıklamaları otomatik iptal edilir. Shift-click, drag ve hotbar swap kilitlidir.
+                                        </p>
+                                    </div>
+
+                                    <div class="bento-card p-4 rounded-xl space-y-2 border border-white/[0.06] hover:border-cyan-500/30 transition">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                                                <i data-lucide="clock" class="w-3.5 h-3.5 text-cyan-400"></i> Anti-Macro Debounce Koruması
+                                            </span>
+                                            <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Anti-Spam</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">
+                                            Buton bazlı milisaniye gecikmesi (varsayılan 150ms). Makro veya otomatik tıklayıcılarla aynı anda iki kez işlem yapılmasını engeller.
+                                        </p>
+                                    </div>
+
+                                    <div class="bento-card p-4 rounded-xl space-y-2 border border-white/[0.06] hover:border-purple-500/30 transition">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                                                <i data-lucide="layers" class="w-3.5 h-3.5 text-purple-400"></i> Dinamik Sayfalama (Pagination)
+                                            </span>
+                                            <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20">Sayfalama</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">
+                                            <code class="text-purple-300 font-mono text-[11px]">PaginatedMenu&lt;T&gt;</code> ile yüzlerce veriyi otomatik sayfalara bölün. İleri, geri ve sayfa bilgisi butonları hazırdır.
+                                        </p>
+                                    </div>
+
+                                    <div class="bento-card p-4 rounded-xl space-y-2 border border-white/[0.06] hover:border-indigo-500/30 transition">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                                                <i data-lucide="layout-grid" class="w-3.5 h-3.5 text-indigo-400"></i> Şablon Maskeleme (Pattern)
+                                            </span>
+                                            <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Tasarım</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">
+                                            Karakter kalıpları (<code class="text-indigo-300 font-mono text-[11px]">"#########", "# W X #"</code>) ile slot numarası hesaplamadan estetik menüler tasarlayın.
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- ============================================== -->
+                            <!-- RELEASE 2: v1.2.0                              -->
+                            <!-- ============================================== -->
+                            <div class="relative space-y-5">
+                                <!-- Timeline Node -->
+                                <div class="absolute -left-[31px] sm:-left-[39px] top-1 w-4 h-4 rounded-full bg-[#08090d] border-2 border-slate-600 flex items-center justify-center">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                </div>
+
+                                <!-- Header Metadata -->
+                                <div class="space-y-2">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-white/[0.08] text-slate-300 font-mono tracking-tight">v1.2.0</span>
                                         <span class="text-xs text-slate-500 font-mono flex items-center gap-1 ml-auto">
                                             <i data-lucide="calendar" class="w-3.5 h-3.5"></i> 27 Eylül 2026
                                         </span>
