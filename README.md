@@ -5,8 +5,8 @@
 </p>
 
 <p align="center">
-  <strong>Endüstri Standardı Reaktif Servis Kaydı, Eklentiler Arası İletişim (Pub/Sub) ve Ekosistem Çatısı</strong><br>
-  <em>Modern Paper, Purpur ve Çok Çekirdekli Folia Sunucuları İçin Yeni Nesil Altyapı Motoru.</em>
+  <strong>Industry-Standard Reactive Service Registry, Inter-Plugin Pub/Sub & Ecosystem Framework</strong><br>
+  <em>Next-generation server infrastructure engineered for modern Paper, Purpur, and multi-threaded Folia servers.</em>
 </p>
 
 <p align="center">
@@ -17,47 +17,55 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-6366f1?style=for-the-badge" alt="License" /></a>
 </p>
 
----
-
-## 🌟 Relay Nedir?
-
-**Relay**, modern Minecraft sunucularında (Paper, Purpur ve özellikle çok iş parçacıklı **Folia**) eklentiler arası entegrasyonu ve sunucu servislerini endüstri standartlarına taşıyan açık kaynaklı bir altyapı motorudur.
-
-Eski Bukkit mimarisindeki senkron ve ana iş parçacığını (Main Thread) donduran çağrılar yerine; **%100 Non-Blocking asenkron mimari**, **mikroservis tipi Pub/Sub mesajlaşması**, **Folia bölgesel iş parçacığı güvenliği (Region-Safe)** ve **otomatik bellek temizliği (Zero-Leak)** sunar.
+<p align="center">
+  <strong>English</strong> • <a href="README_TR.md">Türkçe</a>
+</p>
 
 ---
 
-## 🚀 Dahili Servisler (Features at a Glance)
+## 🌟 What is Relay?
 
-Relay, bir sunucunun ve eklentilerin ihtiyaç duyduğu 8 temel alt sistemi tek bir çatı altında eksiksiz sunar:
+**Relay** is an enterprise-grade, high-performance infrastructure framework and service backbone designed for modern Minecraft servers running on **Paper**, **Purpur**, and multi-threaded **Folia**.
 
-| Modül / Servis | Açıklama | Öne Çıkan Özellikler |
+Instead of fragile load-order dependencies, synchronous Bukkit service lookups that stutter the main thread, and tight compile-time couplings between plugins, Relay delivers:
+* **100% Non-Blocking & Asynchronous Architecture:** Built on Java 21 `CompletableFuture` promises and lock-free concurrent primitives.
+* **Microservice-Style Pub/Sub & RPC:** Decouple your plugins completely with typed asynchronous messaging and request-response channels.
+* **Folia Multi-Thread Native (Region-Safe):** All entity, hologram, and inventory interactions are automatically routed to their owner region thread with zero deadlock risk.
+* **Zero-Memory Leak Lifecycles:** Automatic cleanup hooks unregister listeners, remove display entities, close active virtual menus, and evict stale cooldowns upon plugin disable.
+
+---
+
+## 🚀 Built-in Services (Overview)
+
+Relay unifies 10 essential server subsystems into a clean, lightweight API:
+
+| Service / Subsystem | Description | Key Features |
 | :--- | :--- | :--- |
-| **ServiceRegistry** | Reaktif servis keşfi ve kayıt defteri | `HIGHEST` ➔ `FALLBACK` öncelik basamakları, yüklenme sırasından bağımsız `onServiceReady` Promise mimarisi. |
-| **RelayMessenger** | Bağımsız Pub/Sub ve RPC iletişim veri yolu | Eklentiler birbirinin `.jar` dosyasına bağımlı olmadan kanallara abone olabilir veya asenkron istek-cevap (`request`) yapabilir. |
-| **EconomyService** | Çoklu para birimi ve finans motoru | IEEE 754 kayan noktalı sayı hatalarını önleyen `BigDecimal` aritmetiği, sınırsız para birimi, atomik transferler. |
-| **CooldownService** | Evrensel bekleme süresi yöneticisi | Yetenek, büyü ve komutlar için thread-safe bekleme süreleri, ActionBar dolum yüzdesi (`getProgress()`), otomatik TTL tahliyesi. |
-| **SharedDataService** | Tip güvenli paylaşımlı veri havuzu | `DataKey<T>` ile veri doğrulama, süreli geçici veriler (`setTemporary`), reaktif canlı gözlemciler (`observe`). |
-| **PermissionService** | Asenkron yetki ve rütbe kontrolü | TPS düşüşlerini engelleyen asenkron yetki sorgulama, LuckPerms/Vault uyumluluğu, ön ek ve rütbe ağırlığı. |
-| **PartyService** | Takım ve dost ateşi yöneticisi | Combat anında thread dondurmayan sıfır-bellek tahsisli `isFriendlySync` kontrolleri, zindan grupları. |
-| **MetricsService** | Performans telemetrisi & lag alarmı | Nanosaniye hassasiyetinde süre ölçümü, P50/P95/P99 yüzdelikleri, TPS düşüşlerinde otomatik `LagSpikeEvent` alarmı. |
-| **HologramService** | Display Entity tabanlı hologram motoru | Minecraft 1.20+ `TextDisplay` native mimarisi, sıfır ArmorStand lag, Folia region-safe `spawnAsync`, MiniMessage ve gölge. |
-| **MenuService** | Folia güvenli sanal sandık GUI motoru | Üst envanter tıklamalarını ve sürüklemelerini kilitleyen anti-dupe koruması, 150ms anti-macro debounce, sayfalama (pagination). |
+| **ServiceRegistry** | Reactive service discovery & provider registry | Priority tiers (`HIGHEST` ➔ `FALLBACK`), load-order independent `onServiceReady` Promise callbacks. |
+| **RelayMessenger** | Decoupled Pub/Sub event bus & async RPC | Inter-plugin messaging without jar dependencies; publish topics, subscribe listeners, and await async responses. |
+| **EconomyService** | Multi-currency financial ledger engine | IEEE 754 float-safe `BigDecimal` arithmetic, arbitrary currency registration, atomic transfers. |
+| **CooldownService** | Universal time-to-live cooldown manager | Thread-safe cooldowns for spells, skills, and commands; action bar completion percentage (`getProgress()`), auto-TTL eviction. |
+| **SharedDataService** | Type-safe shared reactive data store | Strongly-typed `DataKey<T>` validation, temporary TTL key expiration, live change observers (`observe`). |
+| **PermissionService** | Asynchronous permission & group checking | Non-blocking group and permission queries to safeguard server tick performance, LuckPerms/Vault bridge, weight ranking. |
+| **PartyService** | Team, party & friendly-fire manager | Allocation-free, lockless `isFriendlySync` verification for combat engines, dungeon parties, and shared loot. |
+| **MetricsService** | Performance telemetry & lag spike alerts | Nanosecond-resolution timers, P50/P95/P99 latency percentiles, automatic `LagSpikeEvent` dispatch upon tick drops. |
+| **HologramService** | Display Entity based holographic billboard engine | Minecraft 1.20+ native `TextDisplay` entities, zero ArmorStand lag, Folia region-safe `spawnAsync`, MiniMessage text and shadows. |
+| **MenuService** | Virtual chest inventory & GUI engine | Folia thread-safe opening, strict anti-duplication cancellation, 150ms anti-macro debounce, paginated menus (`PaginatedMenu<T>`). |
 
 ---
 
-## 🛡️ Folia Multi-Threading & Zero-Leak Mimarisi
+## 🛡️ Folia Multi-Threading & Zero-Leak Architecture
 
-Relay, çok çekirdekli Minecraft sunucu yazılımı **Folia** için sıfırdan tasarlanmıştır:
-* **Region-Safe Scheduling:** Hologram ve menü işlemleri, hedef koordinatın veya oyuncunun ait olduğu bağımsız iş parçacığına otomatik iletilir.
-* **Lock-Free Veri Yapıları:** Tüm dahili önbellekler `ConcurrentHashMap`, `CopyOnWrite` ve atomik sayaçlar ile donatılmıştır; kilitlenme (deadlock) yaşanmaz.
-* **Zero-Leak Yaşam Döngüsü:** Bir eklenti kapandığında veya sunucu yeniden yüklendiğinde, o eklentiye ait tüm dinleyiciler, hologramlar, menüler ve bekleme süreleri sunucudan otomatik tahliye edilir (`setPersistent(false)`).
+Relay was architected from the ground up for multi-threaded servers:
+* **Region-Safe Scheduling:** World entity mutations (such as `TextDisplay` holograms) and inventory views are dispatched via Folia's `RegionScheduler` or `EntityScheduler`.
+* **Lock-Free Concurrency:** All internal registries utilize `ConcurrentHashMap`, `CopyOnWriteArrayList`, and `AtomicReference` constructs to guarantee deterministic execution without thread contention or deadlocks.
+* **Persistent Auto-Cleanup:** All spawned entities have `setPersistent(false)` enabled. When a consumer plugin unloads, Relay automatically purges its associated subscribers, holograms, and GUI sessions.
 
 ---
 
-## 📦 Geliştiriciler İçin Projeye Ekleme (Dependency)
+## 📦 Adding to Your Project (Dependency)
 
-Eklenti geliştiricileri yalnızca 40 KB'lık hafif, harici kütüphane içermeyen **`relay-api`** modülünü çeker:
+Plugin developers only need to shade or compile against the featherweight **`relay-api`** (~40 KB, zero transitive runtime bloat):
 
 ### Gradle (Kotlin DSL)
 ```kotlin
@@ -68,6 +76,18 @@ repositories {
 
 dependencies {
     compileOnly("com.github.Kriscra.Relay:relay-api:v1.3.0")
+}
+```
+
+### Gradle (Groovy DSL)
+```groovy
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    compileOnly 'com.github.Kriscra.Relay:relay-api:v1.3.0'
 }
 ```
 
@@ -92,33 +112,34 @@ dependencies {
 
 ---
 
-## 🛠️ Hızlı Kod Örnekleri
+## 🛠️ Quick Code Examples
 
-### 1. Reaktif Servis Keşfi (`onServiceReady`)
-Yüklenme sırasını dert etmeyin. İlgili eklenti sizden sonra yüklense bile servis kaydedildiği anda geri çağrılır:
+### 1. Reactive Service Discovery (`onServiceReady`)
+Never worry about `loadbefore` or `depend` ordering again. Receive the service instance the moment it gets registered:
 ```java
 RelayAPI.getServiceRegistry().onServiceReady(EconomyService.class, economy -> {
-    getLogger().info("Ekonomi sistemi bağlandı! Para birimi: " + economy.getDefaultCurrency().displayName());
+    getLogger().info("Economy hooked! Default currency: " + economy.getDefaultCurrency().displayName());
 });
 ```
 
-### 2. Eklentiler Arası Mesajlaşma (Pub/Sub)
-Kendi aralarında doğrudan `.jar` bağımlılığı olmadan eklentilerin haberleşmesini sağlayın:
+### 2. Inter-Plugin Pub/Sub Messaging
+Enable seamless cross-plugin communication without direct `.jar` dependencies:
 ```java
-// Yayıncı Eklenti:
-RelayAPI.getMessenger().publish("clan:levelup", new ClanLevelPayload("Akıncılar", 10), this);
+// Publisher Plugin:
+RelayAPI.getMessenger().publish("guild:levelup", new GuildLevelPayload("Valkyrie", 10), this);
 
-// Dinleyici Eklenti:
-RelayAPI.getMessenger().subscribe("clan:levelup", ClanLevelPayload.class, this, ctx -> {
-    getLogger().info(ctx.getPayload().clanName() + " seviye atladı!");
+// Subscriber Plugin:
+RelayAPI.getMessenger().subscribe("guild:levelup", GuildLevelPayload.class, this, ctx -> {
+    getLogger().info(ctx.getPayload().guildName() + " has reached level " + ctx.getPayload().level());
 });
 ```
 
-### 3. TextDisplay Hologram Oluşturma (Folia Region-Safe)
+### 3. TextDisplay Hologram (Folia Region-Safe)
+Create lag-free text displays using Minecraft 1.20+ Display Entities:
 ```java
 Hologram hologram = RelayAPI.getHolograms().createBuilder(plugin, location)
         .appendLine("<gradient:#4facfe:#00f2fe><bold>✦ RELAY NETWORK ✦</bold></gradient>")
-        .appendLine("<gray>Folia & Paper Uyumlu</gray>")
+        .appendLine("<gray>Powered by TextDisplay & Folia</gray>")
         .setBillboard(Billboard.CENTER)
         .setTextShadow(true)
         .build();
@@ -126,10 +147,10 @@ Hologram hologram = RelayAPI.getHolograms().createBuilder(plugin, location)
 hologram.spawnAsync();
 ```
 
-### 4. Folia Uyumlu Sandık Menüsü (Anti-Dupe & Debounce)
+### 4. Folia-Safe Chest GUI (Anti-Dupe & Debounce)
 ```java
 Menu menu = RelayAPI.getMenus().createBuilder(plugin)
-        .titleMiniMessage("<green>Işınlanma Menüsü</green>")
+        .titleMiniMessage("<green>Teleportation Portal</green>")
         .pattern(
             "#########",
             "#   W   #",
@@ -139,8 +160,8 @@ Menu menu = RelayAPI.getMenus().createBuilder(plugin)
         .bindKey('W', MenuButton.builder()
                 .item(new ItemStack(Material.COMPASS))
                 .sound(Sound.ENTITY_ENDERMAN_TELEPORT)
-                .debounce(250L) // 250ms makro koruması
-                .onClick(ctx -> ctx.getPlayer().teleport(spawnLocation))
+                .debounce(250L) // 250ms anti-macro debounce
+                .onClick(ctx -> ctx.getPlayer().teleportAsync(spawnLocation))
                 .build())
         .build();
 
@@ -149,27 +170,25 @@ menu.open(player);
 
 ---
 
-## ⚙️ Yönetici Komutları
+## ⚙️ Administration & Diagnostics
 
-Sunucudaki aktif servisleri, telemetriyi ve oturumları anlık izleyin:
+Monitor active services, topics, telemetry, and open sessions in real time via the in-game command engine:
 
-| Komut | Açıklama |
-| :--- | :--- |
-| `/relay status` | Aktif servis, konu, hologram, menü ve çalışma ortamı bilgilerini gösterir. |
-| `/relay services` | Sunucuda kayıtlı tüm servisleri ve öncelik derecelerini listeler. |
-| `/relay topics` | Aktif Pub/Sub iletişim kanallarını ve dinleyici sayılarını listeler. |
-| `/relay metrics` | Ortalama işlem sürelerini, P95 gecikmelerini ve sayaçları gösterir. |
-| `/relay metrics reset`| Tüm telemetri ve performans sayaçlarını sıfırlar. |
-| `/relay holograms` | Aktif TextDisplay hologramlarını ve konumlarını listeler. |
-| `/relay menus` | Aktif sanal menü oturumlarını ve görüntüleyen oyuncu sayılarını listeler. |
+* `/relay status`: Overview of loaded services, topics, active holograms, menus, and server runtime environment.
+* `/relay services`: Lists all registered services, provider plugins, and priority tiers.
+* `/relay topics`: Inspects active pub/sub topics and subscriber counts.
+* `/relay metrics`: Live execution averages, P95 latencies, and transaction counters.
+* `/relay metrics reset`: Resets all active telemetry samples and metrics counters.
+* `/relay holograms`: Inspects currently tracked TextDisplay holograms and their world locations.
+* `/relay menus`: Lists active virtual inventory sessions and viewing players.
 
-**Yetki:** `relay.admin` (Varsayılan: OP)
+**Permission:** `relay.admin` (Default: OP)
 
 ---
 
-## 🔗 Bağlantılar & Kaynaklar
+## 🔗 Links & Resources
 
-* 🌐 **Canlı Dokümantasyon Sitesi:** [kriscra.github.io/Relay](https://kriscra.github.io/Relay/)
-* 💻 **GitHub Kaynak Kodu:** [github.com/Kriscra/Relay](https://github.com/Kriscra/Relay)
-* 📦 **JitPack SDK Deposu:** [jitpack.io/#Kriscra/Relay](https://jitpack.io/#Kriscra/Relay)
-* 📜 **Lisans:** MIT License
+* 🌐 **Live Documentation:** https://kriscra.github.io/Relay/
+* 💻 **GitHub Repository:** https://github.com/Kriscra/Relay
+* 📦 **JitPack SDK:** https://jitpack.io/#Kriscra/Relay
+* 📜 **License:** [MIT License](LICENSE)
