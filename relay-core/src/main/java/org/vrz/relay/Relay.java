@@ -29,6 +29,7 @@ public final class Relay extends JavaPlugin implements Listener {
     private RelaySharedDataServiceImpl dataService;
     private org.vrz.relay.party.DefaultPartyServiceImpl partyService;
     private org.vrz.relay.metric.RelayMetricsServiceImpl metricsService;
+    private org.vrz.relay.hologram.RelayHologramServiceImpl hologramService;
 
     @Override
     public void onLoad() {
@@ -39,15 +40,17 @@ public final class Relay extends JavaPlugin implements Listener {
         this.dataService = new RelaySharedDataServiceImpl();
         this.partyService = new org.vrz.relay.party.DefaultPartyServiceImpl();
         this.metricsService = new org.vrz.relay.metric.RelayMetricsServiceImpl();
+        this.hologramService = new org.vrz.relay.hologram.RelayHologramServiceImpl();
 
         // Register core framework services
         this.serviceRegistry.register(CooldownService.class, this.cooldownService, ServicePriority.HIGHEST, this);
         this.serviceRegistry.register(SharedDataService.class, this.dataService, ServicePriority.HIGHEST, this);
         this.serviceRegistry.register(org.vrz.relay.api.metric.MetricsService.class, this.metricsService, ServicePriority.HIGHEST, this);
+        this.serviceRegistry.register(org.vrz.relay.api.hologram.HologramService.class, this.hologramService, ServicePriority.HIGHEST, this);
         this.serviceRegistry.register(org.vrz.relay.api.party.PartyService.class, this.partyService, ServicePriority.FALLBACK, this);
         this.serviceRegistry.register(org.vrz.relay.api.permission.PermissionService.class, new org.vrz.relay.permission.DefaultBukkitPermissionProvider(), ServicePriority.FALLBACK, this);
 
-        RelayAPI.setInstance(new RelayProviderImpl(this.serviceRegistry, this.messenger, this.cooldownService, this.dataService, this.metricsService));
+        RelayAPI.setInstance(new RelayProviderImpl(this.serviceRegistry, this.messenger, this.cooldownService, this.dataService, this.metricsService, this.hologramService));
         getLogger().info("Relay API runtime bound successfully.");
     }
 
@@ -96,13 +99,17 @@ public final class Relay extends JavaPlugin implements Listener {
             this.metricsService.reset();
         }
 
+        if (this.hologramService != null) {
+            this.hologramService.deleteAll();
+        }
+
         RelayAPI.clearInstance();
         getLogger().info("Relay successfully unhooked and terminated.");
     }
 
     /**
      * Automatic lifecycle cleanup: When any plugin disables, remove its registered services,
-     * messenger subscriptions, active cooldowns and shared data to prevent memory leaks.
+     * messenger subscriptions, active cooldowns, shared data and holograms to prevent memory leaks.
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPluginDisable(PluginDisableEvent event) {
@@ -124,6 +131,10 @@ public final class Relay extends JavaPlugin implements Listener {
 
         if (this.dataService != null) {
             this.dataService.clearAll(event.getPlugin());
+        }
+
+        if (this.hologramService != null) {
+            this.hologramService.deleteAll(event.getPlugin());
         }
     }
 
@@ -155,6 +166,11 @@ public final class Relay extends JavaPlugin implements Listener {
     @NotNull
     public org.vrz.relay.metric.RelayMetricsServiceImpl getMetricsService() {
         return metricsService;
+    }
+
+    @NotNull
+    public org.vrz.relay.hologram.RelayHologramServiceImpl getHologramService() {
+        return hologramService;
     }
 }
 

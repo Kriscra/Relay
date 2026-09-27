@@ -19,17 +19,20 @@ public final class RelayProviderImpl implements RelayProvider {
     private final CooldownService cooldownService;
     private final SharedDataService dataService;
     private final org.vrz.relay.api.metric.MetricsService metricsService;
+    private final org.vrz.relay.api.hologram.HologramService hologramService;
 
     public RelayProviderImpl(@NotNull ServiceRegistry serviceRegistry,
                              @NotNull RelayMessenger messenger,
                              @NotNull CooldownService cooldownService,
                              @NotNull SharedDataService dataService,
-                             @NotNull org.vrz.relay.api.metric.MetricsService metricsService) {
+                             @NotNull org.vrz.relay.api.metric.MetricsService metricsService,
+                             @NotNull org.vrz.relay.api.hologram.HologramService hologramService) {
         this.serviceRegistry = Objects.requireNonNull(serviceRegistry, "serviceRegistry cannot be null");
         this.messenger = Objects.requireNonNull(messenger, "messenger cannot be null");
         this.cooldownService = Objects.requireNonNull(cooldownService, "cooldownService cannot be null");
         this.dataService = Objects.requireNonNull(dataService, "dataService cannot be null");
         this.metricsService = Objects.requireNonNull(metricsService, "metricsService cannot be null");
+        this.hologramService = Objects.requireNonNull(hologramService, "hologramService cannot be null");
     }
 
     @Override
@@ -60,5 +63,11 @@ public final class RelayProviderImpl implements RelayProvider {
     @NotNull
     public org.vrz.relay.api.metric.MetricsService getMetricsService() {
         return metricsService;
+    }
+
+    @Override
+    @NotNull
+    public org.vrz.relay.api.hologram.HologramService getHologramService() {
+        return hologramService;
     }
 }

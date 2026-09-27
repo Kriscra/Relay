@@ -4,7 +4,7 @@ plugins {
 
 allprojects {
     group = "org.vrz"
-    version = "1.1.0"
+    version = "1.2.0"
 
     repositories {
         mavenCentral()
@@ -31,6 +31,7 @@ subprojects {
     }
 
     tasks.withType<Test>().configureEach {
+        dependsOn(tasks.named("testClasses"))
         useJUnitPlatform()
         systemProperty("file.encoding", "UTF-8")
         val shortDesktop = "C:\\Users\\turkf\\OneDrive\\MASAST~1"

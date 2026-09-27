@@ -163,5 +163,16 @@ public final class RelayAPI {
     public static Optional<org.vrz.relay.api.party.PartyService> getParties() {
         return getInstance().getPartyService();
     }
+
+    /**
+     * Gets the global {@link org.vrz.relay.api.hologram.HologramService}.
+     *
+     * @return active hologram service
+     * @throws IllegalStateException if Relay is not yet initialized
+     */
+    @NotNull
+    public static org.vrz.relay.api.hologram.HologramService getHolograms() {
+        return getInstance().getHologramService();
+    }
 }
 

@@ -57,6 +57,14 @@ public interface RelayProvider {
     org.vrz.relay.api.metric.MetricsService getMetricsService();
 
     /**
+     * Gets the global hologram service.
+     *
+     * @return hologram service instance
+     */
+    @NotNull
+    org.vrz.relay.api.hologram.HologramService getHologramService();
+
+    /**
      * Gets the primary registered economy service, if one is registered.
      *
      * @return optional containing active EconomyService

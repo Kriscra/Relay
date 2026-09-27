@@ -44,6 +44,8 @@ public class RelayCommand implements CommandExecutor, TabCompleter {
                     .append(Component.text(plugin.getServiceRegistry().getKnownServices().size(), NamedTextColor.GREEN)));
             sender.sendMessage(Component.text("» Active Topics: ", NamedTextColor.GRAY)
                     .append(Component.text(plugin.getMessenger().getActiveTopics().size(), NamedTextColor.GREEN)));
+            sender.sendMessage(Component.text("» Active Holograms: ", NamedTextColor.GRAY)
+                    .append(Component.text(plugin.getHologramService().getActiveHologramCount(), NamedTextColor.GREEN)));
             sender.sendMessage(Component.text("» Runtime: ", NamedTextColor.GRAY)
                     .append(Component.text(Runtime.version().toString(), NamedTextColor.WHITE)));
             return true;
@@ -137,7 +139,26 @@ public class RelayCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        sender.sendMessage(Component.text("Unknown subcommand. Usage: /relay <status|services|topics|metrics>", NamedTextColor.RED));
+        if (args[0].equalsIgnoreCase("holograms")) {
+            sendHeader(sender, "Registered Holograms");
+            Collection<org.vrz.relay.api.hologram.Hologram> holos = plugin.getHologramService().getAllHolograms();
+            if (holos.isEmpty()) {
+                sender.sendMessage(Component.text("No active holograms registered.", NamedTextColor.DARK_GRAY));
+                return true;
+            }
+
+            for (org.vrz.relay.api.hologram.Hologram holo : holos) {
+                org.bukkit.Location loc = holo.getLocation();
+                String worldName = loc.getWorld() != null ? loc.getWorld().getName() : "unknown";
+                sender.sendMessage(Component.text("• " + holo.getId(), NamedTextColor.AQUA)
+                        .append(Component.text(" [" + holo.getOwner().getName() + "]", NamedTextColor.YELLOW))
+                        .append(Component.text(String.format(" (%s: %.1f, %.1f, %.1f)", worldName, loc.getX(), loc.getY(), loc.getZ()), NamedTextColor.GRAY))
+                        .append(Component.text(" (" + holo.getLineCount() + " lines)", NamedTextColor.DARK_GRAY)));
+            }
+            return true;
+        }
+
+        sender.sendMessage(Component.text("Unknown subcommand. Usage: /relay <status|services|topics|metrics|holograms>", NamedTextColor.RED));
         return true;
     }
 
@@ -157,7 +178,7 @@ public class RelayCommand implements CommandExecutor, TabCompleter {
             return Collections.emptyList();
         }
         if (args.length == 1) {
-            return Arrays.asList("status", "services", "topics", "metrics").stream()
+            return Arrays.asList("status", "services", "topics", "metrics", "holograms").stream()
                     .filter(s -> s.startsWith(args[0].toLowerCase(Locale.ROOT)))
                     .collect(Collectors.toList());
         }

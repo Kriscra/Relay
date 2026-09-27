@@ -52,7 +52,7 @@
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="text-base font-bold tracking-tight text-white">Relay</span>
-                    <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20">v1.1.0</span>
+                    <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20">v1.2.0</span>
                 </div>
             </a>
 
@@ -65,7 +65,7 @@
                 </a>
                 <a href="#changelog" class="text-slate-400 hover:text-white transition flex items-center gap-1.5">
                     <i data-lucide="history" class="w-4 h-4 text-cyan-400"></i> Güncellemeler
-                    <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[10px]">v1.1.0</span>
+                    <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[10px]">v1.2.0</span>
                 </a>
             </nav>
 
@@ -173,7 +173,7 @@
 
 dependencies {
     // Sadece 40 KB'lık hafif, sıfır-bağımlılıklı API kütüphanesi:
-    compileOnly("com.github.Kriscra.Relay:relay-api:v1.1.0")
+    compileOnly("com.github.Kriscra.Relay:relay-api:v1.2.0")
 }</code></pre>
                             </div>
 
@@ -407,6 +407,7 @@ RelayAPI.getMessenger().request("clan:get_level", clanId, Integer.class, Duratio
                                     <a href="#permissions" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">PermissionService (Yetki & Rütbe)</a>
                                     <a href="#party" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">PartyService (Dost Ateşi & Parti)</a>
                                     <a href="#metrics" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">MetricsService (Telemetri & Performans)</a>
+                                    <a href="#holograms" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">HologramService (TextDisplay)</a>
                                 </div>
                             </div>
 
@@ -423,7 +424,7 @@ RelayAPI.getMessenger().request("clan:get_level", clanId, Integer.class, Duratio
                                 <div class="space-y-0.5">
                                     <a href="#changelog" class="sidebar-link block px-3 py-1.5 rounded text-slate-400 flex items-center justify-between">
                                         <span>Güncellemeler (Changelog)</span>
-                                        <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[10px]">v1.1.0</span>
+                                        <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[10px]">v1.2.0</span>
                                     </a>
                                 </div>
                             </div>
@@ -486,7 +487,7 @@ RelayAPI.getMessenger().request("clan:get_level", clanId, Integer.class, Duratio
 }
 
 dependencies {
-    compileOnly("com.github.Kriscra.Relay:relay-api:v1.1.0")
+    compileOnly("com.github.Kriscra.Relay:relay-api:v1.2.0")
 }</code></pre>
                                 </div>
                             </div>
@@ -505,7 +506,7 @@ dependencies {
     &lt;dependency&gt;
         &lt;groupId&gt;com.github.Kriscra.Relay&lt;/groupId&gt;
         &lt;artifactId&gt;relay-api&lt;/artifactId&gt;
-        &lt;version&gt;v1.1.0&lt;/version&gt;
+        &lt;version&gt;v1.2.0&lt;/version&gt;
         &lt;scope&gt;provided&lt;/scope&gt;
     &lt;/dependency&gt;
 &lt;/dependencies&gt;</code></pre>
@@ -580,6 +581,11 @@ dependencies {
                                             <td class="py-3 px-4 font-mono text-cyan-400">RelayAPI.getMetrics()</td>
                                             <td class="py-3 px-4 font-mono text-slate-300">MetricsService</td>
                                             <td class="py-3 px-4">Performans telemetrisi, sayaç ve süre ölçüm servisini döndürür.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-3 px-4 font-mono text-cyan-400">RelayAPI.getHolograms()</td>
+                                            <td class="py-3 px-4 font-mono text-slate-300">HologramService</td>
+                                            <td class="py-3 px-4">Modern TextDisplay tabanlı, Folia uyumlu yüksek performanslı hologram servisini döndürür.</td>
                                         </tr>
                                         <tr>
                                             <td class="py-3 px-4 font-mono text-cyan-400">RelayAPI.isInitialized()</td>
@@ -1662,6 +1668,261 @@ public class LagMonitorListener implements Listener {
 
 
                     <!-- ============================================== -->
+                    <!-- DOC 10: HOLOGRAMS                              -->
+                    <!-- ============================================== -->
+                    <article id="holograms" class="wiki-article space-y-8 hidden">
+                        <div class="pb-4 border-b border-white/[0.08]">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-xs">v1.2.0 Yeni</span>
+                                <span class="badge-tag bg-indigo-500/10 text-indigo-400 border-indigo-500/20 text-xs">TextDisplay Native</span>
+                                <span class="badge-tag bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-xs">Sıfır ArmorStand Lag</span>
+                            </div>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white">HologramService & Modern TextDisplay</h1>
+                            <p class="text-xs text-slate-400 mt-1">Minecraft 1.20+ TextDisplay varlıkları, sıfır ArmorStand lag, Folia bölgesel iş parçacığı güvenliği ve dinamik MiniMessage desteği.</p>
+                        </div>
+
+                        <!-- Feature Badges -->
+                        <div class="flex flex-wrap gap-2 text-xs">
+                            <span class="px-2.5 py-1 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-medium">TextDisplay Tabanlı</span>
+                            <span class="px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">Sıfır ArmorStand Lag</span>
+                            <span class="px-2.5 py-1 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-medium">Folia Region-Safe</span>
+                            <span class="px-2.5 py-1 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20 font-medium">MiniMessage & Gradient</span>
+                            <span class="px-2.5 py-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-medium">Zero-Leak Bellek Yönetimi</span>
+                        </div>
+
+                        <!-- Content Sections -->
+                        <div class="space-y-6 text-sm text-slate-300 leading-relaxed">
+                            <div class="space-y-3">
+                                <h3 class="text-base font-semibold text-white">Neden ArmorStand Değil, TextDisplay?</h3>
+                                <p>
+                                    Eski nesil hologram eklentileri (HolographicDisplays, DecentHolograms vb.), metin satırlarını görünmez <code>ArmorStand</code> varlıklarının özel isimleri (CustomName) olarak oluşturur. 100 satırlık hologramlar sunucuda 100 adet zırh askısı varlığı, çarpışma kutusu (hitbox), fizik kontrolleri ve yoğun ağ paketi yükü anlamına gelir. Ayrıca sunucu çökmelerinde haritada "hayalet zırh askıları" kalıntı bırakır.
+                                </p>
+                                <p>
+                                    Relay <strong>HologramService</strong>, Minecraft 1.19.4 / 1.20 ile oyuna eklenen native <code>TextDisplay</code> motorunu kullanır. Fizik hesaplaması sıfırdır, istemci tarafında ekran kartı (GPU) ile işlenir ve <code>setPersistent(false)</code> sayesinde asla dünya chunk dosyalarına kalıntı bırakmaz.
+                                </p>
+                            </div>
+
+                            <!-- Bento Grid Architecture -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <div class="bento-card p-4 rounded-xl border border-white/[0.06] space-y-1.5">
+                                    <div class="flex items-center gap-2 text-indigo-400 font-semibold text-xs">
+                                        <i data-lucide="eye" class="w-4 h-4"></i> Akıllı Billboard Modları
+                                    </div>
+                                    <p class="text-xs text-slate-400">
+                                        <code>CENTER</code> (oyuncuya dönen), <code>FIXED</code>, <code>HORIZONTAL</code> veya <code>VERTICAL</code> eksen izleme modları ile tam görsel kontrol.
+                                    </p>
+                                </div>
+                                <div class="bento-card p-4 rounded-xl border border-white/[0.06] space-y-1.5">
+                                    <div class="flex items-center gap-2 text-cyan-400 font-semibold text-xs">
+                                        <i data-lucide="cpu" class="w-4 h-4"></i> Folia Region Eşlemesi
+                                    </div>
+                                    <p class="text-xs text-slate-400">
+                                        <code>spawnAsync()</code> ve <code>setLocationAsync()</code> koordinatın ait olduğu chunk thread'ine <code>RegionScheduler</code> üzerinden otomatik ve güvenle iletilir.
+                                    </p>
+                                </div>
+                                <div class="bento-card p-4 rounded-xl border border-white/[0.06] space-y-1.5">
+                                    <div class="flex items-center gap-2 text-emerald-400 font-semibold text-xs">
+                                        <i data-lucide="sparkles" class="w-4 h-4"></i> Zengin Tasarım Seçenekleri
+                                    </div>
+                                    <p class="text-xs text-slate-400">
+                                        Metin gölgesi (shadow), duvar arkası görünürlük (seeThrough), şeffaf veya özel arka plan rengi ve satır aralığı (spacing).
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Code Example 1 -->
+                            <div class="space-y-3">
+                                <h3 class="text-base font-semibold text-white">1. Akıcı Hologram Oluşturma (Fluent Builder)</h3>
+                                <p class="text-xs text-slate-400">
+                                    <code>RelayAPI.getHolograms().createBuilder(...)</code> ile tek bir akışta zengin stilli bir hologram oluşturup asenkron olarak dünyada yaratın.
+                                </p>
+                                <div class="rounded-xl overflow-hidden border border-white/[0.08] bg-[#0c0d12]">
+                                    <div class="px-4 py-2 bg-white/[0.02] border-b border-white/[0.06] flex items-center justify-between text-xs text-slate-400">
+                                        <span>SpawnHologramExample.java</span>
+                                        <span class="font-mono text-[11px] text-indigo-400">Builder & Folia Async</span>
+                                    </div>
+                                    <pre class="m-0 p-4 text-xs"><code class="language-java">import org.vrz.relay.api.RelayAPI;
+import org.vrz.relay.api.hologram.Billboard;
+import org.vrz.relay.api.hologram.Hologram;
+import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.plugin.Plugin;
+
+public class SpawnHologramExample {
+
+    public void createServerHubHologram(Plugin plugin, Location location) {
+        // HologramBuilder ile fluent yapılandırma
+        Hologram hologram = RelayAPI.getHolograms().createBuilder(plugin, location)
+                .appendLine("&lt;gradient:#4facfe:#00f2fe&gt;&lt;bold&gt;✦ RELAY ULTRA NETWORK ✦&lt;/bold&gt;&lt;/gradient&gt;")
+                .appendLine("&lt;gray&gt;Folia &amp; Paper Tabanlı Hibrit Altyapı&lt;/gray&gt;")
+                .appendLine("")
+                .appendLine("&lt;yellow&gt;Aktif Oyuncular:&lt;/yellow&gt; &lt;green&gt;1,420&lt;/green&gt; &lt;dark_gray&gt;|&lt;/dark_gray&gt; &lt;aqua&gt;TPS: 20.0&lt;/aqua&gt;")
+                .appendLine("&lt;click:run_command:'/warp zindan'&gt;&lt;gold&gt;[Zindanlara Gitmek İçin Tıkla]&lt;/gold&gt;&lt;/click&gt;")
+                .setBillboard(Billboard.CENTER)           // Her açıdan oyuncuya dönsün
+                .setTextShadow(true)                     // Yazı arkasında net gölge
+                .setSeeThrough(false)                    // Duvarların arkasından görünmesin
+                .setBackgroundColor(Color.fromARGB(80, 0, 0, 0)) // Yarı saydam koyu arka plan kutusu
+                .setLineSpacing(0.28)                    // Satırlar arası dikey mesafe
+                .build();
+
+        // Folia ve Paper üzerinde ilgili bölge thread'inde güvenle spawn et
+        hologram.spawnAsync().thenRun(() -&gt; {
+            plugin.getLogger().info("Hologram başarıyla oluşturuldu! ID: " + hologram.getId());
+        });
+    }
+}</code></pre>
+                                </div>
+                            </div>
+
+                            <!-- Code Example 2 -->
+                            <div class="space-y-3">
+                                <h3 class="text-base font-semibold text-white">2. Canlı Dinamik Satır Güncelleme</h3>
+                                <p class="text-xs text-slate-400">
+                                    Var olan bir hologramın metnini yenilemek için tüm hologramı silip tekrar yaratmanıza gerek yoktur. Tek bir satırı anında güncelleyebilirsiniz.
+                                </p>
+                                <div class="rounded-xl overflow-hidden border border-white/[0.08] bg-[#0c0d12]">
+                                    <div class="px-4 py-2 bg-white/[0.02] border-b border-white/[0.06] flex items-center justify-between text-xs text-slate-400">
+                                        <span>UpdateHologramExample.java</span>
+                                        <span class="font-mono text-[11px] text-cyan-400">Dinamik MiniMessage Güncelleme</span>
+                                    </div>
+                                    <pre class="m-0 p-4 text-xs"><code class="language-java">import org.vrz.relay.api.RelayAPI;
+import org.vrz.relay.api.hologram.Hologram;
+
+public class UpdateHologramExample {
+
+    public void updatePlayerCount(Hologram hologram, int onlineCount, double tps) {
+        // 3. satırı (indeks 3) dinamik olarak canlı güncelle
+        hologram.setLineMiniMessage(3, 
+            "&lt;yellow&gt;Aktif Oyuncular:&lt;/yellow&gt; &lt;green&gt;" + onlineCount + 
+            "&lt;/green&gt; &lt;dark_gray&gt;|&lt;/dark_gray&gt; &lt;aqua&gt;TPS: " + String.format("%.1f", tps) + "&lt;/aqua&gt;"
+        );
+    }
+    
+    public void relocateHologram(Hologram hologram, org.bukkit.Location newLocation) {
+        // Folia region-safe asenkron taşıma
+        hologram.setLocationAsync(newLocation).thenRun(() -&gt; {
+            System.out.println("Hologram yeni koordinatına başarıyla taşındı.");
+        });
+    }
+}</code></pre>
+                                </div>
+                            </div>
+
+                            <!-- Code Example 3 -->
+                            <div class="space-y-3">
+                                <h3 class="text-base font-semibold text-white">3. Yaşam Döngüsü ve Olay Dinleyicileri (Events)</h3>
+                                <p class="text-xs text-slate-400">
+                                    Relay EventBus veya Bukkit Event sistemini kullanarak oluşturulan veya silinen tüm hologramları dinleyebilirsiniz.
+                                </p>
+                                <div class="rounded-xl overflow-hidden border border-white/[0.08] bg-[#0c0d12]">
+                                    <div class="px-4 py-2 bg-white/[0.02] border-b border-white/[0.06] flex items-center justify-between text-xs text-slate-400">
+                                        <span>HologramEventListener.java</span>
+                                        <span class="font-mono text-[11px] text-amber-400">Lifecycle Events</span>
+                                    </div>
+                                    <pre class="m-0 p-4 text-xs"><code class="language-java">import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.vrz.relay.api.event.HologramCreatedEvent;
+import org.vrz.relay.api.event.HologramDeletedEvent;
+
+public class HologramEventListener implements Listener {
+
+    @EventHandler
+    public void onHologramCreated(HologramCreatedEvent event) {
+        System.out.println("Yeni hologram yaratıldı: " + event.getHologram().getId() + 
+                           " (Sahip Eklenti: " + event.getPlugin().getName() + ")");
+    }
+
+    @EventHandler
+    public void onHologramDeleted(HologramDeletedEvent event) {
+        System.out.println("Hologram silindi: " + event.getHologram().getId());
+    }
+}</code></pre>
+                                </div>
+                            </div>
+
+                            <!-- API Reference Table -->
+                            <div class="space-y-3">
+                                <h3 class="text-base font-semibold text-white">HologramService & Hologram API Referansı</h3>
+                                <div class="overflow-x-auto rounded-xl border border-white/[0.08]">
+                                    <table class="w-full text-left text-xs border-collapse">
+                                        <thead>
+                                            <tr class="border-b border-white/[0.08] bg-white/[0.02] text-slate-400">
+                                                <th class="py-3 px-4">Metot</th>
+                                                <th class="py-3 px-4">Dönüş Türü</th>
+                                                <th class="py-3 px-4">Açıklama</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-white/[0.05] text-slate-300">
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">createBuilder(Plugin, Location)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">HologramBuilder</td>
+                                                <td class="py-3 px-4">Fluent tasarım akışı ile yeni bir hologram yapılandırıcısı başlatır.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">builder.appendLine(String / Component)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">HologramBuilder</td>
+                                                <td class="py-3 px-4">Holograma MiniMessage veya Adventure Component formatında yeni bir satır ekler.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">builder.setBillboard(Billboard)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">HologramBuilder</td>
+                                                <td class="py-3 px-4">Yüz izleme açısını belirler: <code>CENTER</code>, <code>FIXED</code>, <code>HORIZONTAL</code>, <code>VERTICAL</code>.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">builder.setBackgroundColor(Color)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">HologramBuilder</td>
+                                                <td class="py-3 px-4">Metnin arkasındaki arka plan kutusu rengini (ARGB şeffaflık dahil) belirler.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">builder.setTextShadow(boolean)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">HologramBuilder</td>
+                                                <td class="py-3 px-4">Metnin arkasında kontrast oluşturan hafif gölgeyi açar veya kapatır.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">builder.setSeeThrough(boolean)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">HologramBuilder</td>
+                                                <td class="py-3 px-4">Hologramın blok ve duvar arkasından görünmesini (X-ray) sağlar.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">builder.setLineSpacing(double)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">HologramBuilder</td>
+                                                <td class="py-3 px-4">Satırlar arasındaki dikey uzaklığı ayarlar (varsayılan: 0.28 blok).</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">hologram.spawnAsync()</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">CompletableFuture&lt;Void&gt;</td>
+                                                <td class="py-3 px-4">Hologramı hedef koordinatın Folia bölgesel iş parçacığında güvenle dünyaya yerleştirir.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">hologram.removeAsync()</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">CompletableFuture&lt;Void&gt;</td>
+                                                <td class="py-3 px-4">Hologram varlıklarını dünyadan ve servis kaydından temizler.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">hologram.setLocationAsync(Location)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">CompletableFuture&lt;Void&gt;</td>
+                                                <td class="py-3 px-4">Hologramı Folia güvenli biçimde yeni bir konuma veya farklı bir dünyaya taşır.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">hologram.setLineMiniMessage(index, text)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">void</td>
+                                                <td class="py-3 px-4">Belirtilen satırın içeriğini canlı olarak MiniMessage formatında günceller.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">service.deleteAll(Plugin)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">void</td>
+                                                <td class="py-3 px-4">Belirtilen eklentiye ait tüm hologramları topluca siler (eklenti kapanışında otomatik çağrılır).</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </article>
+
+
+                    <!-- ============================================== -->
                     <!-- DOC 11: FOLIA                                  -->
                     <!-- ============================================== -->
                     <article id="folia" class="wiki-article space-y-6 hidden">
@@ -1721,6 +1982,10 @@ public class LagMonitorListener implements Listener {
                                 <code class="text-amber-400 font-mono font-semibold text-xs">/relay metrics reset</code>
                                 <p class="text-xs text-slate-400 mt-1">Tüm telemetri ve performans sayaçlarını temizleyip sıfırdan başlatır.</p>
                             </div>
+                            <div class="bento-card p-4 rounded-lg">
+                                <code class="text-indigo-400 font-mono font-semibold text-xs">/relay holograms</code>
+                                <p class="text-xs text-slate-400 mt-1">Sunucu üzerindeki tüm aktif TextDisplay hologramlarını ve her birinin ait olduğu eklentiyi listeler.</p>
+                            </div>
                         </div>
                     </article>
 
@@ -1739,21 +2004,117 @@ public class LagMonitorListener implements Listener {
                         <div class="relative pl-6 sm:pl-8 border-l border-white/[0.08] space-y-16 my-8 ml-2">
 
                             <!-- ============================================== -->
-                            <!-- RELEASE 1: v1.1.0                              -->
+                            <!-- RELEASE 1: v1.2.0                              -->
                             <!-- ============================================== -->
                             <div class="relative space-y-5">
                                 <!-- Timeline Node -->
-                                <div class="absolute -left-[31px] sm:-left-[39px] top-1 w-4 h-4 rounded-full bg-[#08090d] border-2 border-amber-400 shadow-[0_0_12px_rgba(251,191,36,0.6)] flex items-center justify-center">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                                <div class="absolute -left-[31px] sm:-left-[39px] top-1 w-4 h-4 rounded-full bg-[#08090d] border-2 border-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.6)] flex items-center justify-center">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
                                 </div>
 
                                 <!-- Header Metadata -->
                                 <div class="space-y-2">
                                     <div class="flex flex-wrap items-center gap-2">
-                                        <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-amber-400 text-slate-950 font-mono tracking-tight">v1.1.0</span>
+                                        <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-cyan-400 text-slate-950 font-mono tracking-tight">v1.2.0</span>
                                         <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> En Güncel Sürüm
                                         </span>
+                                        <span class="text-xs text-slate-500 font-mono flex items-center gap-1 ml-auto">
+                                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i> 27 Eylül 2026
+                                        </span>
+                                    </div>
+                                    <h2 class="text-xl font-bold text-white">Endüstri Standardı HologramService (TextDisplay) & Sıfır ArmorStand Lag</h2>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        Minecraft 1.20+ ve 1.21+ TextDisplay varlıkları ile sıfır sunucu gecikmeli (zero-lag), Folia bölgesel iş parçacığı güvenli (region-safe) ve MiniMessage destekli reaktif hologram alt sistemi eklendi.
+                                    </p>
+                                </div>
+
+                                <!-- Badges row -->
+                                <div class="flex flex-wrap items-center gap-2 text-xs">
+                                    <a href="https://github.com/Kriscra/Relay/releases/tag/v1.2.0" target="_blank" class="px-2 py-0.5 rounded bg-white/[0.04] text-slate-300 hover:text-white border border-white/[0.08] font-mono text-[11px] transition">
+                                        Tag: v1.2.0
+                                    </a>
+                                    <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] font-medium">
+                                        ✔ 30 / 30 Birim Test Geçti
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[11px] font-medium">
+                                        TextDisplay Native
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-[11px] font-medium">
+                                        Folia Region-Safe
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20 text-[11px] font-medium">
+                                        Zero-Leak Bellek
+                                    </span>
+                                </div>
+
+                                <!-- Feature List Grid -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                                    
+                                    <div class="bento-card p-4 rounded-xl space-y-2 border border-white/[0.06] hover:border-indigo-500/30 transition">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                                                <i data-lucide="layers" class="w-3.5 h-3.5 text-indigo-400"></i> TextDisplay Tabanlı Mimari
+                                            </span>
+                                            <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Varlık Motoru</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">
+                                            Görünmez ArmorStand kullanılarak yaratılan hitbox, çarpışma ve fizik yükü tamamen terk edildi. GPU üzerinde işlenen native TextDisplay varlıkları ile sıfır TPS düşüşü.
+                                        </p>
+                                    </div>
+
+                                    <div class="bento-card p-4 rounded-xl space-y-2 border border-white/[0.06] hover:border-cyan-500/30 transition">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                                                <i data-lucide="cpu" class="w-3.5 h-3.5 text-cyan-400"></i> Folia RegionScheduler
+                                            </span>
+                                            <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Thread-Safe</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">
+                                            <code class="text-cyan-300 font-mono text-[11px]">spawnAsync()</code> ve <code class="text-cyan-300 font-mono text-[11px]">setLocationAsync()</code> metotları Folia'da chunk'ın ait olduğu bağımsız iş parçacığına otomatik yönlendirilir.
+                                        </p>
+                                    </div>
+
+                                    <div class="bento-card p-4 rounded-xl space-y-2 border border-white/[0.06] hover:border-emerald-500/30 transition">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                                                <i data-lucide="sliders" class="w-3.5 h-3.5 text-emerald-400"></i> Akıcı HologramBuilder
+                                            </span>
+                                            <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Tasarım</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">
+                                            Billboard açıları (CENTER, FIXED), metin gölgesi, X-ray duvar arkası görüşü, ARGB şeffaf arka plan kutuları ve MiniMessage gradient desteği.
+                                        </p>
+                                    </div>
+
+                                    <div class="bento-card p-4 rounded-xl space-y-2 border border-white/[0.06] hover:border-amber-500/30 transition">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                                                <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-amber-400"></i> Sıfır Chunk Kirliliği (Zero-Leak)
+                                            </span>
+                                            <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">Güvenlik</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">
+                                            Tüm varlıklar <code class="text-amber-300 font-mono text-[11px]">setPersistent(false)</code> ile oluşturulur. Sunucu çökse bile haritaya kalıntı bırakmaz. Eklenti kapandığında otomatik silinir.
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- ============================================== -->
+                            <!-- RELEASE 2: v1.1.0                              -->
+                            <!-- ============================================== -->
+                            <div class="relative space-y-5">
+                                <!-- Timeline Node -->
+                                <div class="absolute -left-[31px] sm:-left-[39px] top-1 w-4 h-4 rounded-full bg-[#08090d] border-2 border-slate-600 flex items-center justify-center">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                </div>
+
+                                <!-- Header Metadata -->
+                                <div class="space-y-2">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-white/[0.08] text-slate-300 font-mono tracking-tight">v1.1.0</span>
                                         <span class="text-xs text-slate-500 font-mono flex items-center gap-1 ml-auto">
                                             <i data-lucide="calendar" class="w-3.5 h-3.5"></i> 27 Eylül 2026
                                         </span>
