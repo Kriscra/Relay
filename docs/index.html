@@ -77,7 +77,9 @@
                     <span>JitPack</span>
                 </a>
                 <a href="https://github.com/Kriscra/Relay" target="_blank" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium text-white bg-slate-800 hover:bg-slate-700 border border-white/10 transition shadow-sm">
-                    <i data-lucide="github" class="w-4 h-4"></i>
+                    <svg class="w-4 h-4 fill-white flex-shrink-0" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                    </svg>
                     <span>GitHub</span>
                 </a>
                 <button id="mobile-menu-btn" class="md:hidden p-1.5 rounded-lg text-slate-400 hover:text-white bg-white/[0.04] border border-white/[0.08]">
@@ -1728,225 +1730,223 @@ public class LagMonitorListener implements Listener {
                     <!-- ============================================== -->
                     <article id="changelog" class="wiki-article space-y-8 hidden">
                         <div class="pb-4 border-b border-white/[0.08]">
-                            <span class="text-xs font-semibold uppercase text-cyan-400">Sürüm Geçmişi</span>
+                            <span class="text-xs font-semibold uppercase text-cyan-400 tracking-wider">Sürüm Geçmişi</span>
                             <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">Güncelleme Günlüğü (Changelog)</h1>
-                            <p class="text-xs text-slate-400 mt-1">Relay'in gelişim serüveni, yeni özellikler, iyileştirmeler ve sürüm detayları.</p>
+                            <p class="text-xs text-slate-400 mt-1">Relay mimarisinin sürüm sürüm gelişim günlüğü, yeni servisler ve kırılma yaratmayan performans yükseltmeleri.</p>
                         </div>
 
-                        <!-- Version 1.1.0 Block -->
-                        <div class="space-y-6">
-                            
-                            <!-- Version Header Card -->
-                            <div class="bento-card p-5 rounded-xl border border-amber-500/30 bg-gradient-to-r from-amber-950/20 via-slate-900/40 to-transparent">
-                                <div class="flex flex-wrap items-center justify-between gap-3">
-                                    <div class="flex items-center gap-3">
-                                        <span class="px-3 py-1 rounded-full bg-amber-400 text-slate-950 font-bold text-xs">v1.1.0</span>
-                                        <h2 class="text-base font-bold text-white">Performans Telemetrisi, Lag Dedektifi & Metrik Motoru</h2>
-                                    </div>
-                                    <div class="flex items-center gap-3 text-xs text-slate-400 font-mono">
-                                        <span>📅 27 Eylül 2026</span>
-                                        <span>&bull;</span>
-                                        <span class="text-amber-400">Tag: v1.1.0</span>
-                                        <span>&bull;</span>
-                                        <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-sans font-semibold">26/26 Tests Passed</span>
-                                    </div>
+                        <!-- Vertical Timeline Container -->
+                        <div class="relative pl-6 sm:pl-8 border-l border-white/[0.08] space-y-16 my-8 ml-2">
+
+                            <!-- ============================================== -->
+                            <!-- RELEASE 1: v1.1.0                              -->
+                            <!-- ============================================== -->
+                            <div class="relative space-y-5">
+                                <!-- Timeline Node -->
+                                <div class="absolute -left-[31px] sm:-left-[39px] top-1 w-4 h-4 rounded-full bg-[#08090d] border-2 border-amber-400 shadow-[0_0_12px_rgba(251,191,36,0.6)] flex items-center justify-center">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
                                 </div>
-                                <p class="text-xs text-slate-300 mt-3 leading-relaxed">
-                                    Relay 1.1.0 sürümü ile birlikte sunucuların TPS düşüşlerini ve eklentilerin işlem sürelerini nanosaniye hassasiyetinde ölçen, kilit-siz (lock-free) <strong>MetricsService</strong> telemetri altyapısı sisteme eklendi.
-                                </p>
+
+                                <!-- Header Metadata -->
+                                <div class="space-y-2">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-amber-400 text-slate-950 font-mono tracking-tight">v1.1.0</span>
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> En Güncel Sürüm
+                                        </span>
+                                        <span class="text-xs text-slate-500 font-mono flex items-center gap-1 ml-auto">
+                                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i> 27 Eylül 2026
+                                        </span>
+                                    </div>
+                                    <h2 class="text-xl font-bold text-white">Performans Telemetrisi, Lag Dedektifi & Metrik Motoru</h2>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        Sunuculardaki TPS düşüşlerini ve eklentilerin fonksiyon sürelerini nanosaniye hassasiyetinde ölçen, kilit-siz (lock-free) dahili telemetri ve lag alarm sistemi eklendi.
+                                    </p>
+                                </div>
+
+                                <!-- Badges row -->
+                                <div class="flex flex-wrap items-center gap-2 text-xs">
+                                    <a href="https://github.com/Kriscra/Relay/releases/tag/v1.1.0" target="_blank" class="px-2 py-0.5 rounded bg-white/[0.04] text-slate-300 hover:text-white border border-white/[0.08] font-mono text-[11px] transition">
+                                        Tag: v1.1.0
+                                    </a>
+                                    <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] font-medium">
+                                        ✔ 26 / 26 Birim Test Geçti
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[11px] font-medium">
+                                        Folia Lock-Free
+                                    </span>
+                                </div>
+
+                                <!-- Feature List Grid -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                                    
+                                    <div class="bento-card p-4 rounded-xl space-y-2 border border-white/[0.06] hover:border-amber-500/30 transition">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                                                <i data-lucide="gauge" class="w-3.5 h-3.5 text-amber-400"></i> MetricsService
+                                            </span>
+                                            <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">Yeni Servis</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">
+                                            <code class="text-amber-300 font-mono text-[11px]">try (MetricScope s = RelayAPI.getMetrics().startTimer("tag"))</code> kalıbı ile tek satırda otomatik süre ölçümü ve nanosaniye hassasiyeti.
+                                        </p>
+                                    </div>
+
+                                    <div class="bento-card p-4 rounded-xl space-y-2 border border-white/[0.06] hover:border-cyan-500/30 transition">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                                                <i data-lucide="activity" class="w-3.5 h-3.5 text-cyan-400"></i> P95 & P99 Yüzdelikleri
+                                            </span>
+                                            <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">İstatistik</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">
+                                            1024 boyutlu dairesel tampon bellek (rolling reservoir) ile RAM şişirmeden en yavaş %5 ve %1 uç gecikmelerin matematiksel hesabı.
+                                        </p>
+                                    </div>
+
+                                    <div class="bento-card p-4 rounded-xl space-y-2 border border-white/[0.06] hover:border-rose-500/30 transition">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                                                <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-rose-400"></i> PerformanceAlertEvent
+                                            </span>
+                                            <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20">Güvenlik</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">
+                                            Ana döngüde belirlenen eşiği (örn: 50ms = 1 tick) aşan ağır fonksiyonlar için otomatik konsol uyarısı ve arka plan olay bildirimi.
+                                        </p>
+                                    </div>
+
+                                    <div class="bento-card p-4 rounded-xl space-y-2 border border-white/[0.06] hover:border-indigo-500/30 transition">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                                                <i data-lucide="terminal" class="w-3.5 h-3.5 text-indigo-400"></i> /relay metrics Komutu
+                                            </span>
+                                            <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Yönetim</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">
+                                            Ortalama ms, p95 gecikmesi, max süre ve çağrı adedini konsola/sohbete döken tanı komutu ve <code class="text-slate-300 font-mono text-[11px]">/relay metrics reset</code> temizleyicisi.
+                                        </p>
+                                    </div>
+
+                                </div>
                             </div>
 
-                            <!-- Highlights Grid -->
-                            <div class="space-y-4">
-                                
-                                <div class="bento-card p-4 rounded-lg space-y-2 border border-white/[0.06]">
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                                        <h3 class="text-sm font-semibold text-white">Kilit-Siz Telemetri Motoru (MetricsService)</h3>
-                                    </div>
-                                    <ul class="list-disc list-inside text-xs text-slate-400 space-y-1 pl-2">
-                                        <li><strong>MetricScope & Try-with-resources:</strong> Fonksiyonların yürütülme sürelerini sıfır karmaşıklıkla <code class="text-amber-300 font-mono text-[11px]">try (MetricScope s = RelayAPI.getMetrics().startTimer("anahtar"))</code> ile blok bitiminde otomatik kaydetme.</li>
-                                        <li><strong>Yüzdelik Dilimler (P95 & P99):</strong> 1024 boyutlu dairesel tampon bellek (reservoir sampling) ile sunucu RAM'ini şişirmeden en yavaş %5 ve %1 uç gecikmeleri anlık hesaplama.</li>
-                                        <li><strong>Atomik Sayaçlar & Göstergeler (Counters & Gauges):</strong> İşlenen transferleri, paketleri ve olayları sayan <code class="text-amber-300 font-mono text-[11px]">increment()</code> ve dinamik <code class="text-amber-300 font-mono text-[11px]">registerGauge(DoubleSupplier)</code> desteği.</li>
-                                    </ul>
+
+                            <!-- ============================================== -->
+                            <!-- RELEASE 2: v1.0.0                              -->
+                            <!-- ============================================== -->
+                            <div class="relative space-y-5">
+                                <!-- Timeline Node -->
+                                <div class="absolute -left-[31px] sm:-left-[39px] top-1 w-4 h-4 rounded-full bg-[#08090d] border-2 border-cyan-400 shadow-[0_0_10px_rgba(56,189,248,0.4)] flex items-center justify-center">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
                                 </div>
 
-                                <div class="bento-card p-4 rounded-lg space-y-2 border border-white/[0.06]">
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-2 h-2 rounded-full bg-rose-400"></span>
-                                        <h3 class="text-sm font-semibold text-white">Ana Thread Lag Dedektifi (PerformanceAlertEvent)</h3>
+                                <!-- Header Metadata -->
+                                <div class="space-y-2">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-cyan-500 text-slate-950 font-mono tracking-tight">v1.0.0</span>
+                                        <span class="px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                                            Genesis Sürümü
+                                        </span>
+                                        <span class="text-xs text-slate-500 font-mono flex items-center gap-1 ml-auto">
+                                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i> 26 Eylül 2026
+                                        </span>
                                     </div>
-                                    <ul class="list-disc list-inside text-xs text-slate-400 space-y-1 pl-2">
-                                        <li><strong>Otomatik Eşik Alarmı:</strong> Ana iş parçacığında belirlenen eşiği (varsayılan 50ms = 1 tam sunucu tick'i) aşan operasyonlar anında tespit edilir.</li>
-                                        <li><strong>Asenkron Uyarı Olayı:</strong> Sunucu akışını kilitlemeden arka planda <code class="text-rose-300 font-mono text-[11px]">PerformanceAlertEvent</code> fırlatılır; Discord webhook veya yönetici bilgilendirmeleri bağlanabilir.</li>
-                                    </ul>
+                                    <h2 class="text-xl font-bold text-white">İlk Kararlı Resmi Sürüm (Initial Stable Release)</h2>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        Relay framework'ünün ilk ana sürümü. 2011'den kalma senkron Vault kütüphanesini geride bırakarak modern Paper, Purpur ve çok iş parçacıklı (multi-threaded region) Folia 1.21+ sunucularına endüstri standardı modüler entegrasyon altyapısı sunar.
+                                    </p>
                                 </div>
 
-                                <div class="bento-card p-4 rounded-lg space-y-2 border border-white/[0.06]">
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
-                                        <h3 class="text-sm font-semibold text-white">Tanı Komutları & Tam Test Kapsamı</h3>
-                                    </div>
-                                    <ul class="list-disc list-inside text-xs text-slate-400 space-y-1 pl-2">
-                                        <li><strong>/relay metrics Komutu:</strong> Tüm aktif ölçümleri ortalama süre, p95 gecikmesi, tavan (max) süre ve çağrı adediyle canlı listeleme.</li>
-                                        <li><strong>/relay metrics reset:</strong> Telemetri havuzunu tek komutla temizleyip sıfırlama.</li>
-                                        <li><strong>26/26 Birim Test:</strong> JUnit 5 ve Mockito ile yazılmış tüm testler (7 yeni telemetri testi dahil) %100 başarıyla tamamlandı.</li>
-                                    </ul>
+                                <!-- Badges row -->
+                                <div class="flex flex-wrap items-center gap-2 text-xs">
+                                    <a href="https://github.com/Kriscra/Relay/releases/tag/v1.0.0" target="_blank" class="px-2 py-0.5 rounded bg-white/[0.04] text-slate-300 hover:text-white border border-white/[0.08] font-mono text-[11px] transition">
+                                        Tag: v1.0.0
+                                    </a>
+                                    <a href="https://jitpack.io/#Kriscra/Relay" target="_blank" class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] font-medium">
+                                        JitPack: ok
+                                    </a>
+                                    <span class="px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-[11px] font-medium">
+                                        Java 21 LTS
+                                    </span>
                                 </div>
 
-                            </div>
-
-                        </div>
-
-                        <hr class="border-white/[0.08] my-8">
-
-                        <!-- Version 1.0.0 Block -->
-                        <div class="space-y-6">
-                            
-                            <!-- Version Header Card -->
-                            <div class="bento-card p-5 rounded-xl border border-cyan-500/20 bg-gradient-to-r from-cyan-950/20 to-transparent">
-                                <div class="flex flex-wrap items-center justify-between gap-3">
-                                    <div class="flex items-center gap-3">
-                                        <span class="px-3 py-1 rounded-full bg-cyan-500 text-slate-950 font-bold text-xs">v1.0.0</span>
-                                        <h2 class="text-base font-bold text-white">İlk Kararlı Resmi Sürüm (Initial Stable Release)</h2>
+                                <!-- Modules Bento Grid -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                                    
+                                    <div class="bento-card p-4 rounded-xl space-y-2 border border-white/[0.06]">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                                                <i data-lucide="layers" class="w-3.5 h-3.5 text-cyan-400"></i> ServiceRegistry
+                                            </span>
+                                            <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Mimari</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">
+                                            5 kademeli dinamik öncelik basamağı (<code class="text-cyan-300 font-mono text-[11px]">HIGHEST &rarr; FALLBACK</code>), reaktif <code class="text-slate-300 font-mono text-[11px]">onServiceReady</code> ve eklenti kapandığında otomatik temizlik.
+                                        </p>
                                     </div>
-                                    <div class="flex items-center gap-3 text-xs text-slate-400 font-mono">
-                                        <span>📅 26 Eylül 2026</span>
-                                        <span>&bull;</span>
-                                        <a href="https://github.com/Kriscra/Relay/releases/tag/v1.0.0" target="_blank" class="text-cyan-400 hover:underline">Tag: v1.0.0</a>
-                                        <span>&bull;</span>
-                                        <a href="https://jitpack.io/#Kriscra/Relay" target="_blank" class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-sans font-semibold">JitPack: ok</a>
+
+                                    <div class="bento-card p-4 rounded-xl space-y-2 border border-white/[0.06]">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                                                <i data-lucide="radio" class="w-3.5 h-3.5 text-indigo-400"></i> RelayMessenger
+                                            </span>
+                                            <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Mikroservis</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">
+                                            Eklentiler arası tam bağımsızlık sağlayan konu tabanlı (topic) Pub/Sub event bus ve zaman aşımı korumalı asenkron RPC (<code class="text-indigo-300 font-mono text-[11px]">request/response</code>).
+                                        </p>
                                     </div>
+
+                                    <div class="bento-card p-4 rounded-xl space-y-2 border border-white/[0.06]">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                                                <i data-lucide="coins" class="w-3.5 h-3.5 text-amber-400"></i> EconomyService
+                                            </span>
+                                            <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">Ekonomi</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">
+                                            IEEE 754 kayan noktalı sayı hatalarını önleyen <code class="text-amber-300 font-mono text-[11px]">BigDecimal</code> aritmetiği, sınırsız çoklu para birimi ve atomik iki taraflı transferler.
+                                        </p>
+                                    </div>
+
+                                    <div class="bento-card p-4 rounded-xl space-y-2 border border-white/[0.06]">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                                                <i data-lucide="clock" class="w-3.5 h-3.5 text-emerald-400"></i> CooldownService
+                                            </span>
+                                            <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">TTL Bekleme</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">
+                                            Yetenek ve büyüler için evrensel bekleme süreleri, ActionBar dolum yüzdesi (<code class="text-emerald-300 font-mono text-[11px]">getProgress()</code>) ve otomatik bellek tahliyesi.
+                                        </p>
+                                    </div>
+
+                                    <div class="bento-card p-4 rounded-xl space-y-2 border border-white/[0.06]">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                                                <i data-lucide="database" class="w-3.5 h-3.5 text-purple-400"></i> SharedDataService
+                                            </span>
+                                            <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20">Ortak Veri</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">
+                                            Tip güvenli <code class="text-purple-300 font-mono text-[11px]">DataKey&lt;T&gt;</code>, savaş etiketleri için süreli geçici veriler (<code class="text-purple-300 font-mono text-[11px]">setTemporary</code>) ve reaktif canlı gözlemciler (<code class="text-purple-300 font-mono text-[11px]">observe</code>).
+                                        </p>
+                                    </div>
+
+                                    <div class="bento-card p-4 rounded-xl space-y-2 border border-white/[0.06]">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                                                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-rose-400"></i> PartyService
+                                            </span>
+                                            <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20">PVP & Parti</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">
+                                            Combat anlarında thread bekletmeyen sıfır bellek tahsisli <code class="text-rose-300 font-mono text-[11px]">isFriendlySync</code> kontrolleri, zindan grupları ve dahili thread-safe motor.
+                                        </p>
+                                    </div>
+
                                 </div>
-                                <p class="text-xs text-slate-300 mt-3 leading-relaxed">
-                                    Relay framework'ünün ilk ana sürümü. 2011'den kalma senkron Vault kütüphanesini geride bırakarak modern Paper, Purpur ve çok iş parçacıklı (multi-threaded region) Folia 1.21+ sunucularına endüstri seviyesinde entegrasyon altyapısı sunar.
-                                </p>
-                            </div>
-
-                            <!-- Highlights Grid -->
-                            <div class="space-y-4">
-                                
-                                <!-- 1. Core Architecture -->
-                                <div class="bento-card p-4 rounded-lg space-y-2 border border-white/[0.06]">
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
-                                        <h3 class="text-sm font-semibold text-white">Çekirdek Mimari & Folia Uyumluluğu</h3>
-                                    </div>
-                                    <ul class="list-disc list-inside text-xs text-slate-400 space-y-1 pl-2">
-                                        <li><strong>Çift Modüllü Yapı:</strong> Eklenti geliştiricileri için sıfır ağır bağımlılıklı, hafif <code class="text-cyan-400 font-mono text-[11px]">relay-api</code> SDK'sı (compileOnly) ve sunucu eklentisi <code class="text-cyan-400 font-mono text-[11px]">relay-core</code>.</li>
-                                        <li><strong>STARTUP Yüklenme Döngüsü:</strong> Diğer eklentiler açılmadan önce en erken yaşam döngüsünde ayağa kalkar, <code class="text-slate-300">NullPointerException</code> riskini ortadan kaldırır.</li>
-                                        <li><strong>Sıfır Bellek Sızıntısı (Zero-Leak):</strong> Eklentiler <code class="text-slate-300">/reload</code> veya devre dışı kaldığında tüm servisler, abonelikler, bekleme süreleri ve paylaşımlı veriler RAM'den otomatik temizlenir.</li>
-                                        <li><strong>Folia Bölgesel İş Parçacığı Güvenliği:</strong> ConcurrentHashMap ve Atomic yapılarla Folia'nın bağımsız CPU çekirdeklerinde %100 Race Condition koruması.</li>
-                                    </ul>
-                                </div>
-
-                                <!-- 2. Service Registry -->
-                                <div class="bento-card p-4 rounded-lg space-y-2 border border-white/[0.06]">
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
-                                        <h3 class="text-sm font-semibold text-white">Reaktif Servis Kayıt Sistemi (ServiceRegistry)</h3>
-                                    </div>
-                                    <ul class="list-disc list-inside text-xs text-slate-400 space-y-1 pl-2">
-                                        <li><strong>5 Kademeli Öncelik Zinciri:</strong> <code class="text-cyan-400 font-mono text-[11px]">HIGHEST</code>, <code class="text-cyan-400 font-mono text-[11px]">HIGH</code>, <code class="text-cyan-400 font-mono text-[11px]">NORMAL</code>, <code class="text-cyan-400 font-mono text-[11px]">LOW</code>, <code class="text-cyan-400 font-mono text-[11px]">FALLBACK</code>. Üst düzey bir eklenti geldiğinde otomatik geçiş, kapandığında alt kademeye kesintisiz dönüş.</li>
-                                        <li><strong>Yüklenme Sırası Bağımsız Tüketim:</strong> <code class="text-slate-300 font-mono text-[11px]">onServiceReady</code> ve <code class="text-slate-300 font-mono text-[11px]">awaitService</code> ile reaktif promise desteği.</li>
-                                        <li><strong>Dinamik Yaşam Döngüsü Olayları:</strong> <code class="text-slate-300 font-mono text-[11px]">ServiceRegisteredEvent</code>, <code class="text-slate-300 font-mono text-[11px]">ServiceUnregisteredEvent</code> ve <code class="text-slate-300 font-mono text-[11px]">PrimaryProviderChangedEvent</code>.</li>
-                                    </ul>
-                                </div>
-
-                                <!-- 3. Messenger -->
-                                <div class="bento-card p-4 rounded-lg space-y-2 border border-white/[0.06]">
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
-                                        <h3 class="text-sm font-semibold text-white">Mikroservis Pub/Sub & RPC Mesajlaşması (RelayMessenger)</h3>
-                                    </div>
-                                    <ul class="list-disc list-inside text-xs text-slate-400 space-y-1 pl-2">
-                                        <li><strong>Bağımsız EventBus:</strong> Eklentilerin birbirinin JAR dosyasına ihtiyaç duymadan tip güvenli nesnelerle konu (topic) tabanlı veri paylaşabilmesi.</li>
-                                        <li><strong>Zaman Aşımı Korumalı RPC (Soru-Cevap):</strong> <code class="text-indigo-300 font-mono text-[11px]">request(topic, req, type, timeout)</code> ile REST API / Mikroservis modeli ve <code class="text-red-400 font-mono text-[11px]">RequestTimeoutException</code> güvenliği.</li>
-                                        <li><strong>Senkron Hızlı Yanıtlayıcı:</strong> <code class="text-indigo-300 font-mono text-[11px]">handleRequestSync</code> ile anında dönüt sağlayan RPC işleyicisi.</li>
-                                    </ul>
-                                </div>
-
-                                <!-- 4. Economy -->
-                                <div class="bento-card p-4 rounded-lg space-y-2 border border-white/[0.06]">
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                                        <h3 class="text-sm font-semibold text-white">Kayıpsız Çoklu Para Birimli Asenkron Ekonomi (EconomyService)</h3>
-                                    </div>
-                                    <ul class="list-disc list-inside text-xs text-slate-400 space-y-1 pl-2">
-                                        <li><strong>Kayıpsız BigDecimal Standardı:</strong> IEEE 754 <code class="text-red-400">double</code> kuruş yuvarlama ve haksız para türeme açıklarını tamamen sonlandıran finansal aritmetik.</li>
-                                        <li><strong>Sınırsız Çoklu Para Birimi:</strong> Altın, Bakiye, Kripto Token ve Etkinlik Puanı gibi onlarca para birimini tek standartta bağımsız yönetebilme (<code class="text-amber-300 font-mono text-[11px]">Currency</code>).</li>
-                                        <li><strong>Atomik İki Taraflı Transfer:</strong> <code class="text-amber-300 font-mono text-[11px]">transfer(from, to, amount, currency, reason)</code> ile bir taraf başarısız olduğunda otomatik geri alma güvencesi.</li>
-                                    </ul>
-                                </div>
-
-                                <!-- 5. Cooldowns -->
-                                <div class="bento-card p-4 rounded-lg space-y-2 border border-white/[0.06]">
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                                        <h3 class="text-sm font-semibold text-white">Evrensel Bekleme Süresi Motoru (CooldownService)</h3>
-                                    </div>
-                                    <ul class="list-disc list-inside text-xs text-slate-400 space-y-1 pl-2">
-                                        <li><strong>Otomatik Bellek Tahliyesi (TTL):</strong> Süresi dolan cooldown kayıtlarının arka planda RAM'den sessizce silinmesi.</li>
-                                        <li><strong>Görsel Yüzde İlerlemesi:</strong> BossBar ve ActionBar için 0.0 - 1.0 arası dolum yüzdesi (<code class="text-emerald-300 font-mono text-[11px]">getProgress()</code>).</li>
-                                        <li><strong>Bitiş Bildirimi & Olayı:</strong> Lambda callback fonksiyonu ve sunucu geneli <code class="text-slate-300 font-mono text-[11px]">CooldownExpiredEvent</code> fırlatıcı.</li>
-                                        <li><strong>Global Kapsam:</strong> Tüm sunucu geneli paylaşılan etkinlik bekleme süreleri (<code class="text-emerald-300 font-mono text-[11px]">setGlobalCooldown</code>).</li>
-                                    </ul>
-                                </div>
-
-                                <!-- 6. Shared Data -->
-                                <div class="bento-card p-4 rounded-lg space-y-2 border border-white/[0.06]">
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-2 h-2 rounded-full bg-purple-400"></span>
-                                        <h3 class="text-sm font-semibold text-white">Tip Güvenli Ortak Bellek & Savaş Etiketi (SharedDataService)</h3>
-                                    </div>
-                                    <ul class="list-disc list-inside text-xs text-slate-400 space-y-1 pl-2">
-                                        <li><strong>Tip Güvenli Anahtarlar:</strong> String yazım hatalarını ve ClassCastException riskini önleyen <code class="text-purple-300 font-mono text-[11px]">DataKey&lt;T&gt;</code> mimarisi.</li>
-                                        <li><strong>Geçici TTL Etiketleri:</strong> Savaşa giren oyunculara otomatik süresi dolan 15 saniyelik savaş etiketi bağlayabilme (<code class="text-purple-300 font-mono text-[11px]">setTemporary</code>).</li>
-                                        <li><strong>Canlı Veri Gözlemcileri:</strong> Bir eklenti veriyi değiştirdiğinde diğer eklentilerin anında haberdar olması (<code class="text-purple-300 font-mono text-[11px]">observe</code> ve <code class="text-slate-300 font-mono text-[11px]">DataChangeEvent</code>).</li>
-                                    </ul>
-                                </div>
-
-                                <!-- 7. Permissions -->
-                                <div class="bento-card p-4 rounded-lg space-y-2 border border-white/[0.06]">
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-2 h-2 rounded-full bg-sky-400"></span>
-                                        <h3 class="text-sm font-semibold text-white">Asenkron Yetki ve Rütbe Servisi (PermissionService)</h3>
-                                    </div>
-                                    <ul class="list-disc list-inside text-xs text-slate-400 space-y-1 pl-2">
-                                        <li><strong>TPS Düşürmeyen Yetki Kontrolleri:</strong> SQL veya LuckPerms sorgularını ana thread'i bekletmeden asenkron tamamlama (<code class="text-sky-300 font-mono text-[11px]">hasPermission</code>, <code class="text-sky-300 font-mono text-[11px]">inGroup</code>).</li>
-                                        <li><strong>Unvan & Rütbe Bilgisi:</strong> Oyuncunun birincil grubunu ve unvanını (<code class="text-sky-300 font-mono text-[11px]">getPrefix</code>, <code class="text-sky-300 font-mono text-[11px]">getSuffix</code>) çekebilme.</li>
-                                        <li><strong>Süreli Geçici Yetkiler:</strong> 1 günlük süreli VIP uçuş yetkisi gibi geçici yetkiler tanımlama (<code class="text-sky-300 font-mono text-[11px]">setTemporaryPermission</code>).</li>
-                                        <li><strong>Dahili Fallback:</strong> LuckPerms olmasa dahi standart Bukkit yetki motoruyla sıfır hatayla çalışabilme (<code class="text-slate-300 font-mono text-[11px]">DefaultBukkitPermissionProvider</code>).</li>
-                                    </ul>
-                                </div>
-
-                                <!-- 8. Party -->
-                                <div class="bento-card p-4 rounded-lg space-y-2 border border-white/[0.06]">
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-2 h-2 rounded-full bg-rose-400"></span>
-                                        <h3 class="text-sm font-semibold text-white">Parti & Sıfır-Gecikmeli Dost Ateşi (PartyService)</h3>
-                                    </div>
-                                    <ul class="list-disc list-inside text-xs text-slate-400 space-y-1 pl-2">
-                                        <li><strong>Sıfır-Gecikmeli Senkron Kontrol:</strong> Saniyede binlerce vuruşun yapıldığı combat anlarında thread bekletmeyen, sıfır bellek tahsisli <code class="text-rose-300 font-mono text-[11px]">isFriendlySync</code> ve <code class="text-rose-300 font-mono text-[11px]">canDamageSync</code>.</li>
-                                        <li><strong>Tam Parti Yaşam Döngüsü:</strong> Zindan grupları oluşturma, kapasite sınırları, lider devri, üye atma ve otomatik dağılma.</li>
-                                        <li><strong>Dahili Fallback:</strong> Harici parti eklentisi olmasa dahi yerleşik thread-safe yöneticisi (<code class="text-slate-300 font-mono text-[11px]">DefaultPartyServiceImpl</code>).</li>
-                                        <li><strong>Parti Olayları:</strong> <code class="text-slate-300 font-mono text-[11px]">PartyCreatedEvent</code>, <code class="text-slate-300 font-mono text-[11px]">PartyDisbandedEvent</code>, <code class="text-slate-300 font-mono text-[11px]">PartyMemberJoinedEvent</code>, <code class="text-slate-300 font-mono text-[11px]">PartyMemberLeaveEvent</code>, <code class="text-slate-300 font-mono text-[11px]">PartyLeaderChangedEvent</code>, <code class="text-slate-300 font-mono text-[11px]">PartyFriendlyFireToggleEvent</code>.</li>
-                                    </ul>
-                                </div>
-
-                                <!-- 9. Tests & Distribution -->
-                                <div class="bento-card p-4 rounded-lg space-y-2 border border-white/[0.06]">
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-2 h-2 rounded-full bg-slate-400"></span>
-                                        <h3 class="text-sm font-semibold text-white">Testler, Dağıtım & Teşhis Araçları</h3>
-                                    </div>
-                                    <ul class="list-disc list-inside text-xs text-slate-400 space-y-1 pl-2">
-                                        <li><strong>%100 Test Başarımı:</strong> Çekirdek servisler için yazılmış 19 birim testin (JUnit 5 & Mockito) tamamı hatasız geçti.</li>
-                                        <li><strong>JitPack Maven Entegrasyonu:</strong> Java 21 LTS yapılandırması (<code class="text-slate-300 font-mono text-[11px]">jitpack.yml</code>) ile tüm dünyaya anında Maven/Gradle dağıtımı.</li>
-                                        <li><strong>Yönetici Tanı Komutları:</strong> <code class="text-slate-300 font-mono text-[11px]">/relay status</code>, <code class="text-slate-300 font-mono text-[11px]">/relay services</code>, <code class="text-slate-300 font-mono text-[11px]">/relay topics</code>.</li>
-                                    </ul>
-                                </div>
-
                             </div>
 
                         </div>
