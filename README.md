@@ -1,249 +1,175 @@
 # ⚡ Relay
 
-> **Endüstri Standardı Reaktif Servis Kayıt & Pluginler Arası İletişim (Pub/Sub) Çatısı**  
-> *Modern Minecraft sunucuları (Paper, Purpur, Folia) için Vault'un yerini alan yeni nesil mimari.*
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Kriscra/Relay/main/docs/favicon.svg" width="96" height="96" alt="Relay Logo" />
+</p>
+
+<p align="center">
+  <strong>Endüstri Standardı Reaktif Servis Kaydı, Eklentiler Arası İletişim (Pub/Sub) ve Ekosistem Çatısı</strong><br>
+  <em>Modern Paper, Purpur ve Çok Çekirdekli Folia Sunucuları İçin Yeni Nesil Altyapı Motoru.</em>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Kriscra/Relay/releases"><img src="https://img.shields.io/badge/version-v1.3.0-cyan?style=for-the-badge&logo=git" alt="Version" /></a>
+  <a href="https://papermc.io"><img src="https://img.shields.io/badge/Paper%20%2F%20Folia-1.20%20--%201.21-00f2fe?style=for-the-badge&logo=buffer" alt="Paper" /></a>
+  <a href="https://www.oracle.com/java/"><img src="https://img.shields.io/badge/Java-21%20LTS-f59e0b?style=for-the-badge&logo=openjdk" alt="Java 21" /></a>
+  <a href="https://jitpack.io/#Kriscra/Relay"><img src="https://img.shields.io/badge/JitPack-v1.3.0-10b981?style=for-the-badge&logo=gradle" alt="JitPack" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-6366f1?style=for-the-badge" alt="License" /></a>
+</p>
 
 ---
 
-## 🚀 Neden Relay? (Vault vs Relay)
+## 🌟 Relay Nedir?
 
-| Özellik | Vault (2011) | Relay (Modern) |
+**Relay**, modern Minecraft sunucularında (Paper, Purpur ve özellikle çok iş parçacıklı **Folia**) eklentiler arası entegrasyonu ve sunucu servislerini endüstri standartlarına taşıyan açık kaynaklı bir altyapı motorudur.
+
+Eski Bukkit mimarisindeki senkron ve ana iş parçacığını (Main Thread) donduran çağrılar yerine; **%100 Non-Blocking asenkron mimari**, **mikroservis tipi Pub/Sub mesajlaşması**, **Folia bölgesel iş parçacığı güvenliği (Region-Safe)** ve **otomatik bellek temizliği (Zero-Leak)** sunar.
+
+---
+
+## 🚀 Dahili Servisler (Features at a Glance)
+
+Relay, bir sunucunun ve eklentilerin ihtiyaç duyduğu 8 temel alt sistemi tek bir çatı altında eksiksiz sunar:
+
+| Modül / Servis | Açıklama | Öne Çıkan Özellikler |
 | :--- | :--- | :--- |
-| **İş Parçacığı (Threading)** | Senkron (Main thread'i dondurur) | **%100 Asenkron & Non-Blocking (`CompletableFuture`)** |
-| **Sunucu Desteği** | Eski Bukkit/Spigot | **Paper, Purpur ve Çok Çekirdekli Folia Uyumlu** |
-| **Para Birimleri** | Sadece tek bir para birimi | **Sınırsız Çoklu Para Birimi (`Currency` standartı)** |
-| **Hassasiyet** | `double` (Kuruş yuvarlama hataları) | **`BigDecimal` ile %100 kayıpsız finansal işlemler** |
-| **Pluginler Arası İletişim**| Yok (Doğrudan `.jar` bağımlılığı şart) | **Decoupled Pub/Sub EventBus (Bağımsız Kanal Mesajlaşması)** |
-| **Yüklenme Sırası Hatası** | `NullPointerException` (Load order sorunu) | **Reaktif `awaitService` & `onServiceReady` Promise mimarisi** |
-| **Öncelik & Fallback** | Bukkit ServicePriority (Sınırlı) | **Dinamik Fallback Zinciri (`HIGHEST` ➔ `FALLBACK`)** |
+| **ServiceRegistry** | Reaktif servis keşfi ve kayıt defteri | `HIGHEST` ➔ `FALLBACK` öncelik basamakları, yüklenme sırasından bağımsız `onServiceReady` Promise mimarisi. |
+| **RelayMessenger** | Bağımsız Pub/Sub ve RPC iletişim veri yolu | Eklentiler birbirinin `.jar` dosyasına bağımlı olmadan kanallara abone olabilir veya asenkron istek-cevap (`request`) yapabilir. |
+| **EconomyService** | Çoklu para birimi ve finans motoru | IEEE 754 kayan noktalı sayı hatalarını önleyen `BigDecimal` aritmetiği, sınırsız para birimi, atomik transferler. |
+| **CooldownService** | Evrensel bekleme süresi yöneticisi | Yetenek, büyü ve komutlar için thread-safe bekleme süreleri, ActionBar dolum yüzdesi (`getProgress()`), otomatik TTL tahliyesi. |
+| **SharedDataService** | Tip güvenli paylaşımlı veri havuzu | `DataKey<T>` ile veri doğrulama, süreli geçici veriler (`setTemporary`), reaktif canlı gözlemciler (`observe`). |
+| **PermissionService** | Asenkron yetki ve rütbe kontrolü | TPS düşüşlerini engelleyen asenkron yetki sorgulama, LuckPerms/Vault uyumluluğu, ön ek ve rütbe ağırlığı. |
+| **PartyService** | Takım ve dost ateşi yöneticisi | Combat anında thread dondurmayan sıfır-bellek tahsisli `isFriendlySync` kontrolleri, zindan grupları. |
+| **MetricsService** | Performans telemetrisi & lag alarmı | Nanosaniye hassasiyetinde süre ölçümü, P50/P95/P99 yüzdelikleri, TPS düşüşlerinde otomatik `LagSpikeEvent` alarmı. |
+| **HologramService** | Display Entity tabanlı hologram motoru | Minecraft 1.20+ `TextDisplay` native mimarisi, sıfır ArmorStand lag, Folia region-safe `spawnAsync`, MiniMessage ve gölge. |
+| **MenuService** | Folia güvenli sanal sandık GUI motoru | Üst envanter tıklamalarını ve sürüklemelerini kilitleyen anti-dupe koruması, 150ms anti-macro debounce, sayfalama (pagination). |
 
 ---
 
-## 📦 Projeye Ekleme (Dependency)
+## 🛡️ Folia Multi-Threading & Zero-Leak Mimarisi
 
-Geliştiriciler yalnızca hafif **`relay-api`** modülünü bağımlılık olarak ekler.
+Relay, çok çekirdekli Minecraft sunucu yazılımı **Folia** için sıfırdan tasarlanmıştır:
+* **Region-Safe Scheduling:** Hologram ve menü işlemleri, hedef koordinatın veya oyuncunun ait olduğu bağımsız iş parçacığına otomatik iletilir.
+* **Lock-Free Veri Yapıları:** Tüm dahili önbellekler `ConcurrentHashMap`, `CopyOnWrite` ve atomik sayaçlar ile donatılmıştır; kilitlenme (deadlock) yaşanmaz.
+* **Zero-Leak Yaşam Döngüsü:** Bir eklenti kapandığında veya sunucu yeniden yüklendiğinde, o eklentiye ait tüm dinleyiciler, hologramlar, menüler ve bekleme süreleri sunucudan otomatik tahliye edilir (`setPersistent(false)`).
+
+---
+
+## 📦 Geliştiriciler İçin Projeye Ekleme (Dependency)
+
+Eklenti geliştiricileri yalnızca 40 KB'lık hafif, harici kütüphane içermeyen **`relay-api`** modülünü çeker:
 
 ### Gradle (Kotlin DSL)
 ```kotlin
 repositories {
     mavenCentral()
-    // Relay repository (veya JitPack)
     maven("https://jitpack.io")
 }
 
 dependencies {
-    compileOnly("com.github.Kriscra.Relay:relay-api:v1.0.0")
+    compileOnly("com.github.Kriscra.Relay:relay-api:v1.3.0")
 }
 ```
 
 ### Maven (`pom.xml`)
 ```xml
-<dependency>
-    <groupId>com.github.Kriscra.Relay</groupId>
-    <artifactId>relay-api</artifactId>
-    <version>v1.0.0</version>
-    <scope>provided</scope>
-</dependency>
-```
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
 
+<dependencies>
+    <dependency>
+        <groupId>com.github.Kriscra.Relay</groupId>
+        <artifactId>relay-api</artifactId>
+        <version>v1.3.0</version>
+        <scope>provided</scope>
+    </dependency>
+</dependencies>
+```
 
 ---
 
-## 🛠️ Hızlı Başlangıç (Quickstart)
+## 🛠️ Hızlı Kod Örnekleri
 
-### 1. Reaktif Servis Tüketimi (`awaitService`)
-Diğer eklentinin sizden önce mi yoksa sonra mı yüklendiğini dert etmenize gerek yok. Servis kaydedildiği an geri çağrılır:
-
+### 1. Reaktif Servis Keşfi (`onServiceReady`)
+Yüklenme sırasını dert etmeyin. İlgili eklenti sizden sonra yüklense bile servis kaydedildiği anda geri çağrılır:
 ```java
-import org.vrz.relay.api.RelayAPI;
-import org.vrz.relay.api.economy.EconomyService;
-
-// Ekonomi servisi hazır olduğunda tetiklenir:
 RelayAPI.getServiceRegistry().onServiceReady(EconomyService.class, economy -> {
     getLogger().info("Ekonomi sistemi bağlandı! Para birimi: " + economy.getDefaultCurrency().displayName());
 });
 ```
 
-### 2. Kendi Servisinizi Kaydetme (Öncelikli Kayıt)
+### 2. Eklentiler Arası Mesajlaşma (Pub/Sub)
+Kendi aralarında doğrudan `.jar` bağımlılığı olmadan eklentilerin haberleşmesini sağlayın:
 ```java
-import org.vrz.relay.api.RelayAPI;
-import org.vrz.relay.api.service.ServicePriority;
-
-// Kendi özel servisinizi öncelik belirterek kaydedin:
-RelayAPI.getServiceRegistry().register(
-    MyCustomService.class,
-    new MyCustomServiceImpl(),
-    ServicePriority.HIGH, // HIGHEST, HIGH, NORMAL, LOW, FALLBACK
-    this
-);
-```
-
-### 3. Pluginler Arası Bağımsız Mesajlaşma (Pub/Sub EventBus)
-İki eklentinin birbirinin `.jar` dosyasına bağımlı kalmadan veri paylaşmasını sağlar:
-
-#### Mesajı Yayınlama (Yayıncı Eklenti):
-```java
-// Klan seviye atladığında veri fırlatın:
+// Yayıncı Eklenti:
 RelayAPI.getMessenger().publish("clan:levelup", new ClanLevelPayload("Akıncılar", 10), this);
-```
 
-#### Mesajı Dinleme (Dinleyici Eklenti - Görev veya Skor Tablosu):
-```java
-// Klan eklentisinin JAR'ına ihtiyaç duymadan kanalı dinleyin:
-RelayAPI.getMessenger().subscribe("clan:levelup", ClanLevelPayload.class, this, context -> {
-    ClanLevelPayload data = context.getPayload();
-    getLogger().info(data.clanName() + " klanı 10. seviyeye ulaştı! Görev puanı veriliyor.");
+// Dinleyici Eklenti:
+RelayAPI.getMessenger().subscribe("clan:levelup", ClanLevelPayload.class, this, ctx -> {
+    getLogger().info(ctx.getPayload().clanName() + " seviye atladı!");
 });
 ```
 
-### 4. Soru-Cevap (RPC / Request-Response)
-Bir eklentinin başka bir eklentiye asenkron soru sorup cevap almasını sağlar (REST / Microservice mantığı):
-
-#### Cevap Verici (Provider Eklenti):
+### 3. TextDisplay Hologram Oluşturma (Folia Region-Safe)
 ```java
-// Klan eklentisi gelen sorguları yanıtlar:
-RelayAPI.getMessenger().handleRequestSync("clan:get_name", UUID.class, this, (ctx, clanId) -> {
-    return clanManager.getClan(clanId).getName();
-});
+Hologram hologram = RelayAPI.getHolograms().createBuilder(plugin, location)
+        .appendLine("<gradient:#4facfe:#00f2fe><bold>✦ RELAY NETWORK ✦</bold></gradient>")
+        .appendLine("<gray>Folia & Paper Uyumlu</gray>")
+        .setBillboard(Billboard.CENTER)
+        .setTextShadow(true)
+        .build();
+
+hologram.spawnAsync();
 ```
 
-#### Soru Soran (Tüketici Eklenti):
+### 4. Folia Uyumlu Sandık Menüsü (Anti-Dupe & Debounce)
 ```java
-// Başka bir eklenti klan adını asenkron sorar (zaman aşımı korumalı):
-RelayAPI.getMessenger().request("clan:get_name", clanId, String.class, Duration.ofSeconds(2))
-    .thenAccept(clanName -> player.sendMessage("Klanınız: " + clanName))
-    .exceptionally(err -> {
-        player.sendMessage("Klan bilgisi alınamadı (Zaman aşımı veya hata)");
-        return null;
-    });
-```
+Menu menu = RelayAPI.getMenus().createBuilder(plugin)
+        .titleMiniMessage("<green>Işınlanma Menüsü</green>")
+        .pattern(
+            "#########",
+            "#   W   #",
+            "#########"
+        )
+        .bindKey('#', MenuButton.of(new ItemStack(Material.BLACK_STAINED_GLASS_PANE)))
+        .bindKey('W', MenuButton.builder()
+                .item(new ItemStack(Material.COMPASS))
+                .sound(Sound.ENTITY_ENDERMAN_TELEPORT)
+                .debounce(250L) // 250ms makro koruması
+                .onClick(ctx -> ctx.getPlayer().teleport(spawnLocation))
+                .build())
+        .build();
 
-### 5. Modern Asenkron Ekonomi İşlemleri
-```java
-RelayAPI.getEconomy().ifPresent(economy -> {
-    UUID playerId = player.getUniqueId();
-    BigDecimal amount = BigDecimal.valueOf(250.50);
-
-    // Asenkron ve non-blocking para yatırma
-    economy.deposit(playerId, amount, "Görev Ödülü").thenAccept(response -> {
-        if (response.isSuccess()) {
-            player.sendMessage("Hesabınıza " + economy.format(amount) + " yatırıldı!");
-            player.sendMessage("Yeni Bakiyeniz: " + economy.format(response.balanceAfter()));
-        } else {
-            player.sendMessage("İşlem başarısız: " + response.errorMessage());
-        }
-    });
-});
-```
-
-### 6. Evrensel Bekleme Süresi (Cooldown) Servisi
-Eklentiler arası ortak, bellek sızıntısız ve otomatik temizlenen bekleme süresi yöneticisi:
-
-```java
-UUID playerId = player.getUniqueId();
-String key = "ability:dash";
-
-// 1. Cooldown kontrolü
-if (RelayAPI.getCooldowns().hasCooldown(playerId, key)) {
-    String remaining = RelayAPI.getCooldowns().formatRemaining(playerId, key);
-    player.sendMessage("§cYetenek henüz hazır değil! Kalan süre: " + remaining);
-    return;
-}
-
-// 2. Cooldown uygulama (10 saniye) ve bitiş bildirimi
-RelayAPI.getCooldowns().setCooldown(playerId, key, Duration.ofSeconds(10), this, expiredEntry -> {
-    player.sendMessage("§aDash yeteneğiniz tekrar hazır!");
-});
-```
-
-### 7. Paylaşımlı Veri ve Metadata Havuzu (SharedDataService)
-Eklentilerin oyunculara tip güvenli (`DataKey<T>`), otomatik süresi dolan (TTL) ve izlenebilir ortak veriler bağlamasını sağlar:
-
-```java
-// 1. Tip güvenli anahtar tanımlama
-DataKey<Boolean> COMBAT_TAG = DataKey.of("combat", "tagged", Boolean.class, false);
-
-// 2. Oyuncuya 15 saniyelik geçici (TTL) savaş etiketi koyma (Savaş eklentisi):
-RelayAPI.getData().setTemporary(player.getUniqueId(), COMBAT_TAG, true, Duration.ofSeconds(15), this);
-
-// 3. Başka bir eklentiden okuma (Işınlanma / Spawn eklentisi):
-if (RelayAPI.getData().getOrKeyDefault(player.getUniqueId(), COMBAT_TAG)) {
-    player.sendMessage("§cSavaş halindeyken ışınlanamazsınız!");
-    return;
-}
-
-// 4. Değişiklikleri dinleme (Gözlemci / Observer):
-RelayAPI.getData().observe(COMBAT_TAG, this, (targetId, key, oldVal, newVal) -> {
-    getLogger().info("Oyuncu " + targetId + " savaş durumu değişti: " + newVal);
-});
-```
-
-### 8. Asenkron Yetki ve Grup Servisi (PermissionService)
-Vault'un senkron yetki sisteminin aksine, LuckPerms veya veritabanı sorgularını **TPS düşürmeden** asenkron yürüten yetki ve rütbe sistemi:
-
-```java
-// 1. Asenkron yetki kontrolü (Non-blocking):
-RelayAPI.getPermissions().ifPresent(perms -> {
-    UUID playerId = player.getUniqueId();
-
-    perms.hasPermission(playerId, "vip.flight").thenAccept(canFly -> {
-        if (canFly) {
-            player.setAllowFlight(true);
-        }
-    });
-
-    // 2. Oyuncunun rütbesini ve unvanını (prefix) alma:
-    perms.getPrimaryGroup(playerId).thenAccept(group -> {
-        perms.getPrefix(playerId).thenAccept(prefix -> {
-            player.sendMessage("Rütbeniz: " + prefix + group);
-        });
-    });
-});
-```
-
-### 9. Parti, Takım ve Dost Ateşi (PartyService)
-Zindan, RPG, yetenek ve klan eklentileri için sıfır-gecikmeli (zero-allocation) senkron dost ateşi kontrolü ve asenkron parti yönetimi:
-
-```java
-// 1. Savaş Olaylarında Sıfır-Gecikmeli Dost Ateşi (Friendly Fire) Kontrolü (Senkron):
-@EventHandler
-public void onDamage(EntityDamageByEntityEvent event) {
-    if (event.getDamager() instanceof Player damager && event.getEntity() instanceof Player victim) {
-        RelayAPI.getParties().ifPresent(parties -> {
-            // Takım arkadaşıysa ve dost ateşi kapalıysa hasarı engelle:
-            if (parties.isFriendlySync(damager.getUniqueId(), victim.getUniqueId())) {
-                event.setCancelled(true);
-                damager.sendMessage("§cTakım arkadaşına saldıramazsın!");
-            }
-        });
-    }
-}
-
-// 2. Asenkron Parti Oluşturma ve Üye Yönetimi:
-RelayAPI.getParties().ifPresent(parties -> {
-    parties.createParty(leader.getUniqueId(), "Zindan Takımı", 4).thenAccept(party -> {
-        leader.sendMessage("§aParti kuruldu: " + party.getName());
-        parties.addMember(party.getId(), friend.getUniqueId());
-    });
-});
+menu.open(player);
 ```
 
 ---
 
+## ⚙️ Yönetici Komutları
 
-## ⚙️ Komutlar & Yönetim
+Sunucudaki aktif servisleri, telemetriyi ve oturumları anlık izleyin:
 
-Sunucu yöneticileri için tanı ve izleme araçları:
-
-* `/relay status`: Aktif servis sayısı, abone olunan kanal sayısı ve çalışma ortamı bilgilerini gösterir.
-* `/relay services`: Kayıtlı tüm servisleri, hangi eklentinin sağladığını ve öncelik derecelerini listeler.
-* `/relay topics`: Mesajlaşma sistemindeki aktif kanalları ve dinleyici sayılarını gösterir.
+| Komut | Açıklama |
+| :--- | :--- |
+| `/relay status` | Aktif servis, konu, hologram, menü ve çalışma ortamı bilgilerini gösterir. |
+| `/relay services` | Sunucuda kayıtlı tüm servisleri ve öncelik derecelerini listeler. |
+| `/relay topics` | Aktif Pub/Sub iletişim kanallarını ve dinleyici sayılarını listeler. |
+| `/relay metrics` | Ortalama işlem sürelerini, P95 gecikmelerini ve sayaçları gösterir. |
+| `/relay metrics reset`| Tüm telemetri ve performans sayaçlarını sıfırlar. |
+| `/relay holograms` | Aktif TextDisplay hologramlarını ve konumlarını listeler. |
+| `/relay menus` | Aktif sanal menü oturumlarını ve görüntüleyen oyuncu sayılarını listeler. |
 
 **Yetki:** `relay.admin` (Varsayılan: OP)
 
 ---
 
-## 🏗️ Modül Mimarisi
+## 🔗 Bağlantılar & Kaynaklar
 
-* **`relay-api`**: Sıfır çalışma zamanı bağımlılığı içeren saf arayüzler, veri modelleri ve yaşam döngüsü olayları (19 KB).
-* **`relay-core`**: STARTUP yaşam döngüsünde çalışan, Folia/Paper uyumlu, eşzamanlı veri yapılarıyla güçlendirilmiş sunucu eklentisi.
+* 🌐 **Canlı Dokümantasyon Sitesi:** [kriscra.github.io/Relay](https://kriscra.github.io/Relay/)
+* 💻 **GitHub Kaynak Kodu:** [github.com/Kriscra/Relay](https://github.com/Kriscra/Relay)
+* 📦 **JitPack SDK Deposu:** [jitpack.io/#Kriscra/Relay](https://jitpack.io/#Kriscra/Relay)
+* 📜 **Lisans:** MIT License
