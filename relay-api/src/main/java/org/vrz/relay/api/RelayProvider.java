@@ -73,6 +73,14 @@ public interface RelayProvider {
     org.vrz.relay.api.menu.MenuService getMenuService();
 
     /**
+     * Gets the global notification and player feedback service.
+     *
+     * @return notification service instance
+     */
+    @NotNull
+    org.vrz.relay.api.notification.NotificationService getNotificationService();
+
+    /**
      * Gets the primary registered economy service, if one is registered.
      *
      * @return optional containing active EconomyService

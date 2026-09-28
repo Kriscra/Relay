@@ -176,7 +176,65 @@ public class RelayCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        sender.sendMessage(Component.text("Unknown subcommand. Usage: /relay <status|services|topics|metrics|holograms|menus>", NamedTextColor.RED));
+        if (args[0].equalsIgnoreCase("notify")) {
+            if (args.length < 3) {
+                sender.sendMessage(Component.text("Usage: /relay notify <player> <actionbar|bossbar|toast|title> [message...]", NamedTextColor.RED));
+                return true;
+            }
+
+            org.bukkit.entity.Player target = org.bukkit.Bukkit.getPlayerExact(args[1]);
+            if (target == null || !target.isOnline()) {
+                sender.sendMessage(Component.text("Player not found or offline: " + args[1], NamedTextColor.RED));
+                return true;
+            }
+
+            String type = args[2].toLowerCase(Locale.ROOT);
+            String rawMessage = args.length > 3
+                    ? String.join(" ", Arrays.copyOfRange(args, 3, args.length))
+                    : "<gradient:#4facfe:#00f2fe>Relay Notification Test</gradient>";
+
+            switch (type) {
+                case "actionbar":
+                    plugin.getNotificationService().actionBar(target)
+                            .messageMiniMessage(rawMessage)
+                            .priority(org.vrz.relay.api.notification.NotificationPriority.HIGH)
+                            .duration(java.time.Duration.ofSeconds(4))
+                            .send(plugin);
+                    sender.sendMessage(Component.text("✔ Sent ActionBar to " + target.getName(), NamedTextColor.GREEN));
+                    break;
+                case "bossbar":
+                    plugin.getNotificationService().bossBar(target)
+                            .titleMiniMessage(rawMessage + " <gray>(%time%s)</gray>")
+                            .countdown(java.time.Duration.ofSeconds(10))
+                            .color(net.kyori.adventure.bossbar.BossBar.Color.BLUE)
+                            .send(plugin);
+                    sender.sendMessage(Component.text("✔ Sent 10s Countdown BossBar to " + target.getName(), NamedTextColor.GREEN));
+                    break;
+                case "toast":
+                    plugin.getNotificationService().toast(target)
+                            .titleMiniMessage(rawMessage)
+                            .descriptionMiniMessage("<gray>Relay Virtual Advancement</gray>")
+                            .icon(org.bukkit.Material.DIAMOND)
+                            .frame(org.vrz.relay.api.notification.ToastFrame.CHALLENGE)
+                            .send(plugin);
+                    sender.sendMessage(Component.text("✔ Dispatched Virtual Toast to " + target.getName(), NamedTextColor.GREEN));
+                    break;
+                case "title":
+                    plugin.getNotificationService().title(target)
+                            .titleMiniMessage(rawMessage)
+                            .subtitleMiniMessage("<gray>Powered by Relay Notification Engine</gray>")
+                            .times(java.time.Duration.ofMillis(500), java.time.Duration.ofSeconds(3), java.time.Duration.ofMillis(500))
+                            .send(plugin);
+                    sender.sendMessage(Component.text("✔ Sent Title to " + target.getName(), NamedTextColor.GREEN));
+                    break;
+                default:
+                    sender.sendMessage(Component.text("Unknown notification type: " + type + ". Choose: actionbar, bossbar, toast, title", NamedTextColor.RED));
+                    break;
+            }
+            return true;
+        }
+
+        sender.sendMessage(Component.text("Unknown subcommand. Usage: /relay <status|services|topics|metrics|holograms|menus|notify>", NamedTextColor.RED));
         return true;
     }
 
@@ -196,12 +254,23 @@ public class RelayCommand implements CommandExecutor, TabCompleter {
             return Collections.emptyList();
         }
         if (args.length == 1) {
-            return Arrays.asList("status", "services", "topics", "metrics", "holograms", "menus").stream()
+            return Arrays.asList("status", "services", "topics", "metrics", "holograms", "menus", "notify").stream()
                     .filter(s -> s.startsWith(args[0].toLowerCase(Locale.ROOT)))
                     .collect(Collectors.toList());
         }
         if (args.length == 2 && args[0].equalsIgnoreCase("metrics")) {
             return Collections.singletonList("reset");
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("notify")) {
+            return org.bukkit.Bukkit.getOnlinePlayers().stream()
+                    .map(org.bukkit.entity.Player::getName)
+                    .filter(name -> name.toLowerCase(Locale.ROOT).startsWith(args[1].toLowerCase(Locale.ROOT)))
+                    .collect(Collectors.toList());
+        }
+        if (args.length == 3 && args[0].equalsIgnoreCase("notify")) {
+            return Arrays.asList("actionbar", "bossbar", "toast", "title").stream()
+                    .filter(s -> s.startsWith(args[2].toLowerCase(Locale.ROOT)))
+                    .collect(Collectors.toList());
         }
         return Collections.emptyList();
     }

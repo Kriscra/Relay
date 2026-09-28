@@ -21,6 +21,7 @@ public final class RelayProviderImpl implements RelayProvider {
     private final org.vrz.relay.api.metric.MetricsService metricsService;
     private final org.vrz.relay.api.hologram.HologramService hologramService;
     private final org.vrz.relay.api.menu.MenuService menuService;
+    private final org.vrz.relay.api.notification.NotificationService notificationService;
 
     public RelayProviderImpl(@NotNull ServiceRegistry serviceRegistry,
                              @NotNull RelayMessenger messenger,
@@ -28,7 +29,8 @@ public final class RelayProviderImpl implements RelayProvider {
                              @NotNull SharedDataService dataService,
                              @NotNull org.vrz.relay.api.metric.MetricsService metricsService,
                              @NotNull org.vrz.relay.api.hologram.HologramService hologramService,
-                             @NotNull org.vrz.relay.api.menu.MenuService menuService) {
+                             @NotNull org.vrz.relay.api.menu.MenuService menuService,
+                             @NotNull org.vrz.relay.api.notification.NotificationService notificationService) {
         this.serviceRegistry = Objects.requireNonNull(serviceRegistry, "serviceRegistry cannot be null");
         this.messenger = Objects.requireNonNull(messenger, "messenger cannot be null");
         this.cooldownService = Objects.requireNonNull(cooldownService, "cooldownService cannot be null");
@@ -36,6 +38,7 @@ public final class RelayProviderImpl implements RelayProvider {
         this.metricsService = Objects.requireNonNull(metricsService, "metricsService cannot be null");
         this.hologramService = Objects.requireNonNull(hologramService, "hologramService cannot be null");
         this.menuService = Objects.requireNonNull(menuService, "menuService cannot be null");
+        this.notificationService = Objects.requireNonNull(notificationService, "notificationService cannot be null");
     }
 
     @Override
@@ -78,5 +81,11 @@ public final class RelayProviderImpl implements RelayProvider {
     @NotNull
     public org.vrz.relay.api.menu.MenuService getMenuService() {
         return menuService;
+    }
+
+    @Override
+    @NotNull
+    public org.vrz.relay.api.notification.NotificationService getNotificationService() {
+        return notificationService;
     }
 }

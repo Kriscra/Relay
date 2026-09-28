@@ -185,5 +185,16 @@ public final class RelayAPI {
     public static org.vrz.relay.api.menu.MenuService getMenus() {
         return getInstance().getMenuService();
     }
+
+    /**
+     * Gets the global {@link org.vrz.relay.api.notification.NotificationService}.
+     *
+     * @return active notification service
+     * @throws IllegalStateException if Relay is not yet initialized
+     */
+    @NotNull
+    public static org.vrz.relay.api.notification.NotificationService getNotifications() {
+        return getInstance().getNotificationService();
+    }
 }
 

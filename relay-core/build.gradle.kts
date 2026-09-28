@@ -39,4 +39,8 @@ tasks {
             expand(props)
         }
     }
+
+    named<Test>("test") {
+        dependsOn(":relay-api:jar")
+    }
 }

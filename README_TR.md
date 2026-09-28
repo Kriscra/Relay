@@ -10,10 +10,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Kriscra/Relay/releases"><img src="https://img.shields.io/badge/version-v1.3.0-cyan?style=for-the-badge&logo=git" alt="Version" /></a>
+  <a href="https://github.com/Kriscra/Relay/releases"><img src="https://img.shields.io/badge/version-v1.4.0-cyan?style=for-the-badge&logo=git" alt="Version" /></a>
   <a href="https://papermc.io"><img src="https://img.shields.io/badge/Paper%20%2F%20Folia-1.20%20--%201.21-00f2fe?style=for-the-badge&logo=buffer" alt="Paper" /></a>
   <a href="https://www.oracle.com/java/"><img src="https://img.shields.io/badge/Java-21%20LTS-f59e0b?style=for-the-badge&logo=openjdk" alt="Java 21" /></a>
-  <a href="https://jitpack.io/#Kriscra/Relay"><img src="https://img.shields.io/badge/JitPack-v1.3.0-10b981?style=for-the-badge&logo=gradle" alt="JitPack" /></a>
+  <a href="https://jitpack.io/#Kriscra/Relay"><img src="https://img.shields.io/badge/JitPack-v1.4.0-10b981?style=for-the-badge&logo=gradle" alt="JitPack" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-6366f1?style=for-the-badge" alt="License" /></a>
 </p>
 
@@ -33,7 +33,7 @@ Eski Bukkit mimarisindeki ana iş parçacığını (Main Thread) donduran senkro
 
 ## 🚀 Dahili Servisler (Genel Bakış)
 
-Relay, bir sunucunun ve eklentilerin ihtiyaç duyduğu 8 temel alt sistemi tek bir çatı altında eksiksiz sunar:
+Relay, bir sunucunun ve eklentilerin ihtiyaç duyduğu 11 temel alt sistemi tek bir çatı altında eksiksiz sunar:
 
 | Modül / Servis | Açıklama | Öne Çıkan Özellikler |
 | :--- | :--- | :--- |
@@ -47,21 +47,22 @@ Relay, bir sunucunun ve eklentilerin ihtiyaç duyduğu 8 temel alt sistemi tek b
 | **MetricsService** | Performans telemetrisi & lag alarmı | Nanosaniye hassasiyetinde süre ölçümü, P50/P95/P99 yüzdelikleri, TPS düşüşlerinde otomatik `LagSpikeEvent` alarmı. |
 | **HologramService** | Display Entity tabanlı hologram motoru | Minecraft 1.20+ `TextDisplay` native mimarisi, sıfır ArmorStand lag, Folia region-safe `spawnAsync`, MiniMessage ve gölge. |
 | **MenuService** | Folia güvenli sanal sandık GUI motoru | Üst envanter tıklamalarını ve sürüklemelerini kilitleyen anti-dupe koruması, 150ms anti-macro debounce, sayfalama (pagination). |
+| **NotificationService** | Çok kanallı oyuncu bildirim & geri bildirim motoru | Öncelik sıralı ActionBar kuyruğu, animasyonlu geri sayımlı BossBar, sağ üst sanal Toast kutucukları ve Title akışları. |
 
 ---
 
 ## 🛡️ Folia Multi-Threading & Zero-Leak Mimarisi
 
 Relay, çok çekirdekli Minecraft sunucu yazılımı **Folia** için sıfırdan tasarlanmıştır:
-* **Region-Safe Scheduling:** Hologram ve menü işlemleri, hedef koordinatın veya oyuncunun ait olduğu bağımsız iş parçacığına otomatik iletilir.
+* **Region-Safe Scheduling:** Hologram, menü ve bildirim işlemleri, hedef koordinatın veya oyuncunun ait olduğu bağımsız iş parçacığına otomatik iletilir.
 * **Lock-Free Veri Yapıları:** Tüm dahili önbellekler `ConcurrentHashMap`, `CopyOnWrite` ve atomik sayaçlar ile donatılmıştır; kilitlenme (deadlock) yaşanmaz.
-* **Zero-Leak Yaşam Döngüsü:** Bir eklenti kapandığında veya sunucu yeniden yüklendiğinde, o eklentiye ait tüm dinleyiciler, hologramlar, menüler ve bekleme süreleri sunucudan otomatik tahliye edilir (`setPersistent(false)`).
+* **Zero-Leak Yaşam Döngüsü:** Bir eklenti kapandığında veya sunucu yeniden yüklendiğinde, o eklentiye ait tüm dinleyiciler, hologramlar, menüler, BossBar'lar ve bekleme süreleri sunucudan otomatik tahliye edilir (`setPersistent(false)`).
 
 ---
 
 ## 📦 Geliştiriciler İçin Projeye Ekleme (Dependency)
 
-Eklenti geliştiricileri yalnızca 40 KB'lık hafif, harici kütüphane içermeyen **`relay-api`** modülünü çeker:
+Eklenti geliştiricileri yalnızca hafif, harici kütüphane içermeyen **`relay-api`** modülünü çeker:
 
 ### Gradle (Kotlin DSL)
 ```kotlin
@@ -71,7 +72,19 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.github.Kriscra.Relay:relay-api:v1.3.0")
+    compileOnly("com.github.Kriscra.Relay:relay-api:v1.4.0")
+}
+```
+
+### Gradle (Groovy DSL)
+```groovy
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    compileOnly 'com.github.Kriscra.Relay:relay-api:v1.4.0'
 }
 ```
 
@@ -88,7 +101,7 @@ dependencies {
     <dependency>
         <groupId>com.github.Kriscra.Relay</groupId>
         <artifactId>relay-api</artifactId>
-        <version>v1.3.0</version>
+        <version>v1.4.0</version>
         <scope>provided</scope>
     </dependency>
 </dependencies>
@@ -151,6 +164,32 @@ Menu menu = RelayAPI.getMenus().createBuilder(plugin)
 menu.open(player);
 ```
 
+### 5. Çok Kanallı Bildirimler (Öncelikli ActionBar, BossBar & Toast)
+```java
+// Öncelikli ve Kesintisiz ActionBar:
+RelayAPI.getNotifications().actionBar(player)
+        .messageMiniMessage("<gradient:#f12711:#f5af19><bold>UYARI:</bold> Güvenli bölgeden çıktınız!</gradient>")
+        .priority(NotificationPriority.HIGH)
+        .duration(Duration.ofSeconds(3))
+        .send(plugin);
+
+// Animasyonlu Geri Sayımlı BossBar (%time% ve %progress% destekli):
+ActiveBossBar bar = RelayAPI.getNotifications().bossBar(player)
+        .titleMiniMessage("<aqua>Zindan Başlıyor</aqua> <gray>(Kalan: %time%s)</gray>")
+        .countdown(Duration.ofSeconds(30))
+        .color(BossBar.Color.BLUE)
+        .onComplete(() -> player.sendMessage("Zindan kapıları açıldı!"))
+        .send(plugin);
+
+// Sağ Üst Sanal Toast (Advancement) Bildirimi:
+RelayAPI.getNotifications().toast(player)
+        .titleMiniMessage("<gold>Efsanevi Görev!</gold>")
+        .descriptionMiniMessage("<gray>Ender Ejderhasını alt et</gray>")
+        .icon(Material.DRAGON_HEAD)
+        .frame(ToastFrame.CHALLENGE)
+        .send(plugin);
+```
+
 ---
 
 ## ⚙️ Yönetici Komutları
@@ -164,6 +203,7 @@ Sunucudaki aktif servisleri, telemetriyi ve oturumları anlık izleyin:
 * `/relay metrics reset`: Tüm telemetri ve performans sayaçlarını sıfırlar.
 * `/relay holograms`: Aktif TextDisplay hologramlarını ve konumlarını listeler.
 * `/relay menus`: Aktif sanal menü oturumlarını ve görüntüleyen oyuncu sayılarını listeler.
+* `/relay notify <oyuncu> <actionbar|bossbar|toast|title> [mesaj]`: Oyuncuya test bildirimi gönderir.
 
 **Yetki:** `relay.admin` (Varsayılan: OP)
 
@@ -174,4 +214,4 @@ Sunucudaki aktif servisleri, telemetriyi ve oturumları anlık izleyin:
 * 🌐 **Canlı Dokümantasyon:** https://kriscra.github.io/Relay/
 * 💻 **GitHub:** https://github.com/Kriscra/Relay
 * 📦 **JitPack SDK:** https://jitpack.io/#Kriscra/Relay
-* 📜 **Lisans:** MIT License
+* 📜 **Lisans:** [MIT License](LICENSE)
