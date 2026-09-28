@@ -10,10 +10,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Kriscra/Relay/releases"><img src="https://img.shields.io/badge/version-v1.4.0-cyan?style=for-the-badge&logo=git" alt="Version" /></a>
+  <a href="https://github.com/Kriscra/Relay/releases"><img src="https://img.shields.io/badge/version-v1.4.1-cyan?style=for-the-badge&logo=git" alt="Version" /></a>
   <a href="https://papermc.io"><img src="https://img.shields.io/badge/Paper%20%2F%20Folia-1.20%20--%201.21-00f2fe?style=for-the-badge&logo=buffer" alt="Paper" /></a>
   <a href="https://www.oracle.com/java/"><img src="https://img.shields.io/badge/Java-21%20LTS-f59e0b?style=for-the-badge&logo=openjdk" alt="Java 21" /></a>
-  <a href="https://jitpack.io/#Kriscra/Relay"><img src="https://img.shields.io/badge/JitPack-v1.4.0-10b981?style=for-the-badge&logo=gradle" alt="JitPack" /></a>
+  <a href="https://jitpack.io/#Kriscra/Relay"><img src="https://img.shields.io/badge/JitPack-v1.4.1-10b981?style=for-the-badge&logo=gradle" alt="JitPack" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-6366f1?style=for-the-badge" alt="License" /></a>
 </p>
 
@@ -76,7 +76,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.github.Kriscra.Relay:relay-api:v1.4.0")
+    compileOnly("com.github.Kriscra.Relay:relay-api:v1.4.1")
 }
 ```
 
@@ -88,7 +88,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'com.github.Kriscra.Relay:relay-api:v1.4.0'
+    compileOnly 'com.github.Kriscra.Relay:relay-api:v1.4.1'
 }
 ```
 
@@ -105,7 +105,7 @@ dependencies {
     <dependency>
         <groupId>com.github.Kriscra.Relay</groupId>
         <artifactId>relay-api</artifactId>
-        <version>v1.4.0</version>
+        <version>v1.4.1</version>
         <scope>provided</scope>
     </dependency>
 </dependencies>
