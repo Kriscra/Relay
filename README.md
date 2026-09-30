@@ -10,10 +10,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Kriscra/Relay/releases"><img src="https://img.shields.io/badge/version-v1.4.1-cyan?style=for-the-badge&logo=git" alt="Version" /></a>
+  <a href="https://github.com/Kriscra/Relay/releases"><img src="https://img.shields.io/badge/version-v1.5.0-cyan?style=for-the-badge&logo=git" alt="Version" /></a>
   <a href="https://papermc.io"><img src="https://img.shields.io/badge/Paper%20%2F%20Folia-1.20%20--%201.21-00f2fe?style=for-the-badge&logo=buffer" alt="Paper" /></a>
   <a href="https://www.oracle.com/java/"><img src="https://img.shields.io/badge/Java-21%20LTS-f59e0b?style=for-the-badge&logo=openjdk" alt="Java 21" /></a>
-  <a href="https://jitpack.io/#Kriscra/Relay"><img src="https://img.shields.io/badge/JitPack-v1.4.1-10b981?style=for-the-badge&logo=gradle" alt="JitPack" /></a>
+  <a href="https://jitpack.io/#Kriscra/Relay"><img src="https://img.shields.io/badge/JitPack-v1.5.0-10b981?style=for-the-badge&logo=gradle" alt="JitPack" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-6366f1?style=for-the-badge" alt="License" /></a>
 </p>
 
@@ -30,14 +30,14 @@
 Instead of fragile load-order dependencies, synchronous Bukkit service lookups that stutter the main thread, and tight compile-time couplings between plugins, Relay delivers:
 * **100% Non-Blocking & Asynchronous Architecture:** Built on Java 21 `CompletableFuture` promises and lock-free concurrent primitives.
 * **Microservice-Style Pub/Sub & RPC:** Decouple your plugins completely with typed asynchronous messaging and request-response channels.
-* **Folia Multi-Thread Native (Region-Safe):** All entity, hologram, notification, and inventory interactions are automatically routed to their owner region thread with zero deadlock risk.
-* **Zero-Memory Leak Lifecycles:** Automatic cleanup hooks unregister listeners, remove display entities, close active virtual menus, dismiss active bossbars, and evict stale cooldowns upon plugin disable.
+* **Folia Multi-Thread Native (Region-Safe):** All entity, hologram, notification, scheduler, and inventory interactions are automatically routed to their owner region thread with zero deadlock risk.
+* **Zero-Memory Leak Lifecycles:** Automatic cleanup hooks unregister listeners, remove display entities, close active virtual menus, dismiss active bossbars, cancel running scheduled tasks, and evict stale cooldowns upon plugin disable.
 
 ---
 
 ## 🚀 Built-in Services (Overview)
 
-Relay unifies 11 essential server subsystems into a clean, lightweight API:
+Relay unifies 12 essential server subsystems into a clean, lightweight API:
 
 | Service / Subsystem | Description | Key Features |
 | :--- | :--- | :--- |
@@ -52,15 +52,16 @@ Relay unifies 11 essential server subsystems into a clean, lightweight API:
 | **HologramService** | Display Entity based holographic billboard engine | Minecraft 1.20+ native `TextDisplay` entities, zero ArmorStand lag, Folia region-safe `spawnAsync`, MiniMessage text and shadows. |
 | **MenuService** | Virtual chest inventory & GUI engine | Folia thread-safe opening, strict anti-duplication cancellation, 150ms anti-macro debounce, paginated menus (`PaginatedMenu<T>`). |
 | **NotificationService** | Multi-channel player feedback & display engine | Priority-based queued ActionBars, animated countdown BossBars, virtual top-right Toasts, and smooth Title sequences. |
+| **SchedulerService** | Unified Folia & Paper multi-thread scheduler | Universal entity, location/region, global, and async scheduling; `runAsyncPromise`, thread verification, zero-leak task auto-cancel. |
 
 ---
 
 ## 🛡️ Folia Multi-Threading & Zero-Leak Architecture
 
 Relay was architected from the ground up for multi-threaded servers:
-* **Region-Safe Scheduling:** World entity mutations (such as `TextDisplay` holograms) and inventory views are dispatched via Folia's `RegionScheduler` or `EntityScheduler`.
+* **Region-Safe Scheduling:** World entity mutations (such as `TextDisplay` holograms), scheduled tasks, and inventory views are dispatched via Folia's `RegionScheduler` or `EntityScheduler`.
 * **Lock-Free Concurrency:** All internal registries utilize `ConcurrentHashMap`, `CopyOnWriteArrayList`, and `AtomicReference` constructs to guarantee deterministic execution without thread contention or deadlocks.
-* **Persistent Auto-Cleanup:** All spawned entities have `setPersistent(false)` enabled. When a consumer plugin unloads, Relay automatically purges its associated subscribers, holograms, bossbars, and GUI sessions.
+* **Persistent Auto-Cleanup:** All spawned entities have `setPersistent(false)` enabled. When a consumer plugin unloads, Relay automatically purges its associated subscribers, holograms, bossbars, scheduled tasks, and GUI sessions.
 
 ---
 
@@ -76,7 +77,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.github.Kriscra.Relay:relay-api:v1.4.1")
+    compileOnly("com.github.Kriscra.Relay:relay-api:v1.5.0")
 }
 ```
 
@@ -88,7 +89,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'com.github.Kriscra.Relay:relay-api:v1.4.1'
+    compileOnly 'com.github.Kriscra.Relay:relay-api:v1.5.0'
 }
 ```
 
@@ -105,7 +106,7 @@ dependencies {
     <dependency>
         <groupId>com.github.Kriscra.Relay</groupId>
         <artifactId>relay-api</artifactId>
-        <version>v1.4.1</version>
+        <version>v1.5.0</version>
         <scope>provided</scope>
     </dependency>
 </dependencies>
@@ -195,13 +196,36 @@ RelayAPI.getNotifications().toast(player)
         .send(plugin);
 ```
 
+### 6. Unified Multi-Thread Scheduler (Folia & Paper)
+Run tasks on entity region threads, global ticks, or async pools with identical code across Paper and Folia:
+```java
+SchedulerService scheduler = RelayAPI.getScheduler();
+
+// Run safely on player's regional thread:
+scheduler.runFor(plugin, player, () -> {
+    player.giveExp(100);
+});
+
+// Run repeating particle task at world coordinates:
+RelayTask task = scheduler.runAtRepeating(plugin, targetLoc, t -> {
+    targetLoc.getWorld().spawnParticle(Particle.FLAME, targetLoc, 5);
+}, 20L, 10L);
+
+// Cancel anytime (or let Relay auto-cancel upon plugin disable):
+task.cancel();
+
+// Non-blocking async promise execution:
+scheduler.supplyAsyncPromise(() -> database.loadPlayerData(uuid))
+         .thenAccept(data -> scheduler.runFor(plugin, player, () -> player.sendMessage("Loaded!")));
+```
+
 ---
 
 ## ⚙️ Administration & Diagnostics
 
-Monitor active services, topics, telemetry, open sessions, and test notifications in real time:
+Monitor active services, topics, telemetry, open sessions, scheduled tasks, and test notifications in real time:
 
-* `/relay status`: Overview of loaded services, topics, active holograms, menus, and server runtime environment.
+* `/relay status`: Overview of loaded services, topics, active holograms, menus, scheduled tasks, and server runtime environment.
 * `/relay services`: Lists all registered services, provider plugins, and priority tiers.
 * `/relay topics`: Inspects active pub/sub topics and subscriber counts.
 * `/relay metrics`: Live execution averages, P95 latencies, and transaction counters.

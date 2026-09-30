@@ -196,5 +196,16 @@ public final class RelayAPI {
     public static org.vrz.relay.api.notification.NotificationService getNotifications() {
         return getInstance().getNotificationService();
     }
+
+    /**
+     * Gets the global unified {@link org.vrz.relay.api.scheduler.SchedulerService}.
+     *
+     * @return active scheduler service
+     * @throws IllegalStateException if Relay is not yet initialized
+     */
+    @NotNull
+    public static org.vrz.relay.api.scheduler.SchedulerService getScheduler() {
+        return getInstance().getSchedulerService();
+    }
 }
 

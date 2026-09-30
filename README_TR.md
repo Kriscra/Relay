@@ -10,10 +10,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Kriscra/Relay/releases"><img src="https://img.shields.io/badge/version-v1.4.1-cyan?style=for-the-badge&logo=git" alt="Version" /></a>
+  <a href="https://github.com/Kriscra/Relay/releases"><img src="https://img.shields.io/badge/version-v1.5.0-cyan?style=for-the-badge&logo=git" alt="Version" /></a>
   <a href="https://papermc.io"><img src="https://img.shields.io/badge/Paper%20%2F%20Folia-1.20%20--%201.21-00f2fe?style=for-the-badge&logo=buffer" alt="Paper" /></a>
   <a href="https://www.oracle.com/java/"><img src="https://img.shields.io/badge/Java-21%20LTS-f59e0b?style=for-the-badge&logo=openjdk" alt="Java 21" /></a>
-  <a href="https://jitpack.io/#Kriscra/Relay"><img src="https://img.shields.io/badge/JitPack-v1.4.1-10b981?style=for-the-badge&logo=gradle" alt="JitPack" /></a>
+  <a href="https://jitpack.io/#Kriscra/Relay"><img src="https://img.shields.io/badge/JitPack-v1.5.0-10b981?style=for-the-badge&logo=gradle" alt="JitPack" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-6366f1?style=for-the-badge" alt="License" /></a>
 </p>
 
@@ -33,7 +33,7 @@ Eski Bukkit mimarisindeki ana iş parçacığını (Main Thread) donduran senkro
 
 ## 🚀 Dahili Servisler (Genel Bakış)
 
-Relay, bir sunucunun ve eklentilerin ihtiyaç duyduğu 11 temel alt sistemi tek bir çatı altında eksiksiz sunar:
+Relay, bir sunucunun ve eklentilerin ihtiyaç duyduğu 12 temel alt sistemi tek bir çatı altında eksiksiz sunar:
 
 | Modül / Servis | Açıklama | Öne Çıkan Özellikler |
 | :--- | :--- | :--- |
@@ -48,15 +48,16 @@ Relay, bir sunucunun ve eklentilerin ihtiyaç duyduğu 11 temel alt sistemi tek 
 | **HologramService** | Display Entity tabanlı hologram motoru | Minecraft 1.20+ `TextDisplay` native mimarisi, sıfır ArmorStand lag, Folia region-safe `spawnAsync`, MiniMessage ve gölge. |
 | **MenuService** | Folia güvenli sanal sandık GUI motoru | Üst envanter tıklamalarını ve sürüklemelerini kilitleyen anti-dupe koruması, 150ms anti-macro debounce, sayfalama (pagination). |
 | **NotificationService** | Çok kanallı oyuncu bildirim & geri bildirim motoru | Öncelik sıralı ActionBar kuyruğu, animasyonlu geri sayımlı BossBar, sağ üst sanal Toast kutucukları ve Title akışları. |
+| **SchedulerService** | Evrensel Folia & Paper çok çekirdekli zamanlayıcı | Folia varlık, koordinat/bölge, global ve asenkron görev çalıştırma; `runAsyncPromise`, thread doğrulama, sıfır sızıntılı görev iptali. |
 
 ---
 
 ## 🛡️ Folia Multi-Threading & Zero-Leak Mimarisi
 
 Relay, çok çekirdekli Minecraft sunucu yazılımı **Folia** için sıfırdan tasarlanmıştır:
-* **Region-Safe Scheduling:** Hologram, menü ve bildirim işlemleri, hedef koordinatın veya oyuncunun ait olduğu bağımsız iş parçacığına otomatik iletilir.
+* **Region-Safe Scheduling:** Hologram, zamanlanmış görevler, menü ve bildirim işlemleri, hedef koordinatın veya oyuncunun ait olduğu bağımsız iş parçacığına otomatik iletilir.
 * **Lock-Free Veri Yapıları:** Tüm dahili önbellekler `ConcurrentHashMap`, `CopyOnWrite` ve atomik sayaçlar ile donatılmıştır; kilitlenme (deadlock) yaşanmaz.
-* **Zero-Leak Yaşam Döngüsü:** Bir eklenti kapandığında veya sunucu yeniden yüklendiğinde, o eklentiye ait tüm dinleyiciler, hologramlar, menüler, BossBar'lar ve bekleme süreleri sunucudan otomatik tahliye edilir (`setPersistent(false)`).
+* **Zero-Leak Yaşam Döngüsü:** Bir eklenti kapandığında veya sunucu yeniden yüklendiğinde, o eklentiye ait tüm dinleyiciler, hologramlar, zamanlanmış görevler, menüler, BossBar'lar ve bekleme süreleri sunucudan otomatik tahliye edilir (`setPersistent(false)`).
 
 ---
 
@@ -72,7 +73,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.github.Kriscra.Relay:relay-api:v1.4.1")
+    compileOnly("com.github.Kriscra.Relay:relay-api:v1.5.0")
 }
 ```
 
@@ -84,7 +85,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'com.github.Kriscra.Relay:relay-api:v1.4.1'
+    compileOnly 'com.github.Kriscra.Relay:relay-api:v1.5.0'
 }
 ```
 
@@ -101,7 +102,7 @@ dependencies {
     <dependency>
         <groupId>com.github.Kriscra.Relay</groupId>
         <artifactId>relay-api</artifactId>
-        <version>v1.4.1</version>
+        <version>v1.5.0</version>
         <scope>provided</scope>
     </dependency>
 </dependencies>
@@ -190,13 +191,36 @@ RelayAPI.getNotifications().toast(player)
         .send(plugin);
 ```
 
+### 6. Evrensel Çok Çekirdekli Zamanlayıcı (Folia & Paper)
+Folia bölgesel iş parçacıkları (Region), global tick veya asenkron havuzlarda aynı kodla güvenle görev çalıştırın:
+```java
+SchedulerService scheduler = RelayAPI.getScheduler();
+
+// Oyuncunun bulunduğu bölgesel (region) iş parçacığında güvenle çalıştır:
+scheduler.runFor(plugin, player, () -> {
+    player.giveExp(100);
+});
+
+// Belirli bir dünya koordinatında periyodik parçacık efekti görevi:
+RelayTask task = scheduler.runAtRepeating(plugin, targetLoc, t -> {
+    targetLoc.getWorld().spawnParticle(Particle.FLAME, targetLoc, 5);
+}, 20L, 10L);
+
+// İstediğiniz an iptal edin (veya eklenti kapandığında Relay'in otomatik iptal etmesine bırakın):
+task.cancel();
+
+// Non-blocking asenkron promise akışı:
+scheduler.supplyAsyncPromise(() -> database.loadPlayerData(uuid))
+         .thenAccept(data -> scheduler.runFor(plugin, player, () -> player.sendMessage("Yüklendi!")));
+```
+
 ---
 
 ## ⚙️ Yönetici Komutları
 
-Sunucudaki aktif servisleri, telemetriyi ve oturumları anlık izleyin:
+Sunucudaki aktif servisleri, telemetriyi, zamanlanmış görevleri ve oturumları anlık izleyin:
 
-* `/relay status`: Aktif servis, konu, hologram, menü ve çalışma ortamı bilgilerini gösterir.
+* `/relay status`: Aktif servis, konu, hologram, menü, zamanlanmış görev ve çalışma ortamı bilgilerini gösterir.
 * `/relay services`: Sunucuda kayıtlı tüm servisleri ve öncelik derecelerini listeler.
 * `/relay topics`: Aktif Pub/Sub iletişim kanallarını ve dinleyici sayılarını listeler.
 * `/relay metrics`: Ortalama işlem sürelerini, P95 gecikmelerini ve sayaçları gösterir.

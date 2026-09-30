@@ -48,6 +48,8 @@ public class RelayCommand implements CommandExecutor, TabCompleter {
                     .append(Component.text(plugin.getHologramService().getActiveHologramCount(), NamedTextColor.GREEN)));
             sender.sendMessage(Component.text("» Active Menus: ", NamedTextColor.GRAY)
                     .append(Component.text(plugin.getMenuService().getActiveMenus().size(), NamedTextColor.GREEN)));
+            sender.sendMessage(Component.text("» Active Tasks: ", NamedTextColor.GRAY)
+                    .append(Component.text(plugin.getSchedulerService().getActiveTaskCount(), NamedTextColor.GREEN)));
             sender.sendMessage(Component.text("» Runtime: ", NamedTextColor.GRAY)
                     .append(Component.text(Runtime.version().toString(), NamedTextColor.WHITE)));
             return true;

@@ -32,6 +32,7 @@ public final class Relay extends JavaPlugin implements Listener {
     private org.vrz.relay.hologram.RelayHologramServiceImpl hologramService;
     private org.vrz.relay.menu.RelayMenuServiceImpl menuService;
     private org.vrz.relay.notification.RelayNotificationServiceImpl notificationService;
+    private org.vrz.relay.scheduler.RelaySchedulerServiceImpl schedulerService;
 
     @Override
     public void onLoad() {
@@ -45,6 +46,7 @@ public final class Relay extends JavaPlugin implements Listener {
         this.hologramService = new org.vrz.relay.hologram.RelayHologramServiceImpl();
         this.menuService = new org.vrz.relay.menu.RelayMenuServiceImpl();
         this.notificationService = new org.vrz.relay.notification.RelayNotificationServiceImpl(this);
+        this.schedulerService = new org.vrz.relay.scheduler.RelaySchedulerServiceImpl();
 
         // Register core framework services
         this.serviceRegistry.register(CooldownService.class, this.cooldownService, ServicePriority.HIGHEST, this);
@@ -53,10 +55,11 @@ public final class Relay extends JavaPlugin implements Listener {
         this.serviceRegistry.register(org.vrz.relay.api.hologram.HologramService.class, this.hologramService, ServicePriority.HIGHEST, this);
         this.serviceRegistry.register(org.vrz.relay.api.menu.MenuService.class, this.menuService, ServicePriority.HIGHEST, this);
         this.serviceRegistry.register(org.vrz.relay.api.notification.NotificationService.class, this.notificationService, ServicePriority.HIGHEST, this);
+        this.serviceRegistry.register(org.vrz.relay.api.scheduler.SchedulerService.class, this.schedulerService, ServicePriority.HIGHEST, this);
         this.serviceRegistry.register(org.vrz.relay.api.party.PartyService.class, this.partyService, ServicePriority.FALLBACK, this);
         this.serviceRegistry.register(org.vrz.relay.api.permission.PermissionService.class, new org.vrz.relay.permission.DefaultBukkitPermissionProvider(), ServicePriority.FALLBACK, this);
 
-        RelayAPI.setInstance(new RelayProviderImpl(this.serviceRegistry, this.messenger, this.cooldownService, this.dataService, this.metricsService, this.hologramService, this.menuService, this.notificationService));
+        RelayAPI.setInstance(new RelayProviderImpl(this.serviceRegistry, this.messenger, this.cooldownService, this.dataService, this.metricsService, this.hologramService, this.menuService, this.notificationService, this.schedulerService));
         getLogger().info("Relay API runtime bound successfully.");
     }
 
@@ -123,6 +126,10 @@ public final class Relay extends JavaPlugin implements Listener {
             this.notificationService.shutdown();
         }
 
+        if (this.schedulerService != null) {
+            this.schedulerService.shutdown();
+        }
+
         RelayAPI.clearInstance();
         getLogger().info("Relay successfully unhooked and terminated.");
     }
@@ -163,6 +170,10 @@ public final class Relay extends JavaPlugin implements Listener {
 
         if (this.notificationService != null) {
             this.notificationService.clearAll(event.getPlugin());
+        }
+
+        if (this.schedulerService != null) {
+            this.schedulerService.cancelAll(event.getPlugin());
         }
     }
 
@@ -209,6 +220,11 @@ public final class Relay extends JavaPlugin implements Listener {
     @NotNull
     public org.vrz.relay.notification.RelayNotificationServiceImpl getNotificationService() {
         return notificationService;
+    }
+
+    @NotNull
+    public org.vrz.relay.scheduler.RelaySchedulerServiceImpl getSchedulerService() {
+        return schedulerService;
     }
 }
 

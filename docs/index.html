@@ -52,7 +52,7 @@
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="text-base font-bold tracking-tight text-white">Relay</span>
-                    <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20">v1.4.0</span>
+                    <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20">v1.5.0</span>
                 </div>
             </a>
 
@@ -65,7 +65,7 @@
                 </a>
                 <a href="#changelog" class="text-slate-400 hover:text-white transition flex items-center gap-1.5">
                     <i data-lucide="history" class="w-4 h-4 text-cyan-400"></i> Güncellemeler
-                    <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[10px]">v1.4.0</span>
+                    <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[10px]">v1.5.0</span>
                 </a>
             </nav>
 
@@ -173,7 +173,7 @@
 
 dependencies {
     // Sadece 40 KB'lık hafif, sıfır-bağımlılıklı API kütüphanesi:
-    compileOnly("com.github.Kriscra.Relay:relay-api:v1.3.0")
+    compileOnly("com.github.Kriscra.Relay:relay-api:v1.5.0")
 }</code></pre>
                             </div>
 
@@ -410,6 +410,7 @@ RelayAPI.getMessenger().request("clan:get_level", clanId, Integer.class, Duratio
                                     <a href="#holograms" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">HologramService (TextDisplay)</a>
                                     <a href="#menus" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">MenuService (Sanal GUI)</a>
                                     <a href="#notifications" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">NotificationService (Bildirim &amp; BossBar)</a>
+                                    <a href="#scheduler" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">SchedulerService (Evrensel Zamanlayıcı)</a>
                                 </div>
                             </div>
 
@@ -2380,6 +2381,252 @@ public class ToastExample {
 
                         </div>
                     </article>
+                    <article id="scheduler" class="wiki-article space-y-6 hidden">
+                        <div class="space-y-3">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-xs">v1.5.0 Yeni</span>
+                                <span class="badge-tag bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-xs">Folia Native</span>
+                                <span class="badge-tag bg-indigo-500/10 text-indigo-400 border-indigo-500/20 text-xs">Paper Fallback</span>
+                                <span class="badge-tag bg-amber-500/10 text-amber-400 border-amber-500/20 text-xs">Zero-Leak</span>
+                            </div>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">SchedulerService (Evrensel Çok Çekirdekli Zamanlayıcı)</h1>
+                            <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                                Folia bölgesel çok çekirdekli mimarisi (<code class="text-cyan-400 font-mono">EntityScheduler</code>, <code class="text-cyan-400 font-mono">RegionScheduler</code>, <code class="text-cyan-400 font-mono">GlobalRegionScheduler</code>, <code class="text-cyan-400 font-mono">AsyncScheduler</code>) ile Paper/Spigot (<code class="text-slate-300 font-mono">BukkitScheduler</code>) arasındaki tüm farkları şeffaf bir soyutlama altında toplayan evrensel görev zamanlayıcısı.
+                            </p>
+                        </div>
+
+                        <div class="space-y-6 text-xs sm:text-sm text-slate-300">
+                            <!-- Mimari Açıklaması -->
+                            <div class="p-4 rounded-xl bg-white/[0.02] border border-white/[0.08] space-y-3">
+                                <h3 class="text-sm font-semibold text-white flex items-center gap-2">
+                                    <i data-lucide="cpu" class="w-4 h-4 text-cyan-400"></i> Neden Klasik BukkitScheduler Yerine Relay SchedulerService?
+                                </h3>
+                                <p class="text-slate-400 leading-relaxed text-xs">
+                                    Folia sunucularda klasik <code class="text-amber-400 font-mono text-[11px]">Bukkit.getScheduler().runTask(...)</code> çağrıları ya <span class="text-red-400 font-medium">UnsupportedOperationException</span> fırlatır ya da yanlış iş parçacığında çalıştırılarak veri bozulmalarına (Corrupted World / Race Conditions) yol açar.
+                                </p>
+                                <p class="text-slate-400 leading-relaxed text-xs">
+                                    Relay <strong>SchedulerService</strong>, sunucunun Folia mı yoksa standart Paper mı olduğunu çalışma anında otomatik algılar. Hedef varlık, koordinat, küresel döngü veya arka plan asenkron havuzuna göre görevi doğru iş parçacığına yönlendirir. Ayrıca eklenti kapandığında çalışan tüm görevleri <strong>sıfır bellek sızıntısıyla (Zero-Leak)</strong> iptal eder.
+                                </p>
+                            </div>
+
+                            <!-- Kod Örnekleri -->
+                            <div class="space-y-4">
+                                <h3 class="text-base font-semibold text-white">Pratik Kullanım Örnekleri</h3>
+
+                                <!-- Örnek 1: Varlık & Oyuncu Zamanlayıcısı -->
+                                <div class="space-y-1.5">
+                                    <h4 class="text-xs font-semibold text-cyan-300">1. Oyuncu ve Varlık Zamanlayıcısı (Entity-Bound Scheduling)</h4>
+                                    <p class="text-xs text-slate-400">Oyuncu veya varlık geçerli olduğu sürece onun ait olduğu bölgesel (region) thread üzerinde çalışır. Varlık ölür veya sunucudan ayrılırsa periyodik görev kendini sonlandırır.</p>
+                                    <div class="ide-window rounded-xl overflow-hidden text-xs">
+                                        <div class="px-4 py-2 bg-[#0d1017] border-b border-white/[0.06] text-slate-400 font-mono text-[11px] flex items-center justify-between">
+                                            <span>PlayerHealTask.java</span>
+                                        </div>
+                                        <div class="p-4 font-mono bg-black/40">
+                                            <pre><code class="language-java">SchedulerService scheduler = RelayAPI.getScheduler();
+
+// Oyuncunun ait olduğu bölge iş parçacığında anında çalıştır:
+scheduler.runFor(plugin, player, () -> {
+    player.giveExp(50);
+});
+
+// Oyuncu üzerinde periyodik (örneğin zehir/rejenerasyon) görevi başlat:
+RelayTask regenTask = scheduler.runForRepeating(plugin, player, task -> {
+    if (player.getHealth() < 20.0) {
+        player.setHealth(Math.min(20.0, player.getHealth() + 1.0));
+    } else {
+        task.cancel(); // Hedefe ulaşıldığında görevi durdur
+    }
+}, 20L, 40L); // 1 saniye sonra başla, 2 saniyede bir tekrarla</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Örnek 2: Bölge & Koordinat Zamanlayıcısı -->
+                                <div class="space-y-1.5">
+                                    <h4 class="text-xs font-semibold text-cyan-300">2. Dünya & Bölge Koordinat Zamanlayıcısı (Location / Region Scheduling)</h4>
+                                    <p class="text-xs text-slate-400">Folia'da dünya blokları ve parçacık efektleri koordinatın bağlı olduğu chunk thread'inde işlenmelidir. Relay otomatik olarak Folia <code class="text-cyan-400 font-mono">RegionScheduler</code> kullanır.</p>
+                                    <div class="ide-window rounded-xl overflow-hidden text-xs">
+                                        <div class="px-4 py-2 bg-[#0d1017] border-b border-white/[0.06] text-slate-400 font-mono text-[11px] flex items-center justify-between">
+                                            <span>BeaconAuraTask.java</span>
+                                        </div>
+                                        <div class="p-4 font-mono bg-black/40">
+                                            <pre><code class="language-java">Location beaconLoc = new Location(world, 100.5, 64.0, -250.5);
+
+// Koordinat bölgesinde her 10 tickte bir parçacık patlat:
+RelayTask auraTask = scheduler.runAtRepeating(plugin, beaconLoc, task -> {
+    world.spawnParticle(Particle.ENCHANT, beaconLoc, 15, 0.5, 1.0, 0.5, 0.1);
+}, 0L, 10L);
+
+// Görevi manuel iptal etme:
+auraTask.cancel();</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Örnek 3: Global Sunucu & Asenkron Promise -->
+                                <div class="space-y-1.5">
+                                    <h4 class="text-xs font-semibold text-cyan-300">3. Asenkron Promise & Bölgesel İletim (Async to Region Pipeline)</h4>
+                                    <p class="text-xs text-slate-400">Veritabanı veya web isteklerini ana sunucuyu dondurmadan arka planda çalıştırın, sonucu doğrudan oyuncunun regional thread'ine teslim edin.</p>
+                                    <div class="ide-window rounded-xl overflow-hidden text-xs">
+                                        <div class="px-4 py-2 bg-[#0d1017] border-b border-white/[0.06] text-slate-400 font-mono text-[11px] flex items-center justify-between">
+                                            <span>AsyncProfileLoader.java</span>
+                                        </div>
+                                        <div class="p-4 font-mono bg-black/40">
+                                            <pre><code class="language-java">// Asenkron veritabanı sorgusu (CompletableFuture):
+scheduler.supplyAsyncPromise(() -> database.loadStats(player.getUniqueId()))
+    .thenAccept(stats -> {
+        // Sonucu güvenle oyuncunun bölgesel iş parçacığında uygula:
+        scheduler.runFor(plugin, player, () -> {
+            player.sendMessage("İstatistikleriniz güncellendi! Seviye: " + stats.getLevel());
+        });
+    })
+    .exceptionally(err -> {
+        getLogger().severe("İstatistik yüklenemedi: " + err.getMessage());
+        return null;
+    });</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Örnek 4: Thread Doğrulama -->
+                                <div class="space-y-1.5">
+                                    <h4 class="text-xs font-semibold text-cyan-300">4. Thread Güvenlik Kontrolleri (Runtime Assertions)</h4>
+                                    <p class="text-xs text-slate-400">Kritik işlemlerde doğru iş parçacığında olup olmadığınızı kontrol edin:</p>
+                                    <div class="ide-window rounded-xl overflow-hidden text-xs">
+                                        <div class="px-4 py-2 bg-[#0d1017] border-b border-white/[0.06] text-slate-400 font-mono text-[11px] flex items-center justify-between">
+                                            <span>ThreadGuard.java</span>
+                                        </div>
+                                        <div class="p-4 font-mono bg-black/40">
+                                            <pre><code class="language-java">// Oyuncunun bölgesinde miyiz?
+if (scheduler.isEntityThread(player)) {
+    player.getInventory().addItem(rewardItem);
+} else {
+    scheduler.runFor(plugin, player, () -> player.getInventory().addItem(rewardItem));
+}
+
+// Global ana sunucu döngüsünde miyiz?
+if (scheduler.isGlobalTickThread()) {
+    Bukkit.broadcastMessage("Sunucu yeniden başlatılıyor...");
+}</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- API Referans Tablosu -->
+                            <div class="space-y-3">
+                                <h3 class="text-base font-semibold text-white">SchedulerService API Referansı</h3>
+                                <div class="overflow-x-auto rounded-xl border border-white/[0.08]">
+                                    <table class="w-full text-left text-xs border-collapse">
+                                        <thead>
+                                            <tr class="border-b border-white/[0.08] bg-white/[0.02] text-slate-400">
+                                                <th class="py-3 px-4 font-semibold">Metot</th>
+                                                <th class="py-3 px-4 font-semibold">Dönüş Tipi</th>
+                                                <th class="py-3 px-4 font-semibold">Açıklama</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-white/[0.04] text-slate-300">
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">runFor(Plugin, Entity, Runnable)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">RelayTask</td>
+                                                <td class="py-3 px-4">Hedef varlığın bölgesel thread'inde anında tek seferlik çalıştırır.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">runForLater(Plugin, Entity, Runnable, long delayTicks)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">RelayTask</td>
+                                                <td class="py-3 px-4">Hedef varlığın thread'inde belirtilen tick gecikmesiyle tek seferlik çalıştırır.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">runForRepeating(Plugin, Entity, Consumer&lt;RelayTask&gt;, delay, period)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">RelayTask</td>
+                                                <td class="py-3 px-4">Hedef varlığın thread'inde periyodik çalışır; varlık silinirse otomatik iptal edilir.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">runAt(Plugin, Location, Runnable)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">RelayTask</td>
+                                                <td class="py-3 px-4">Hedef koordinatın chunk bölgesel iş parçacığında çalıştırır.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">runAtLater(Plugin, Location, Runnable, long delayTicks)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">RelayTask</td>
+                                                <td class="py-3 px-4">Hedef koordinatın bölgesinde gecikmeli çalıştırır.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">runAtRepeating(Plugin, Location, Consumer&lt;RelayTask&gt;, delay, period)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">RelayTask</td>
+                                                <td class="py-3 px-4">Hedef koordinatta periyodik çalışır (parçacık, hologram, alan büyüleri için ideal).</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">runGlobal(Plugin, Runnable)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">RelayTask</td>
+                                                <td class="py-3 px-4">Folia küresel tick thread'inde (Paper'da main thread) çalıştırır.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">runGlobalLater(Plugin, Runnable, long delayTicks)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">RelayTask</td>
+                                                <td class="py-3 px-4">Küresel tick thread'inde gecikmeli çalıştırır.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">runGlobalRepeating(Plugin, Consumer&lt;RelayTask&gt;, delay, period)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">RelayTask</td>
+                                                <td class="py-3 px-4">Küresel tick thread'inde periyodik çalışır (sunucu duyuruları, saat senkronizasyonu).</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">runAsync(Plugin, Runnable)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">RelayTask</td>
+                                                <td class="py-3 px-4">Arka plan asenkron thread havuzunda anında çalıştırır.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">runAsyncLater(Plugin, Runnable, long delay, TimeUnit)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">RelayTask</td>
+                                                <td class="py-3 px-4">Arka plan asenkron havuzunda zaman birimi hassasiyetiyle gecikmeli çalıştırır.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">runAsyncRepeating(Plugin, Runnable, delay, period, TimeUnit)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">RelayTask</td>
+                                                <td class="py-3 px-4">Arka planda periyodik olarak çalışır (otomatik veritabanı kaydı, ping kontrolleri).</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">runAsyncPromise(Runnable)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">CompletableFuture&lt;Void&gt;</td>
+                                                <td class="py-3 px-4">Asenkron CompletableFuture promise zinciri başlatır.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">supplyAsyncPromise(Supplier&lt;T&gt;)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">CompletableFuture&lt;T&gt;</td>
+                                                <td class="py-3 px-4">Sonuç döndüren asenkron CompletableFuture promise zinciri başlatır.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">isEntityThread(Entity)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">boolean</td>
+                                                <td class="py-3 px-4">Geçerli iş parçacığının hedef varlığın bölgesel thread'i olup olmadığını döndürür.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">isRegionThread(Location)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">boolean</td>
+                                                <td class="py-3 px-4">Geçerli iş parçacığının hedef koordinatın bölgesel thread'i olup olmadığını döndürür.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">isGlobalTickThread()</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">boolean</td>
+                                                <td class="py-3 px-4">Geçerli iş parçacığının Folia global tick (Paper'da main thread) olup olmadığını doğrular.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">cancelAll(Plugin)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">void</td>
+                                                <td class="py-3 px-4">Belirli bir eklentinin başlattığı tüm aktif görevleri anında durdurur (Zero-Leak).</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">getActiveTaskCount()</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">int</td>
+                                                <td class="py-3 px-4">Relay tarafından yönetilen toplam aktif görev sayısını döndürür.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
                     <article id="folia" class="wiki-article space-y-6 hidden">
                         <div class="pb-4 border-b border-white/[0.08]">
                             <span class="text-xs font-semibold uppercase text-cyan-400">İleri Düzey</span>
@@ -2463,20 +2710,105 @@ public class ToastExample {
                         <div class="relative pl-6 sm:pl-8 border-l border-white/[0.08] space-y-16 my-8 ml-2">
 
                             <!-- ============================================== -->
-                            <!-- RELEASE: v1.4.0                                -->
+                            <!-- RELEASE: v1.5.0                                -->
                             <!-- ============================================== -->
                             <div class="relative space-y-5">
                                 <!-- Timeline Node -->
-                                <div class="absolute -left-[31px] sm:-left-[39px] top-1 w-4 h-4 rounded-full bg-[#08090d] border-2 border-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.6)] flex items-center justify-center">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                <div class="absolute -left-[31px] sm:-left-[39px] top-1 w-4 h-4 rounded-full bg-[#08090d] border-2 border-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.6)] flex items-center justify-center">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
                                 </div>
 
                                 <!-- Header Metadata -->
                                 <div class="space-y-2">
                                     <div class="flex flex-wrap items-center gap-2">
-                                        <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-emerald-400 text-slate-950 font-mono tracking-tight">v1.4.0</span>
-                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> En Güncel Sürüm
+                                        <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-cyan-400 text-slate-950 font-mono tracking-tight">v1.5.0</span>
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span> En Güncel Sürüm
+                                        </span>
+                                        <span class="text-xs text-slate-500 font-mono flex items-center gap-1 ml-auto">
+                                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i> 30 Eylül 2026
+                                        </span>
+                                    </div>
+                                    <h2 class="text-xl font-bold text-white">SchedulerService &amp; Folia Evrensel Çok Çekirdekli Zamanlayıcı</h2>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        Folia'nın tüm bölgesel ve asenkron zamanlayıcılarını (<code class="text-cyan-400 font-mono">EntityScheduler</code>, <code class="text-cyan-400 font-mono">RegionScheduler</code>, <code class="text-cyan-400 font-mono">GlobalRegionScheduler</code>, <code class="text-cyan-400 font-mono">AsyncScheduler</code>) ve Paper/Spigot (<code class="text-slate-300 font-mono">BukkitScheduler</code>) altyapısını tek bir çatı altında birleştiren yeni nesil görev motoru eklendi.
+                                    </p>
+                                </div>
+
+                                <!-- Badges row -->
+                                <div class="flex flex-wrap items-center gap-2 text-xs">
+                                    <a href="https://github.com/Kriscra/Relay/releases/tag/v1.5.0" target="_blank" class="px-2 py-0.5 rounded bg-white/[0.04] text-slate-300 hover:text-white border border-white/[0.08] font-mono text-[11px] transition">
+                                        Tag: v1.5.0
+                                    </a>
+                                    <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] font-medium">
+                                        ✔ 46 / 46 Birim Test Geçti
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-[11px] font-medium">
+                                        Folia Multi-threading
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[11px] font-medium">
+                                        Entity &amp; Region Bound
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20 text-[11px] font-medium">
+                                        CompletableFuture Promises
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[11px] font-medium">
+                                        Zero-Leak Auto-Cancel
+                                    </span>
+                                </div>
+
+                                <!-- Feature List Grid -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                                    <div class="p-3.5 rounded-lg bg-white/[0.02] border border-white/[0.06] space-y-1">
+                                        <div class="flex items-center gap-2 text-xs font-semibold text-white">
+                                            <i data-lucide="user-check" class="w-4 h-4 text-cyan-400"></i> Varlık &amp; Oyuncu Bölgesel Zamanlayıcısı
+                                        </div>
+                                        <p class="text-[11px] text-slate-400 leading-relaxed">
+                                            <code class="text-cyan-400 font-mono">runFor</code> ve <code class="text-cyan-400 font-mono">runForRepeating</code> metotları varlığın o an bulunduğu chunk/region iş parçacığında güvenle çalışır. Varlık ölür veya ayrılırsa görev otomatik iptal edilir.
+                                        </p>
+                                    </div>
+                                    <div class="p-3.5 rounded-lg bg-white/[0.02] border border-white/[0.06] space-y-1">
+                                        <div class="flex items-center gap-2 text-xs font-semibold text-white">
+                                            <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400"></i> Dünya &amp; Koordinat Zamanlayıcısı
+                                        </div>
+                                        <p class="text-[11px] text-slate-400 leading-relaxed">
+                                            <code class="text-emerald-400 font-mono">runAt</code> ve <code class="text-emerald-400 font-mono">runAtRepeating</code> metotları Folia'nın <code class="text-slate-300 font-mono">RegionScheduler</code> yapısına bağlanarak blok/parçacık operasyonlarını thread kilitlenmesi olmadan icra eder.
+                                        </p>
+                                    </div>
+                                    <div class="p-3.5 rounded-lg bg-white/[0.02] border border-white/[0.06] space-y-1">
+                                        <div class="flex items-center gap-2 text-xs font-semibold text-white">
+                                            <i data-lucide="zap" class="w-4 h-4 text-purple-400"></i> Asenkron Promise &amp; Pipeline
+                                        </div>
+                                        <p class="text-[11px] text-slate-400 leading-relaxed">
+                                            <code class="text-purple-400 font-mono">supplyAsyncPromise</code> ve <code class="text-purple-400 font-mono">runAsyncPromise</code> ile veritabanı veya HTTP sorgularını non-blocking CompletableFuture zincirine döküp bölgesel iş parçacığına taşıyın.
+                                        </p>
+                                    </div>
+                                    <div class="p-3.5 rounded-lg bg-white/[0.02] border border-white/[0.06] space-y-1">
+                                        <div class="flex items-center gap-2 text-xs font-semibold text-white">
+                                            <i data-lucide="shield-alert" class="w-4 h-4 text-amber-400"></i> Sıfır Sızıntı &amp; Durum Denetimi
+                                        </div>
+                                        <p class="text-[11px] text-slate-400 leading-relaxed">
+                                            Eklentiler kapandığında veya sunucu yeniden yüklendiğinde eklentiye ait tüm çalışan görevler sunucudan tahliye edilir. <code class="text-amber-400 font-mono">/relay status</code> komutu ile aktif görev sayısı gerçek zamanlı izlenebilir.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ============================================== -->
+                            <!-- RELEASE: v1.4.0                                -->
+                            <!-- ============================================== -->
+                            <div class="relative space-y-5">
+                                <!-- Timeline Node -->
+                                <div class="absolute -left-[31px] sm:-left-[39px] top-1 w-4 h-4 rounded-full bg-[#08090d] border-2 border-slate-600 flex items-center justify-center">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+                                </div>
+
+                                <!-- Header Metadata -->
+                                <div class="space-y-2">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-white/[0.1] text-white font-mono tracking-tight">v1.4.0</span>
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-white/[0.04] text-slate-400 border border-white/[0.08]">
+                                            Önceki Kararlı Sürüm
                                         </span>
                                         <span class="text-xs text-slate-500 font-mono flex items-center gap-1 ml-auto">
                                             <i data-lucide="calendar" class="w-3.5 h-3.5"></i> 28 Eylül 2026
