@@ -25,9 +25,17 @@
 
 ## 🌟 Relay Nedir?
 
-**Relay**, modern Minecraft sunucularında (Paper, Purpur ve özellikle çok iş parçacıklı **Folia**) eklentiler arası entegrasyonu ve sunucu servislerini endüstri standartlarına taşıyan açık kaynaklı bir altyapı motorudur.
+**Relay**, modern Minecraft sunucularında (**Paper**, **Purpur** ve özellikle çok çekirdekli **Folia**) eklentiler arası entegrasyonu, veri iletişimini ve sunucu servislerini endüstri standartlarına taşıyan kurumsal düzeyde açık kaynaklı bir altyapı motorudur.
 
-Eski Bukkit mimarisindeki ana iş parçacığını (Main Thread) donduran senkron çağrılar yerine; **%100 Non-Blocking asenkron mimari**, **mikroservis tipi Pub/Sub mesajlaşması**, **Folia bölgesel iş parçacığı güvenliği (Region-Safe)** ve **otomatik bellek temizliği (Zero-Leak)** sunar.
+Yıllardır Minecraft eklenti mimarisi 2012'den kalma tek çekirdekli Bukkit alışkanlıklarına takılı kalmıştır: Ana iş parçacığını (Main Thread) kilitleyen senkron veritabanı/ekonomi sorguları, `plugin.yml` içerisindeki kırılgan `depend:` yüklenme sırası çakışmaları, Folia üzerinde çöken klasik zamanlayıcılar, sunucu performansını yok eden ArmorStand hologramları ve eklenti yeniden yüklendiğinde arkasında zombi nesneler bırakan bellek sızıntıları.
+
+**Relay, sunucu mimarisini 5 temel sütun üzerinde yeniden inşa eder:**
+
+1. ⚡ **%100 Non-Blocking & Asenkron Mimari:** Java 21 `CompletableFuture` promise zincirleri, kilit-içermeyen (lock-free) eşzamanlı veri yapıları ve nanosaniye hassasiyetli telemetri. Veritabanı sorguları ve ekonomi transferleri sunucu TPS'ini asla düşürmez.
+2. 🧵 **Evrensel Çok Çekirdekli Zamanlayıcı (`SchedulerService`):** Görev kodunuzu tek sefer yazın. Relay; varlık, koordinat/bölge, küresel tick ve asenkron görevleri Folia'nın `EntityScheduler`, `RegionScheduler`, `GlobalRegionScheduler` ve `AsyncScheduler` motorlarına yönlendirirken, Paper üzerinde otomatik olarak `BukkitScheduler`'a şeffaf düşer.
+3. 📡 **Mikroservis Tipi Pub/Sub & RPC İletişim Veri Yolu:** Eklentilerinizi birbirinden tamamen bağımsız hale getirin. Birbirlerinin `.jar` dosyasına ihtiyaç duymadan kanallara abone olun, mesaj yayınlayın veya zaman aşımı korumalı asenkron soru-cevap (`request`) yapın.
+4. 🛡️ **Sıfır Bellek Sızıntısı (Zero-Leak) Garantisi:** Bir eklenti kapandığında veya sunucu yeniden yüklendiğinde; açılan hologramlar, sanal sandık menüleri, aktif BossBar'lar, zamanlanmış görevler ve bekleme süreleri sunucudan otomatik olarak tahliye edilir (`setPersistent(false)`).
+5. 🪶 **Tüy Siklet API (~80 KB):** Harici bağımlılık veya şişkinlik içermez. Projenize eklediğinizde sadece hafif ve tip-güvenli arayüzler sunar.
 
 ---
 
