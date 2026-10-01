@@ -10,10 +10,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Kriscra/Relay/releases"><img src="https://img.shields.io/badge/version-v1.5.0-cyan?style=for-the-badge&logo=git" alt="Version" /></a>
+  <a href="https://github.com/Kriscra/Relay/releases"><img src="https://img.shields.io/badge/version-v1.6.0-cyan?style=for-the-badge&logo=git" alt="Version" /></a>
   <a href="https://papermc.io"><img src="https://img.shields.io/badge/Paper%20%2F%20Folia-1.20%20--%201.21-00f2fe?style=for-the-badge&logo=buffer" alt="Paper" /></a>
   <a href="https://www.oracle.com/java/"><img src="https://img.shields.io/badge/Java-21%20LTS-f59e0b?style=for-the-badge&logo=openjdk" alt="Java 21" /></a>
-  <a href="https://jitpack.io/#Kriscra/Relay"><img src="https://img.shields.io/badge/JitPack-v1.5.0-10b981?style=for-the-badge&logo=gradle" alt="JitPack" /></a>
+  <a href="https://jitpack.io/#Kriscra/Relay"><img src="https://img.shields.io/badge/JitPack-v1.6.0-10b981?style=for-the-badge&logo=gradle" alt="JitPack" /></a>
+  <a href="https://github.com/Kriscra/Relay/actions"><img src="https://img.shields.io/badge/tests-53%2F53%20passed-emerald?style=for-the-badge&logo=githubactions" alt="Tests" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-6366f1?style=for-the-badge" alt="License" /></a>
 </p>
 
@@ -41,7 +42,7 @@ Yıllardır Minecraft eklenti mimarisi 2012'den kalma tek çekirdekli Bukkit al�
 
 ## 🚀 Dahili Servisler (Genel Bakış)
 
-Relay, bir sunucunun ve eklentilerin ihtiyaç duyduğu 12 temel alt sistemi tek bir çatı altında eksiksiz sunar:
+Relay, bir sunucunun ve eklentilerin ihtiyaç duyduğu 13 temel alt sistemi tek bir çatı altında eksiksiz sunar:
 
 | Modül / Servis | Açıklama | Öne Çıkan Özellikler |
 | :--- | :--- | :--- |
@@ -57,15 +58,16 @@ Relay, bir sunucunun ve eklentilerin ihtiyaç duyduğu 12 temel alt sistemi tek 
 | **MenuService** | Folia güvenli sanal sandık GUI motoru | Üst envanter tıklamalarını ve sürüklemelerini kilitleyen anti-dupe koruması, 150ms anti-macro debounce, sayfalama (pagination). |
 | **NotificationService** | Çok kanallı oyuncu bildirim & geri bildirim motoru | Öncelik sıralı ActionBar kuyruğu, animasyonlu geri sayımlı BossBar, sağ üst sanal Toast kutucukları ve Title akışları. |
 | **SchedulerService** | Evrensel Folia & Paper çok çekirdekli zamanlayıcı | Folia varlık, koordinat/bölge, global ve asenkron görev çalıştırma; `runAsyncPromise`, thread doğrulama, sıfır sızıntılı görev iptali. |
+| **ScoreboardService** | Evrensel titreşimsiz scoreboard & tablist motoru | Oyuncu başına izole scoreboard, 1-15 dinamik satır, lambda sağlayıcıları, animasyonlu başlık, tablist üst/alt bilgi. |
 
 ---
 
 ## 🛡️ Folia Multi-Threading & Zero-Leak Mimarisi
 
 Relay, çok çekirdekli Minecraft sunucu yazılımı **Folia** için sıfırdan tasarlanmıştır:
-* **Region-Safe Scheduling:** Hologram, zamanlanmış görevler, menü ve bildirim işlemleri, hedef koordinatın veya oyuncunun ait olduğu bağımsız iş parçacığına otomatik iletilir.
+* **Region-Safe Scheduling:** Hologram, zamanlanmış görevler, menü, scoreboard ve bildirim işlemleri, hedef koordinatın veya oyuncunun ait olduğu bağımsız iş parçacığına otomatik iletilir.
 * **Lock-Free Veri Yapıları:** Tüm dahili önbellekler `ConcurrentHashMap`, `CopyOnWrite` ve atomik sayaçlar ile donatılmıştır; kilitlenme (deadlock) yaşanmaz.
-* **Zero-Leak Yaşam Döngüsü:** Bir eklenti kapandığında veya sunucu yeniden yüklendiğinde, o eklentiye ait tüm dinleyiciler, hologramlar, zamanlanmış görevler, menüler, BossBar'lar ve bekleme süreleri sunucudan otomatik tahliye edilir (`setPersistent(false)`).
+* **Zero-Leak Yaşam Döngüsü:** Bir eklenti kapandığında veya sunucu yeniden yüklendiğinde, o eklentiye ait tüm dinleyiciler, hologramlar, zamanlanmış görevler, sidebarlar, menüler, BossBar'lar ve bekleme süreleri sunucudan otomatik tahliye edilir (`setPersistent(false)`).
 
 ---
 
@@ -81,7 +83,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.github.Kriscra.Relay:relay-api:v1.5.0")
+    compileOnly("com.github.Kriscra.Relay:relay-api:v1.6.0")
 }
 ```
 
@@ -93,7 +95,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'com.github.Kriscra.Relay:relay-api:v1.5.0'
+    compileOnly 'com.github.Kriscra.Relay:relay-api:v1.6.0'
 }
 ```
 
@@ -110,7 +112,7 @@ dependencies {
     <dependency>
         <groupId>com.github.Kriscra.Relay</groupId>
         <artifactId>relay-api</artifactId>
-        <version>v1.5.0</version>
+        <version>v1.6.0</version>
         <scope>provided</scope>
     </dependency>
 </dependencies>
@@ -222,19 +224,39 @@ scheduler.supplyAsyncPromise(() -> database.loadPlayerData(uuid))
          .thenAccept(data -> scheduler.runFor(plugin, player, () -> player.sendMessage("Yüklendi!")));
 ```
 
+### 7. Titreşimsiz Scoreboard & Tablist Motoru
+Animasyonlu başlıklar, periyodik yenileme ve dinamik lambda sağlayıcıları içeren izole scoreboard:
+```java
+Sidebar sidebar = RelayAPI.getScoreboard().sidebarBuilder(plugin)
+        .titleMiniMessage("<gradient:#ff0844:#ffb199><bold>✦ RELAY RPG ✦</bold></gradient>")
+        .lineMiniMessage(1, "<gray>Oyuncu: <white>" + player.getName())
+        .line(2, () -> Component.text("Bakiye: " + economy.getBalance(player.getUniqueId())))
+        .lineMiniMessage(3, "<aqua>Gecikme: <green>" + player.getPing() + "ms")
+        .updateInterval(20L) // Dinamik satırları saniyede bir otomatik yenile
+        .buildAndShow(player);
+
+// Oyuncu tablist üst ve alt bilgi mesajları:
+RelayAPI.getScoreboard().setTablistMiniMessage(
+        player,
+        "<gradient:#4facfe:#00f2fe><bold>RELAY SERVER NETWORK</bold></gradient>\n<gray>Aktif Oyuncular: 150</gray>",
+        "<gray>Web: www.example.com • Discord: /discord</gray>"
+);
+```
+
 ---
 
 ## ⚙️ Yönetici Komutları
 
-Sunucudaki aktif servisleri, telemetriyi, zamanlanmış görevleri ve oturumları anlık izleyin:
+Sunucudaki aktif servisleri, telemetriyi, zamanlanmış görevleri, scoreboard'ları ve oturumları anlık izleyin:
 
-* `/relay status`: Aktif servis, konu, hologram, menü, zamanlanmış görev ve çalışma ortamı bilgilerini gösterir.
+* `/relay status`: Aktif servis, konu, hologram, menü, görev, scoreboard ve çalışma ortamı bilgilerini gösterir.
 * `/relay services`: Sunucuda kayıtlı tüm servisleri ve öncelik derecelerini listeler.
 * `/relay topics`: Aktif Pub/Sub iletişim kanallarını ve dinleyici sayılarını listeler.
 * `/relay metrics`: Ortalama işlem sürelerini, P95 gecikmelerini ve sayaçları gösterir.
 * `/relay metrics reset`: Tüm telemetri ve performans sayaçlarını sıfırlar.
 * `/relay holograms`: Aktif TextDisplay hologramlarını ve konumlarını listeler.
 * `/relay menus`: Aktif sanal menü oturumlarını ve görüntüleyen oyuncu sayılarını listeler.
+* `/relay scoreboards`: Aktif sanal scoreboard'ları ve izleyen oyuncuları listeler.
 * `/relay notify <oyuncu> <actionbar|bossbar|toast|title> [mesaj]`: Oyuncuya test bildirimi gönderir.
 
 **Yetki:** `relay.admin` (Varsayılan: OP)

@@ -89,6 +89,14 @@ public interface RelayProvider {
     org.vrz.relay.api.scheduler.SchedulerService getSchedulerService();
 
     /**
+     * Gets the global scoreboard and sidebar service.
+     *
+     * @return scoreboard service instance
+     */
+    @NotNull
+    org.vrz.relay.api.scoreboard.ScoreboardService getScoreboardService();
+
+    /**
      * Gets the primary registered economy service, if one is registered.
      *
      * @return optional containing active EconomyService

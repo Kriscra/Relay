@@ -207,5 +207,16 @@ public final class RelayAPI {
     public static org.vrz.relay.api.scheduler.SchedulerService getScheduler() {
         return getInstance().getSchedulerService();
     }
+
+    /**
+     * Gets the global {@link org.vrz.relay.api.scoreboard.ScoreboardService}.
+     *
+     * @return active scoreboard and sidebar service
+     * @throws IllegalStateException if Relay is not yet initialized
+     */
+    @NotNull
+    public static org.vrz.relay.api.scoreboard.ScoreboardService getScoreboard() {
+        return getInstance().getScoreboardService();
+    }
 }
 

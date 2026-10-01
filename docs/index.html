@@ -52,7 +52,7 @@
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="text-base font-bold tracking-tight text-white">Relay</span>
-                    <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20">v1.5.0</span>
+                    <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20">v1.6.0</span>
                 </div>
             </a>
 
@@ -65,7 +65,7 @@
                 </a>
                 <a href="#changelog" class="text-slate-400 hover:text-white transition flex items-center gap-1.5">
                     <i data-lucide="history" class="w-4 h-4 text-cyan-400"></i> Güncellemeler
-                    <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[10px]">v1.5.0</span>
+                    <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[10px]">v1.6.0</span>
                 </a>
             </nav>
 
@@ -173,7 +173,7 @@
 
 dependencies {
     // Sadece 40 KB'lık hafif, sıfır-bağımlılıklı API kütüphanesi:
-    compileOnly("com.github.Kriscra.Relay:relay-api:v1.5.0")
+    compileOnly("com.github.Kriscra.Relay:relay-api:v1.6.0")
 }</code></pre>
                             </div>
 
@@ -411,6 +411,7 @@ RelayAPI.getMessenger().request("clan:get_level", clanId, Integer.class, Duratio
                                     <a href="#menus" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">MenuService (Sanal GUI)</a>
                                     <a href="#notifications" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">NotificationService (Bildirim &amp; BossBar)</a>
                                     <a href="#scheduler" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">SchedulerService (Evrensel Zamanlayıcı)</a>
+                                    <a href="#scoreboards" class="sidebar-link block px-3 py-1.5 rounded text-slate-400">ScoreboardService (Titreşimsiz Scoreboard)</a>
                                 </div>
                             </div>
 
@@ -427,7 +428,7 @@ RelayAPI.getMessenger().request("clan:get_level", clanId, Integer.class, Duratio
                                 <div class="space-y-0.5">
                                     <a href="#changelog" class="sidebar-link block px-3 py-1.5 rounded text-slate-400 flex items-center justify-between">
                                         <span>Güncellemeler (Changelog)</span>
-                                        <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[10px]">v1.3.0</span>
+                                        <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[10px]">v1.6.0</span>
                                     </a>
                                 </div>
                             </div>
@@ -490,7 +491,7 @@ RelayAPI.getMessenger().request("clan:get_level", clanId, Integer.class, Duratio
 }
 
 dependencies {
-    compileOnly("com.github.Kriscra.Relay:relay-api:v1.3.0")
+    compileOnly("com.github.Kriscra.Relay:relay-api:v1.6.0")
 }</code></pre>
                                 </div>
                             </div>
@@ -509,7 +510,7 @@ dependencies {
     &lt;dependency&gt;
         &lt;groupId&gt;com.github.Kriscra.Relay&lt;/groupId&gt;
         &lt;artifactId&gt;relay-api&lt;/artifactId&gt;
-        &lt;version&gt;v1.3.0&lt;/version&gt;
+        &lt;version&gt;v1.6.0&lt;/version&gt;
         &lt;scope&gt;provided&lt;/scope&gt;
     &lt;/dependency&gt;
 &lt;/dependencies&gt;</code></pre>
@@ -594,6 +595,21 @@ dependencies {
                                             <td class="py-3 px-4 font-mono text-cyan-400">RelayAPI.getMenus()</td>
                                             <td class="py-3 px-4 font-mono text-slate-300">MenuService</td>
                                             <td class="py-3 px-4">Folia güvenli, reaktif sanal sandık GUI ve sayfalama (pagination) menü motorunu döndürür.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-3 px-4 font-mono text-cyan-400">RelayAPI.getNotifications()</td>
+                                            <td class="py-3 px-4 font-mono text-slate-300">NotificationService</td>
+                                            <td class="py-3 px-4">Öncelik sıralı ActionBar, animasyonlu BossBar ve sanal Toast bildirim motorunu döndürür.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-3 px-4 font-mono text-cyan-400">RelayAPI.getScheduler()</td>
+                                            <td class="py-3 px-4 font-mono text-slate-300">SchedulerService</td>
+                                            <td class="py-3 px-4">Folia çok çekirdekli (Entity/Region/Global/Async) ve Paper zamanlayıcı motorunu döndürür.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-3 px-4 font-mono text-cyan-400">RelayAPI.getScoreboard()</td>
+                                            <td class="py-3 px-4 font-mono text-slate-300">ScoreboardService</td>
+                                            <td class="py-3 px-4">Titreşimsiz (flicker-free) sanal sidebar, dinamik satır tedarikçileri ve tablist motorunu döndürür.</td>
                                         </tr>
                                         <tr>
                                             <td class="py-3 px-4 font-mono text-cyan-400">RelayAPI.isInitialized()</td>
@@ -2627,6 +2643,263 @@ if (scheduler.isGlobalTickThread()) {
                             </div>
                         </div>
                     </article>
+                    <article id="scoreboards" class="wiki-article space-y-6 hidden">
+                        <div class="space-y-3">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="badge-tag bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-xs">v1.6.0 Yeni</span>
+                                <span class="badge-tag bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-xs">Flicker-Free Native</span>
+                                <span class="badge-tag bg-indigo-500/10 text-indigo-400 border-indigo-500/20 text-xs">Folia Multi-threading</span>
+                                <span class="badge-tag bg-purple-500/10 text-purple-400 border-purple-500/20 text-xs">Paper &amp; Purpur</span>
+                                <span class="badge-tag bg-amber-500/10 text-amber-400 border-amber-500/20 text-xs">Zero-Leak</span>
+                            </div>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">ScoreboardService &amp; Titreşimsiz Sanal Scoreboard (Sidebar)</h1>
+                            <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                                Paper, Purpur ve çok çekirdekli Folia sunucuları için sıfır titremeli (flicker-free), oyuncuya izole sanal scoreboard panoları, dinamik satır sağlayıcıları, animasyonlu başlıklar ve sanal tablist motoru.
+                            </p>
+                        </div>
+
+                        <div class="space-y-6 text-xs sm:text-sm text-slate-300">
+                            <!-- Mimari Açıklaması -->
+                            <div class="p-4 rounded-xl bg-white/[0.02] border border-white/[0.08] space-y-3">
+                                <h3 class="text-sm font-semibold text-white flex items-center gap-2">
+                                    <i data-lucide="layout-dashboard" class="w-4 h-4 text-cyan-400"></i> Neden Klasik Scoreboard Yerine Relay ScoreboardService?
+                                </h3>
+                                <p class="text-slate-400 leading-relaxed text-xs">
+                                    Geleneksel eklentilerin kullandığı <code class="text-rose-400 font-mono text-[11px]">Scoreboard.resetScores()</code> veya satır her değiştiğinde objective'i silip yeniden oluşturma yöntemi, istemci ekran kartında (GPU) her saniye can sıkıcı bir ekran titremesine (flicker) neden olur. Ayrıca sunucunun paylaşılan global scoreboard'unu kirletir ve Folia'nın çok çekirdekli yapısında senkron çağrıldığında sunucuyu çökertebilir.
+                                </p>
+                                <p class="text-slate-400 leading-relaxed text-xs">
+                                    Relay <strong>ScoreboardService</strong>, her oyuncuya tamamen izole yeni bir sanal Scoreboard örneği atar. 15 satır için önceden tanımlanmış özel takımlar (Teams) ve görünmez renk girdileri oluşturulur. Metin güncellemeleri yalnızca <code class="text-cyan-400 font-mono text-[11px]">team.prefix(Component)</code> üzerinden iletilir; objective veya score asla silinmez. Bu sayede <strong>%100 sıfır titreme (Zero-Flicker)</strong> garantilenir. Paper 1.20.4+ üzerinde kırmızı puan sayıları (<code class="text-slate-300 font-mono text-[11px]">BlankFormat</code>) otomatik gizlenir.
+                                </p>
+                            </div>
+
+                            <!-- Bento Grid Özellikleri -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+                                <div class="p-3.5 rounded-lg bg-white/[0.02] border border-white/[0.06] space-y-1">
+                                    <div class="flex items-center gap-2 text-xs font-semibold text-white">
+                                        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i> Oyuncuya İzole &amp; Folia Thread-Safe
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        Global scoreboard kirletilmez. Tüm takım ve pano işlemleri Folia üzerinde oyuncunun ait olduğu bölgesel (entity) iş parçacığına yönlendirilir.
+                                    </p>
+                                </div>
+                                <div class="p-3.5 rounded-lg bg-white/[0.02] border border-white/[0.06] space-y-1">
+                                    <div class="flex items-center gap-2 text-xs font-semibold text-white">
+                                        <i data-lucide="layers" class="w-4 h-4 text-cyan-400"></i> Öncelikli Katmanlama (Priority Stack)
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        Lobi panosu (öncelik 0) açıkken bir mini oyun (öncelik 100) panosu açıldığında mini oyun panosu öne geçer. Oyun bittiğinde lobi panosu otomatik geri yüklenir.
+                                    </p>
+                                </div>
+                                <div class="p-3.5 rounded-lg bg-white/[0.02] border border-white/[0.06] space-y-1">
+                                    <div class="flex items-center gap-2 text-xs font-semibold text-white">
+                                        <i data-lucide="film" class="w-4 h-4 text-purple-400"></i> Animasyonlu Başlık &amp; Canlı Sağlayıcılar
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        Satırları <code class="text-purple-300 font-mono text-[11px]">Supplier&lt;Component&gt;</code> lambdaları ile tanımlayın; pano belirlenen tick aralığında kendini arka planda otomatik güncellesin.
+                                    </p>
+                                </div>
+                                <div class="p-3.5 rounded-lg bg-white/[0.02] border border-white/[0.06] space-y-1">
+                                    <div class="flex items-center gap-2 text-xs font-semibold text-white">
+                                        <i data-lucide="trash-2" class="w-4 h-4 text-amber-400"></i> Sıfır Sızıntı (Zero-Leak)
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        Oyuncu sunucudan çıktığında veya eklentiniz kapandığında takımlar ve nesneler imha edilir, oyuncunun orijinal panosu geri yüklenir.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Kod Örnekleri -->
+                            <div class="space-y-4">
+                                <h3 class="text-base font-semibold text-white">Pratik Kullanım Örnekleri</h3>
+
+                                <!-- Örnek 1: Akıcı SidebarBuilder ile Dinamik Pano -->
+                                <div class="space-y-1.5">
+                                    <h4 class="text-xs font-semibold text-cyan-300">1. Akıcı SidebarBuilder ile Dinamik ve Animasyonlu Sidebar Oluşturma</h4>
+                                    <p class="text-xs text-slate-400">Oyuncuya özel ping, bakiye, rütbe ve sunucu bilgisi içeren, 20 tickte bir otomatik yenilenen şık bir pano oluşturun:</p>
+                                    <div class="ide-window rounded-xl overflow-hidden text-xs">
+                                        <div class="px-4 py-2 bg-[#0d1017] border-b border-white/[0.06] text-slate-400 font-mono text-[11px] flex items-center justify-between">
+                                            <span>LobbySidebar.java</span>
+                                        </div>
+                                        <div class="p-4 font-mono bg-black/40">
+                                            <pre><code class="language-java">ScoreboardService scoreboard = RelayAPI.getScoreboard();
+
+Sidebar sidebar = scoreboard.sidebarBuilder(plugin, player)
+    .title(Component.text("✦ SUNUCU ADI ✦", NamedTextColor.GOLD, TextDecoration.BOLD))
+    .priority(10)
+    .updateIntervalTicks(20L) // 1 saniyede bir satırları yenile
+    .line(1, Component.text(" "))
+    .line(2, () -> Component.text("Oyuncu: ", NamedTextColor.GRAY)
+        .append(Component.text(player.getName(), NamedTextColor.YELLOW)))
+    .line(3, () -> Component.text("Bakiye: ", NamedTextColor.GRAY)
+        .append(Component.text("$" + getBalance(player), NamedTextColor.GREEN)))
+    .line(4, () -> Component.text("Gecikme: ", NamedTextColor.GRAY)
+        .append(Component.text(player.getPing() + "ms", NamedTextColor.AQUA)))
+    .line(5, Component.text(" "))
+    .line(6, Component.text("play.sunucu.com", NamedTextColor.DARK_GRAY))
+    .buildAndShow();</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Örnek 2: Animasyonlu Başlık -->
+                                <div class="space-y-1.5">
+                                    <h4 class="text-xs font-semibold text-cyan-300">2. Kare Döngülü Animasyonlu Başlık (Animated Title)</h4>
+                                    <p class="text-xs text-slate-400">Başlık rengini veya parıltısını her 4 tickte bir değiştiren animasyonlu başlık motoru:</p>
+                                    <div class="ide-window rounded-xl overflow-hidden text-xs">
+                                        <div class="px-4 py-2 bg-[#0d1017] border-b border-white/[0.06] text-slate-400 font-mono text-[11px] flex items-center justify-between">
+                                            <span>AnimatedSidebar.java</span>
+                                        </div>
+                                        <div class="p-4 font-mono bg-black/40">
+                                            <pre><code class="language-java">List&lt;Component&gt; titleFrames = List.of(
+    Component.text("► RELAY NETWORK ◄", NamedTextColor.CYAN, TextDecoration.BOLD),
+    Component.text("► RELAY NETWORK ◄", NamedTextColor.WHITE, TextDecoration.BOLD),
+    Component.text("► RELAY NETWORK ◄", NamedTextColor.BLUE, TextDecoration.BOLD)
+);
+
+AtomicInteger frameIndex = new AtomicInteger(0);
+
+Sidebar sidebar = scoreboard.sidebarBuilder(plugin, player)
+    .title(sb -> {
+        int idx = frameIndex.getAndIncrement() % titleFrames.size();
+        sb.updateTitle(titleFrames.get(idx));
+    }, 4L) // 4 tickte bir kare değiştir
+    .line(1, Component.text("Hoş geldin, " + player.getName()))
+    .buildAndShow();</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Örnek 3: Sanal Tablist Header & Footer -->
+                                <div class="space-y-1.5">
+                                    <h4 class="text-xs font-semibold text-cyan-300">3. Sanal Tablist Başlığı ve Altlığı (Tablist Header &amp; Footer)</h4>
+                                    <p class="text-xs text-slate-400">Oyuncunun TAB listesi başlık ve altlığını Folia güvenli şekilde tek metotla ayarlayın:</p>
+                                    <div class="ide-window rounded-xl overflow-hidden text-xs">
+                                        <div class="px-4 py-2 bg-[#0d1017] border-b border-white/[0.06] text-slate-400 font-mono text-[11px] flex items-center justify-between">
+                                            <span>TablistManager.java</span>
+                                        </div>
+                                        <div class="p-4 font-mono bg-black/40">
+                                            <pre><code class="language-java">Component header = Component.text("\n✦ VRZ NETWORK ✦\n", NamedTextColor.GOLD, TextDecoration.BOLD)
+    .append(Component.text("Aktif Oyuncular: ", NamedTextColor.GRAY))
+    .append(Component.text(Bukkit.getOnlinePlayers().size(), NamedTextColor.YELLOW));
+
+Component footer = Component.text("\nWeb: ", NamedTextColor.GRAY)
+    .append(Component.text("www.vrznetwork.com", NamedTextColor.AQUA))
+    .append(Component.text("\nDiscord: ", NamedTextColor.GRAY))
+    .append(Component.text("discord.gg/vrz\n", NamedTextColor.LIGHT_PURPLE));
+
+// Folia ve Paper üzerinde güvenle uygula:
+scoreboard.setTablist(player, header, footer);
+
+// Sıfırlamak için:
+// scoreboard.resetTablist(player);</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Örnek 4: Öncelik Yönetimi (Mini-Oyun vs Lobi) -->
+                                <div class="space-y-1.5">
+                                    <h4 class="text-xs font-semibold text-cyan-300">4. Öncelik Sıralı Katmanlama (Lobi vs Mini-Oyun)</h4>
+                                    <p class="text-xs text-slate-400">Bir oyuncu zindana veya mini oyuna girdiğinde lobi panosunu silmeden geçici olarak üstüne yazın:</p>
+                                    <div class="ide-window rounded-xl overflow-hidden text-xs">
+                                        <div class="px-4 py-2 bg-[#0d1017] border-b border-white/[0.06] text-slate-400 font-mono text-[11px] flex items-center justify-between">
+                                            <span>MinigameScoreboard.java</span>
+                                        </div>
+                                        <div class="p-4 font-mono bg-black/40">
+                                            <pre><code class="language-java">// Mini-oyun panosu (Öncelik: 100 - Lobi panosunun üzerine geçer):
+Sidebar arenaSidebar = scoreboard.sidebarBuilder(minigamePlugin, player)
+    .title(Component.text("⚔ ARENA SAVAŞI ⚔", NamedTextColor.RED, TextDecoration.BOLD))
+    .priority(100)
+    .updateIntervalTicks(10L)
+    .line(1, () -> Component.text("Kalan Süre: " + arena.getTimeLeft() + "s", NamedTextColor.YELLOW))
+    .line(2, () -> Component.text("Canlar: " + arena.getLives(player), NamedTextColor.GREEN))
+    .buildAndShow();
+
+// Oyun bittiğinde sadece destroy() çağrılır, lobi panosu otomatik tekrar ekrana gelir!
+arenaSidebar.destroy();</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- API Referans Tablosu -->
+                            <div class="space-y-3">
+                                <h3 class="text-base font-semibold text-white">ScoreboardService &amp; Sidebar API Referansı</h3>
+                                <div class="overflow-x-auto rounded-xl border border-white/[0.08]">
+                                    <table class="w-full text-left text-xs border-collapse">
+                                        <thead>
+                                            <tr class="border-b border-white/[0.08] bg-white/[0.02] text-slate-400">
+                                                <th class="py-3 px-4 font-semibold">Metot</th>
+                                                <th class="py-3 px-4 font-semibold">Dönüş Tipi</th>
+                                                <th class="py-3 px-4 font-semibold">Açıklama</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-white/[0.04] text-slate-300">
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">sidebarBuilder(Plugin, Player)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">SidebarBuilder</td>
+                                                <td class="py-3 px-4">Hedef oyuncu için sıfır titremeli akıcı sanal sidebar oluşturucusunu başlatır.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">getSidebar(Player)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">Optional&lt;Sidebar&gt;</td>
+                                                <td class="py-3 px-4">Oyuncunun şu anda ekranda olan en yüksek öncelikli aktif kenar çubuğunu döndürür.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">removeSidebar(Player, Plugin)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">void</td>
+                                                <td class="py-3 px-4">Belirli bir eklentinin oyuncu için açtığı panoyu kapatır ve alt öncelikli panoyu gösterir.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">setTablist(Player, Component header, Component footer)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">void</td>
+                                                <td class="py-3 px-4">Oyuncunun TAB listesi üst ve alt metinlerini Folia thread-safe şekilde günceller.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">resetTablist(Player)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">void</td>
+                                                <td class="py-3 px-4">Oyuncunun TAB listesi başlık ve altlığını boşaltarak varsayılana döndürür.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">clearAll(Player)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">void</td>
+                                                <td class="py-3 px-4">Oyuncunun tüm kayıtlı panolarını siler ve sunucu ana panosunu geri atar.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">clearAll(Plugin)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">void</td>
+                                                <td class="py-3 px-4">Belirli bir eklentinin tüm oyunculara açtığı panoları sunucudan tahliye eder (Zero-Leak).</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">getActiveSidebarCount()</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">int</td>
+                                                <td class="py-3 px-4">Sunucu genelinde Relay tarafından yönetilen toplam aktif sidebar sayısını döndürür.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">Sidebar.update()</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">void</td>
+                                                <td class="py-3 px-4">Dinamik satır sağlayıcılarını anında değerlendirip takım öneklerini titreşimsiz günceller.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">Sidebar.updateTitle(Component)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">void</td>
+                                                <td class="py-3 px-4">Pano başlığını anında yeni metinle günceller.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">Sidebar.setLine(int line, Component)</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">void</td>
+                                                <td class="py-3 px-4">1-15 arasındaki belirli bir satırı sabit metin ile anında günceller.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-3 px-4 font-mono text-cyan-400">Sidebar.destroy()</td>
+                                                <td class="py-3 px-4 font-mono text-slate-300">void</td>
+                                                <td class="py-3 px-4">Panoyu tamamen imha eder, zamanlayıcıları durdurur ve takımları temizler.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
                     <article id="folia" class="wiki-article space-y-6 hidden">
                         <div class="pb-4 border-b border-white/[0.08]">
                             <span class="text-xs font-semibold uppercase text-cyan-400">İleri Düzey</span>
@@ -2692,6 +2965,10 @@ if (scheduler.isGlobalTickThread()) {
                                 <code class="text-purple-400 font-mono font-semibold text-xs">/relay menus</code>
                                 <p class="text-xs text-slate-400 mt-1">Sunucuda aktif sanal sandık menülerini, satır sayılarını ve görüntüleyen oyuncu sayılarını listeler.</p>
                             </div>
+                            <div class="bento-card p-4 rounded-lg">
+                                <code class="text-cyan-400 font-mono font-semibold text-xs">/relay scoreboards</code>
+                                <p class="text-xs text-slate-400 mt-1">Sunucuda aktif sanal kenar çubuklarını (sidebar), oyuncu adlarını ve oluşturan eklentileri raporlar.</p>
+                            </div>
                         </div>
                     </article>
 
@@ -2710,7 +2987,7 @@ if (scheduler.isGlobalTickThread()) {
                         <div class="relative pl-6 sm:pl-8 border-l border-white/[0.08] space-y-16 my-8 ml-2">
 
                             <!-- ============================================== -->
-                            <!-- RELEASE: v1.5.0                                -->
+                            <!-- RELEASE: v1.6.0                                -->
                             <!-- ============================================== -->
                             <div class="relative space-y-5">
                                 <!-- Timeline Node -->
@@ -2721,9 +2998,94 @@ if (scheduler.isGlobalTickThread()) {
                                 <!-- Header Metadata -->
                                 <div class="space-y-2">
                                     <div class="flex flex-wrap items-center gap-2">
-                                        <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-cyan-400 text-slate-950 font-mono tracking-tight">v1.5.0</span>
+                                        <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-cyan-400 text-slate-950 font-mono tracking-tight">v1.6.0</span>
                                         <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
                                             <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span> En Güncel Sürüm
+                                        </span>
+                                        <span class="text-xs text-slate-500 font-mono flex items-center gap-1 ml-auto">
+                                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i> 2 Ekim 2026
+                                        </span>
+                                    </div>
+                                    <h2 class="text-xl font-bold text-white">ScoreboardService &amp; Titreşimsiz Sanal Scoreboard &amp; Tablist Motoru</h2>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        Paper, Purpur ve Folia için sıfır titremeli (flicker-free), oyuncuya izole sanal kenar çubukları (sidebar), dinamik satır sağlayıcıları, animasyonlu başlıklar, öncelikli katmanlama ve sanal tablist motoru eklendi.
+                                    </p>
+                                </div>
+
+                                <!-- Badges row -->
+                                <div class="flex flex-wrap items-center gap-2 text-xs">
+                                    <a href="https://github.com/Kriscra/Relay/releases/tag/v1.6.0" target="_blank" class="px-2 py-0.5 rounded bg-white/[0.04] text-slate-300 hover:text-white border border-white/[0.08] font-mono text-[11px] transition">
+                                        Tag: v1.6.0
+                                    </a>
+                                    <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] font-medium">
+                                        ✔ 53 / 53 Birim Test Geçti
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-[11px] font-medium">
+                                        Zero-Flicker Native
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[11px] font-medium">
+                                        Folia Thread-Safe
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20 text-[11px] font-medium">
+                                        Per-Player Isolated
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[11px] font-medium">
+                                        Zero-Leak Memory
+                                    </span>
+                                </div>
+
+                                <!-- Feature List Grid -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                                    <div class="p-3.5 rounded-lg bg-white/[0.02] border border-white/[0.06] space-y-1">
+                                        <div class="flex items-center gap-2 text-xs font-semibold text-white">
+                                            <i data-lucide="sparkles" class="w-4 h-4 text-cyan-400"></i> %100 Titreşimsiz Team-Prefix Mimarisi
+                                        </div>
+                                        <p class="text-[11px] text-slate-400 leading-relaxed">
+                                            Score ve objective silme alışkanlığı terk edildi. 15 önceden kayıtlı takım ve görünmez renk girdileriyle sadece <code class="text-cyan-400 font-mono">team.prefix()</code> güncellenir. İstemcide sıfır titreme.
+                                        </p>
+                                    </div>
+                                    <div class="p-3.5 rounded-lg bg-white/[0.02] border border-white/[0.06] space-y-1">
+                                        <div class="flex items-center gap-2 text-xs font-semibold text-white">
+                                            <i data-lucide="layers" class="w-4 h-4 text-indigo-400"></i> Öncelikli Katmanlama (Priority Stack)
+                                        </div>
+                                        <p class="text-[11px] text-slate-400 leading-relaxed">
+                                            Farklı eklentiler panolarını bağımsız yönetir. Yüksek öncelikli mini oyun panosu kapandığında lobi panosu otomatik ve kesintisiz biçimde geri yüklenir.
+                                        </p>
+                                    </div>
+                                    <div class="p-3.5 rounded-lg bg-white/[0.02] border border-white/[0.06] space-y-1">
+                                        <div class="flex items-center gap-2 text-xs font-semibold text-white">
+                                            <i data-lucide="film" class="w-4 h-4 text-purple-400"></i> Akıcı SidebarBuilder &amp; Canlı Sağlayıcılar
+                                        </div>
+                                        <p class="text-[11px] text-slate-400 leading-relaxed">
+                                            <code class="text-purple-400 font-mono">Supplier&lt;Component&gt;</code> lambdaları ile otomatik yenilenen satırlar ve tick zamanlamalı animasyonlu başlık çerçeveleri.
+                                        </p>
+                                    </div>
+                                    <div class="p-3.5 rounded-lg bg-white/[0.02] border border-white/[0.06] space-y-1">
+                                        <div class="flex items-center gap-2 text-xs font-semibold text-white">
+                                            <i data-lucide="shield-check" class="w-4 h-4 text-amber-400"></i> Sanal Tablist &amp; Sıfır Bellek Sızıntısı
+                                        </div>
+                                        <p class="text-[11px] text-slate-400 leading-relaxed">
+                                            Folia güvenli TAB başlık/altlık yönetimi, oyuncu ayrıldığında ve eklenti kapandığında otomatik kaynak tahliyesi ve <code class="text-amber-400 font-mono">/relay scoreboards</code> denetim komutu.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ============================================== -->
+                            <!-- RELEASE: v1.5.0                                -->
+                            <!-- ============================================== -->
+                            <div class="relative space-y-5">
+                                <!-- Timeline Node -->
+                                <div class="absolute -left-[31px] sm:-left-[39px] top-1 w-4 h-4 rounded-full bg-[#08090d] border-2 border-slate-600 flex items-center justify-center">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+                                </div>
+
+                                <!-- Header Metadata -->
+                                <div class="space-y-2">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-white/[0.1] text-white font-mono tracking-tight">v1.5.0</span>
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-white/[0.04] text-slate-400 border border-white/[0.08]">
+                                            Önceki Kararlı Sürüm
                                         </span>
                                         <span class="text-xs text-slate-500 font-mono flex items-center gap-1 ml-auto">
                                             <i data-lucide="calendar" class="w-3.5 h-3.5"></i> 30 Eylül 2026

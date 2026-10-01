@@ -50,6 +50,8 @@ public class RelayCommand implements CommandExecutor, TabCompleter {
                     .append(Component.text(plugin.getMenuService().getActiveMenus().size(), NamedTextColor.GREEN)));
             sender.sendMessage(Component.text("» Active Tasks: ", NamedTextColor.GRAY)
                     .append(Component.text(plugin.getSchedulerService().getActiveTaskCount(), NamedTextColor.GREEN)));
+            sender.sendMessage(Component.text("» Active Sidebars: ", NamedTextColor.GRAY)
+                    .append(Component.text(plugin.getScoreboardService().getActiveSidebarCount(), NamedTextColor.GREEN)));
             sender.sendMessage(Component.text("» Runtime: ", NamedTextColor.GRAY)
                     .append(Component.text(Runtime.version().toString(), NamedTextColor.WHITE)));
             return true;
@@ -178,6 +180,23 @@ public class RelayCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        if (args[0].equalsIgnoreCase("scoreboards")) {
+            sendHeader(sender, "Active Sidebars");
+            Collection<org.vrz.relay.api.scoreboard.Sidebar> sidebars = plugin.getScoreboardService().getActiveSidebars();
+            if (sidebars.isEmpty()) {
+                sender.sendMessage(Component.text("No active sidebars registered.", NamedTextColor.DARK_GRAY));
+                return true;
+            }
+
+            for (org.vrz.relay.api.scoreboard.Sidebar sb : sidebars) {
+                String viewer = sb.getPlayer() != null ? sb.getPlayer().getName() : "None";
+                sender.sendMessage(Component.text("• " + sb.getId().toString().substring(0, 8), NamedTextColor.AQUA)
+                        .append(Component.text(" [" + sb.getPlugin().getName() + "]", NamedTextColor.YELLOW))
+                        .append(Component.text(" (Viewer: " + viewer + ", Lines: " + sb.getLines().size() + ")", NamedTextColor.GRAY)));
+            }
+            return true;
+        }
+
         if (args[0].equalsIgnoreCase("notify")) {
             if (args.length < 3) {
                 sender.sendMessage(Component.text("Usage: /relay notify <player> <actionbar|bossbar|toast|title> [message...]", NamedTextColor.RED));
@@ -236,7 +255,7 @@ public class RelayCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        sender.sendMessage(Component.text("Unknown subcommand. Usage: /relay <status|services|topics|metrics|holograms|menus|notify>", NamedTextColor.RED));
+        sender.sendMessage(Component.text("Unknown subcommand. Usage: /relay <status|services|topics|metrics|holograms|menus|scoreboards|notify>", NamedTextColor.RED));
         return true;
     }
 
@@ -256,7 +275,7 @@ public class RelayCommand implements CommandExecutor, TabCompleter {
             return Collections.emptyList();
         }
         if (args.length == 1) {
-            return Arrays.asList("status", "services", "topics", "metrics", "holograms", "menus", "notify").stream()
+            return Arrays.asList("status", "services", "topics", "metrics", "holograms", "menus", "scoreboards", "notify").stream()
                     .filter(s -> s.startsWith(args[0].toLowerCase(Locale.ROOT)))
                     .collect(Collectors.toList());
         }
